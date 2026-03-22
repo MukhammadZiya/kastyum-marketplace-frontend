@@ -1,0 +1,60 @@
+# dependencies
+node_modules/
+.pnpm-store/
+.npm/
+.yarn/
+.yarn-cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# build output
+dist/
+build/
+out/
+.next/
+coverage/
+
+# turbo / monorepo
+.turbo/
+
+# env files
+.env
+.env.*
+!.env.example
+
+# logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# editor / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# cache
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+
+# vite
+vite.config.ts.timestamp-*
+*.local
+
+# typescript
+*.tsbuildinfo
+
+# test
+playwright-report/
+test-results/
+
+# misc
+tmp/
+temp/
+*.swp
