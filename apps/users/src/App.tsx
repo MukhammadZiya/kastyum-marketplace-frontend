@@ -1,12 +1,17 @@
-import { Button } from '@repo/ui'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { MainLayout } from "./components/MainLayout";
+import { HomePage } from "./pages/HomePage";
 
 function App() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gray-100">
-      <h1 className="text-3xl font-bold text-blue-600">Users App Ready</h1>
-      <Button>Shop now</Button>
-    </div>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<HomePage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App
