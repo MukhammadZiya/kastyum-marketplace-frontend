@@ -1,9 +1,20 @@
+import { useState } from "react";
+import { SellerSectionPanel } from "./components/seller/SellerSectionPanel";
+import { type SellerSection } from "./constants/sellerNavigation";
+import { SellerLayout } from "./layouts/SellerLayout";
+
 function App() {
+  const [activeSection, setActiveSection] =
+    useState<SellerSection>("Dashboard");
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <h1 className="text-3xl font-bold text-green-600">Sellers App Ready</h1>
-    </div>
-  )
+    <SellerLayout
+      activeSection={activeSection}
+      onSelectSection={setActiveSection}
+    >
+      <SellerSectionPanel activeSection={activeSection} />
+    </SellerLayout>
+  );
 }
 
-export default App
+export default App;
