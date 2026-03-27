@@ -1,12 +1,49 @@
-import { Button } from '@repo/ui'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { MainLayout } from "./components/MainLayout";
+import { HomePage } from "./pages/HomePage";
+import { ShopWithSidebarPage } from "./pages/ShopWithSidebarPage";
+import { ShopWithoutSidebarPage } from "./pages/ShopWithoutSidebarPage";
+import { CartPage } from "./pages/CartPage";
+import { CheckoutPage } from "./pages/CheckoutPage";
+import { ContactPage } from "./pages/ContactPage";
+import { WishlistPage } from "./pages/WishlistPage";
+import { SignInPage } from "./pages/SignInPage";
+import { SignUpPage } from "./pages/SignUpPage";
+import { ErrorPage } from "./pages/ErrorPage";
+import { MailSuccessPage } from "./pages/MailSuccessPage";
+import { ShopDetailsPage } from "./pages/ShopDetailsPage";
+import { BlogGridWithSidebarPage } from "./pages/BlogGridWithSidebarPage";
+import { BlogGridPage } from "./pages/BlogGridPage";
+import { BlogDetailsWithSidebarPage } from "./pages/BlogDetailsWithSidebarPage";
+import { BlogDetailsPage } from "./pages/BlogDetailsPage";
+import { MyAccountPage } from "./pages/MyAccountPage";
 
 function App() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gray-100">
-      <h1 className="text-3xl font-bold text-blue-600">Users App Ready</h1>
-      <Button>Shop now</Button>
-    </div>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="shop-with-sidebar" element={<ShopWithSidebarPage />} />
+          <Route path="shop-without-sidebar" element={<ShopWithoutSidebarPage />} />
+          <Route path="cart" element={<CartPage />} />
+          <Route path="checkout" element={<CheckoutPage />} />
+          <Route path="contact" element={<ContactPage />} />
+          <Route path="wishlist" element={<WishlistPage />} />
+          <Route path="shop-details" element={<ShopDetailsPage />} />
+          <Route path="signin" element={<SignInPage />} />
+          <Route path="signup" element={<SignUpPage />} />
+          <Route path="my-account" element={<MyAccountPage />} />
+          <Route path="error" element={<ErrorPage />} />
+          <Route path="mail-success" element={<MailSuccessPage />} />
+          <Route path="blogs/blog-grid-with-sidebar" element={<BlogGridWithSidebarPage />} />
+          <Route path="blogs/blog-grid" element={<BlogGridPage />} />
+          <Route path="blogs/blog-details-with-sidebar" element={<BlogDetailsWithSidebarPage />} />
+          <Route path="blogs/blog-details" element={<BlogDetailsPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App
