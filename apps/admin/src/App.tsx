@@ -1,9 +1,19 @@
+import { useState } from "react";
+import { AdminSectionPanel } from "./components/admin/AdminSectionPanel";
+import { type AdminSection } from "./constants/adminNavigation";
+import { AdminLayout } from "./layouts/AdminLayout";
+
 function App() {
+  const [activeSection, setActiveSection] = useState<AdminSection>("Dashboard");
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <h1 className="text-3xl font-bold text-red-600">Admin App Ready</h1>
-    </div>
-  )
+    <AdminLayout
+      activeSection={activeSection}
+      onSelectSection={setActiveSection}
+    >
+      <AdminSectionPanel activeSection={activeSection} />
+    </AdminLayout>
+  );
 }
 
-export default App
+export default App;
