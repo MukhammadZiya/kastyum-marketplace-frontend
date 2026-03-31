@@ -1,36 +1,34 @@
-export type AdminSection =
-  | "Dashboard"
-  | "Users"
-  | "Sellers"
-  | "Products (Moderation)"
-  | "Orders"
-  | "Reports/Complaints"
-  | "CMS"
-  | "Audit Logs"
-  | "Admin";
+export type AdminNavId =
+  | "dashboard"
+  | "users"
+  | "sellers"
+  | "products"
+  | "orders"
+  | "reports"
+  | "cms";
 
-export const NAV_ITEMS: AdminSection[] = [
-  "Dashboard",
-  "Users",
-  "Sellers",
-  "Products (Moderation)",
-  "Orders",
-  "Reports/Complaints",
-  "CMS",
-  "Audit Logs",
-  "Admin",
-];
-
-export const SECTION_DESCRIPTIONS: Record<AdminSection, string> = {
-  Dashboard: "Overview of marketplace health across users and sellers.",
-  Users: "Manage buyer accounts, statuses, and activity visibility.",
-  Sellers: "Review seller stores, onboarding status, and control actions.",
-  "Products (Moderation)": "Approve, reject, or unlist seller products.",
-  Orders: "Monitor order lifecycle, issues, and interventions.",
-  "Reports/Complaints": "Handle abuse reports, disputes, and content complaints.",
-  CMS: "Update banners, highlights, and managed storefront content.",
-  "Audit Logs":
-    "Track superadmin actions for accountability and compliance.",
-  Admin: "Single superadmin profile and platform-level admin settings.",
+export type AdminNavItem = {
+  id: AdminNavId;
+  label: string;
+  path: string;
 };
 
+export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
+  { id: "dashboard", label: "Dashboard", path: "/" },
+  { id: "users", label: "Users", path: "/users" },
+  { id: "sellers", label: "Sellers", path: "/sellers" },
+  { id: "products", label: "Products", path: "/products" },
+  { id: "orders", label: "Orders", path: "/orders" },
+  { id: "reports", label: "Reports", path: "/reports" },
+  { id: "cms", label: "CMS", path: "/cms" },
+];
+
+export const ADMIN_PAGE_TITLES: Record<AdminNavId, string> = {
+  dashboard: "Dashboard",
+  users: "Users",
+  sellers: "Sellers",
+  products: "Products",
+  orders: "Orders",
+  reports: "Reports",
+  cms: "CMS",
+};
