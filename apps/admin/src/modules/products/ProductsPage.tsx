@@ -2,11 +2,9 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "@repo/ui";
 import { ActivityFeed } from "../../components/ActivityFeed";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
-import { ModuleSubNav } from "../../components/ModuleSubNav";
 import { QuickActions } from "../../components/QuickActions";
 import { StatGrid } from "../../components/StatGrid";
 import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
-import { PRODUCTS_SUBNAV } from "./productsNav";
 
 const PRODUCT_STATS = [
   { label: "Live listings", value: "48,200", hint: "Buyer-visible" },
@@ -43,7 +41,6 @@ export function ProductsPage() {
   return (
     <AdminPageFrame
       title={ADMIN_PAGE_TITLES.products}
-      tabs={<ModuleSubNav items={PRODUCTS_SUBNAV} />}
       addon={
         <p className="text-sm text-slate-500">
           Moderation, policy, and catalog health

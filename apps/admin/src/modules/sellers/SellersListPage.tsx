@@ -1,15 +1,12 @@
 import { TableCard } from "@repo/ui";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
 import { DataTablePlaceholder } from "../../components/DataTablePlaceholder";
-import { ModuleSubNav } from "../../components/ModuleSubNav";
 import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
-import { SELLERS_SUBNAV } from "./sellersNav";
 
 export function SellersListPage() {
   return (
     <AdminPageFrame
       title={ADMIN_PAGE_TITLES.sellers}
-      tabs={<ModuleSubNav items={SELLERS_SUBNAV} />}
       addon={
         <p className="text-sm text-slate-500">
           Browse storefronts — filters and KYC status will plug in next.

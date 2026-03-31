@@ -2,10 +2,8 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { Button, Card } from "@repo/ui";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
-import { ModuleSubNav } from "../../components/ModuleSubNav";
 import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
 import { adminInputClass } from "../../lib/formFieldStyles";
-import { SELLERS_SUBNAV } from "./sellersNav";
 
 export function SellerCreatePage() {
   const [storeName, setStoreName] = useState("");
@@ -19,7 +17,6 @@ export function SellerCreatePage() {
   return (
     <AdminPageFrame
       title={ADMIN_PAGE_TITLES.sellers}
-      tabs={<ModuleSubNav items={SELLERS_SUBNAV} />}
       addon={
         <p className="text-sm text-slate-500">
           Onboard a new seller — extend with tax, payout, and KYC fields later.

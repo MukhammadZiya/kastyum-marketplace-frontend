@@ -1,14 +1,9 @@
+import { useCallback, useEffect, useRef, useState } from "react";
 import { LogOut } from "lucide-react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { Button, PageLayout, Sidebar, type SidebarNavItem } from "@repo/ui";
-import { ADMIN_NAV_ITEMS } from "../constants/adminNavigation";
 import { logoutAdmin } from "../lib/logoutAdmin";
-
-const sidebarItems: SidebarNavItem[] = ADMIN_NAV_ITEMS.map((n) => ({
-  id: n.id,
-  label: n.label,
-  to: n.path,
-}));
+import { ADMIN_SIDEBAR_ITEMS, isSidebarSubActive } from "./adminSidebarNav";
 
 function AdminBrand() {
   return (
@@ -53,13 +48,71 @@ function AdminSidebarProfile({ onLogout }: { onLogout: () => void }) {
   );
 }
 
+function isParentRouteActive(pathname: string, item: SidebarNavItem) {
+  if (item.to === "/") return pathname === "/";
+  return pathname === item.to || pathname.startsWith(`${item.to}/`);
+}
+
 export function AdminAppShell() {
   const { pathname } = useLocation();
+  /** Explicit open/close; omitted key => follow route (open when parent route active). */
+  const [sectionOverride, setSectionOverride] = useState<
+    Record<string, boolean | undefined>
+  >({});
 
   const isItemActive = (item: SidebarNavItem) => {
     if (item.to === "/") return pathname === "/";
     return pathname === item.to || pathname.startsWith(`${item.to}/`);
   };
+
+  const isSectionExpanded = useCallback(
+    (id: string) => {
+      const item = ADMIN_SIDEBAR_ITEMS.find((i) => i.id === id);
+      if (!item?.subItems?.length) return false;
+      const auto = isParentRouteActive(pathname, item);
+      const o = sectionOverride[id];
+      if (o === true) return true;
+      if (o === false) return false;
+      return auto;
+    },
+    [pathname, sectionOverride],
+  );
+
+  const toggleSection = useCallback(
+    (id: string) => {
+      setSectionOverride((prev) => {
+        const item = ADMIN_SIDEBAR_ITEMS.find((i) => i.id === id);
+        const auto =
+          item && item.subItems?.length
+            ? isParentRouteActive(pathname, item)
+            : false;
+        const o = prev[id];
+        const effective = o === true ? true : o === false ? false : auto;
+        return { ...prev, [id]: !effective };
+      });
+    },
+    [pathname],
+  );
+
+  const prevPathnameRef = useRef(pathname);
+  useEffect(() => {
+    const prevPath = prevPathnameRef.current;
+    prevPathnameRef.current = pathname;
+    setSectionOverride((prevMap) => {
+      const next = { ...prevMap };
+      let changed = false;
+      for (const item of ADMIN_SIDEBAR_ITEMS) {
+        if (!item.subItems?.length) continue;
+        const inNow = isParentRouteActive(pathname, item);
+        const wasIn = isParentRouteActive(prevPath, item);
+        if (inNow && !wasIn && next[item.id] !== undefined) {
+          delete next[item.id];
+          changed = true;
+        }
+      }
+      return changed ? next : prevMap;
+    });
+  }, [pathname]);
 
   const handleLogout = () => {
     logoutAdmin();
@@ -70,10 +123,13 @@ export function AdminAppShell() {
       sidebar={
         <Sidebar
           brand={<AdminBrand />}
-          items={sidebarItems}
+          items={ADMIN_SIDEBAR_ITEMS}
           isItemActive={isItemActive}
-          renderLink={({ to, className, children }) => (
-            <NavLink to={to} className={className} end={to === "/"}>
+          isSubItemActive={(sub) => isSidebarSubActive(pathname, sub)}
+          isSectionExpanded={isSectionExpanded}
+          onToggleSection={toggleSection}
+          renderLink={({ to, className, children, end, onClick }) => (
+            <NavLink to={to} className={className} end={!!end} onClick={onClick}>
               {children}
             </NavLink>
           )}

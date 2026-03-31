@@ -2,10 +2,8 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { Button, Card } from "@repo/ui";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
-import { ModuleSubNav } from "../../components/ModuleSubNav";
 import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
 import { adminInputClass } from "../../lib/formFieldStyles";
-import { USERS_SUBNAV } from "./usersNav";
 
 export function UserCreatePage() {
   const [email, setEmail] = useState("");
@@ -19,7 +17,6 @@ export function UserCreatePage() {
   return (
     <AdminPageFrame
       title={ADMIN_PAGE_TITLES.users}
-      tabs={<ModuleSubNav items={USERS_SUBNAV} />}
       addon={
         <p className="text-sm text-slate-500">
           Create or invite a buyer — replace with API mutation when ready.

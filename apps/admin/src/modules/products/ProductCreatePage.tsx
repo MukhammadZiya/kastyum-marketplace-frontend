@@ -2,10 +2,8 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { Button, Card } from "@repo/ui";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
-import { ModuleSubNav } from "../../components/ModuleSubNav";
 import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
 import { adminInputClass } from "../../lib/formFieldStyles";
-import { PRODUCTS_SUBNAV } from "./productsNav";
 
 export function ProductCreatePage() {
   const [title, setTitle] = useState("");
@@ -20,7 +18,6 @@ export function ProductCreatePage() {
   return (
     <AdminPageFrame
       title={ADMIN_PAGE_TITLES.products}
-      tabs={<ModuleSubNav items={PRODUCTS_SUBNAV} />}
       addon={
         <p className="text-sm text-slate-500">
           Draft a listing — replace seller picker and media upload when APIs exist.
