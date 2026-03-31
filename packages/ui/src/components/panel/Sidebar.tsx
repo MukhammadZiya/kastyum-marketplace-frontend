@@ -27,6 +27,39 @@ type RenderLinkArgs = {
   onClick?: MouseEventHandler<HTMLElement>;
 };
 
+export type SidebarTone = "admin" | "seller";
+
+const SIDEBAR_TONE: Record<
+  SidebarTone,
+  {
+    parentActive: string;
+    parentInactive: string;
+    leafActive: string;
+    leafInactive: string;
+    subActive: string;
+    subInactive: string;
+  }
+> = {
+  admin: {
+    parentActive: "bg-blue-50 text-blue-800",
+    parentInactive: "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+    leafActive: "bg-blue-50 text-blue-800",
+    leafInactive: "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+    subActive: "bg-white text-blue-800 shadow-sm ring-1 ring-slate-200/80",
+    subInactive: "text-slate-600 hover:bg-white/60 hover:text-slate-900",
+  },
+  seller: {
+    parentActive: "bg-emerald-50 text-emerald-900",
+    parentInactive: "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+    leafActive:
+      "bg-[#00966d] text-white shadow-sm shadow-[#00966d]/25",
+    leafInactive: "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+    subActive:
+      "bg-[#00966d] text-white shadow-sm shadow-[#00966d]/25",
+    subInactive: "text-slate-600 hover:bg-white/60 hover:text-slate-900",
+  },
+};
+
 type SidebarProps = {
   brand: ReactNode;
   items: SidebarNavItem[];
@@ -38,6 +71,10 @@ type SidebarProps = {
   renderLink: (args: RenderLinkArgs) => ReactNode;
   footer: ReactNode;
   className?: string;
+  /** `embedded` = fills a parent (e.g. drawer); `fixed` = default docked aside */
+  variant?: "fixed" | "embedded";
+  /** Color tokens for parent / leaf / sub links */
+  tone?: SidebarTone;
 };
 
 function SectionChevron({ expanded }: { expanded: boolean }) {
@@ -67,7 +104,10 @@ export function Sidebar({
   renderLink,
   footer,
   className,
+  variant = "fixed",
+  tone = "admin",
 }: SidebarProps) {
+  const t = SIDEBAR_TONE[tone];
   const collapsible =
     typeof onToggleSection === "function" &&
     typeof isSectionExpanded === "function";
@@ -75,7 +115,10 @@ export function Sidebar({
   return (
     <aside
       className={clsx(
-        "fixed inset-y-0 left-0 z-20 flex w-[260px] flex-col border-r border-slate-200/90 bg-white",
+        "flex w-[260px] flex-col bg-white",
+        variant === "fixed"
+          ? "fixed inset-y-0 left-0 z-20 border-r border-slate-200/90"
+          : "relative h-full min-h-0 w-full max-w-none border-r-0 shadow-none",
         className,
       )}
     >
@@ -100,9 +143,7 @@ export function Sidebar({
                   onClick={() => onToggleSection!(item.id)}
                   className={clsx(
                     "flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium transition-colors",
-                    active
-                      ? "bg-blue-50 text-blue-800"
-                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+                    active ? t.parentActive : t.parentInactive,
                   )}
                   aria-expanded={expanded}
                   aria-controls={`sidebar-section-${item.id}`}
@@ -121,9 +162,7 @@ export function Sidebar({
                   end: item.to === "/",
                   className: clsx(
                     "block rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
-                    active
-                      ? "bg-blue-50 text-blue-800"
-                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+                    active ? t.leafActive : t.leafInactive,
                   ),
                   children: item.label,
                 })
@@ -146,9 +185,7 @@ export function Sidebar({
                           end: sub.end,
                           className: clsx(
                             "block rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                            subActive
-                              ? "bg-white text-blue-800 shadow-sm ring-1 ring-slate-200/80"
-                              : "text-slate-600 hover:bg-white/60 hover:text-slate-900",
+                            subActive ? t.subActive : t.subInactive,
                           ),
                           children: sub.label,
                         })}

@@ -6,6 +6,7 @@ export {
   Sidebar,
   type SidebarNavItem,
   type SidebarSubItem,
+  type SidebarTone,
 } from "./Sidebar";
 export { StatCard } from "./StatCard";
 export { TableCard } from "./TableCard";

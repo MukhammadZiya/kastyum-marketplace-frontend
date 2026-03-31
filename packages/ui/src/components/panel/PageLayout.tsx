@@ -16,7 +16,7 @@ export function PageLayout({ sidebar, children, className }: PageLayoutProps) {
       )}
     >
       {sidebar}
-      <div className="min-h-screen pl-[260px]">{children}</div>
+      <div className="min-h-screen pl-0 lg:pl-[260px]">{children}</div>
     </div>
   );
 }

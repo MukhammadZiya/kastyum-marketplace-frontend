@@ -6,69 +6,28 @@ import {
   type MouseEventHandler,
   type ReactNode,
 } from "react";
-import { LogOut } from "lucide-react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import {
-  Button,
   Drawer,
   PageLayout,
   Sidebar,
   type SidebarNavItem,
   type SidebarSubItem,
 } from "@repo/ui";
-import { AdminMobileNavContext } from "../contexts/AdminMobileNavContext";
-import { logoutAdmin } from "../lib/logoutAdmin";
-import { ADMIN_SIDEBAR_ITEMS, isSidebarSubActive } from "./adminSidebarNav";
-
-function AdminBrand() {
-  return (
-    <div className="flex items-center gap-3">
-      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-sm font-bold text-white">
-        K
-      </div>
-      <div>
-        <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
-          Kastyum
-        </p>
-        <p className="text-sm font-semibold text-slate-900">Admin</p>
-      </div>
-    </div>
-  );
-}
-
-function AdminSidebarProfile({ onLogout }: { onLogout: () => void }) {
-  return (
-    <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/80 p-3">
-      <div
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-800"
-        aria-hidden
-      >
-        SA
-      </div>
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium text-slate-900">superadmin</p>
-        <p className="truncate text-xs text-slate-500">Administrator</p>
-      </div>
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        className="!h-9 !w-9 shrink-0 !p-0 text-slate-500 hover:text-slate-900"
-        onClick={onLogout}
-        aria-label="Log out"
-      >
-        <LogOut className="h-4 w-4" strokeWidth={2} />
-      </Button>
-    </div>
-  );
-}
+import {
+  SellerSidebarFooter,
+  SellerSidebarHeader,
+} from "../components/seller/SellerSidebar";
+import { SellerTopbar } from "../components/seller/SellerTopbar";
+import { SellerMobileNavContext } from "../contexts/SellerMobileNavContext";
+import { isSellerSubActive, SELLER_SIDEBAR_ITEMS } from "./sellerSidebarNav";
 
 function isParentRouteActive(pathname: string, item: SidebarNavItem) {
   if (item.to === "/") return pathname === "/";
   return pathname === item.to || pathname.startsWith(`${item.to}/`);
 }
 
-export function AdminAppShell() {
+export function SellerAppShell() {
   const { pathname } = useLocation();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [sectionOverride, setSectionOverride] = useState<
@@ -82,7 +41,7 @@ export function AdminAppShell() {
 
   const isSectionExpanded = useCallback(
     (id: string) => {
-      const item = ADMIN_SIDEBAR_ITEMS.find((i) => i.id === id);
+      const item = SELLER_SIDEBAR_ITEMS.find((i) => i.id === id);
       if (!item?.subItems?.length) return false;
       const auto = isParentRouteActive(pathname, item);
       const o = sectionOverride[id];
@@ -96,7 +55,7 @@ export function AdminAppShell() {
   const toggleSection = useCallback(
     (id: string) => {
       setSectionOverride((prev) => {
-        const item = ADMIN_SIDEBAR_ITEMS.find((i) => i.id === id);
+        const item = SELLER_SIDEBAR_ITEMS.find((i) => i.id === id);
         const auto =
           item && item.subItems?.length
             ? isParentRouteActive(pathname, item)
@@ -116,7 +75,7 @@ export function AdminAppShell() {
     setSectionOverride((prevMap) => {
       const next = { ...prevMap };
       let changed = false;
-      for (const item of ADMIN_SIDEBAR_ITEMS) {
+      for (const item of SELLER_SIDEBAR_ITEMS) {
         if (!item.subItems?.length) continue;
         const inNow = isParentRouteActive(pathname, item);
         const wasIn = isParentRouteActive(prevPath, item);
@@ -128,10 +87,6 @@ export function AdminAppShell() {
       return changed ? next : prevMap;
     });
   }, [pathname]);
-
-  const handleLogout = () => {
-    logoutAdmin();
-  };
 
   const openMobileNav = useCallback(() => setMobileNavOpen(true), []);
 
@@ -170,48 +125,53 @@ export function AdminAppShell() {
   );
 
   const sidebarShared = {
-    brand: <AdminBrand />,
-    items: ADMIN_SIDEBAR_ITEMS,
+    brand: <SellerSidebarHeader />,
+    items: SELLER_SIDEBAR_ITEMS,
     isItemActive,
-    isSubItemActive: (sub: SidebarSubItem) => isSidebarSubActive(pathname, sub),
+    isSubItemActive: (sub: SidebarSubItem) => isSellerSubActive(pathname, sub),
     isSectionExpanded,
     onToggleSection: toggleSection,
-    footer: <AdminSidebarProfile onLogout={handleLogout} />,
+    footer: <SellerSidebarFooter />,
+    tone: "seller" as const,
   };
 
   return (
-    <AdminMobileNavContext.Provider value={{ openMobileNav }}>
+    <SellerMobileNavContext.Provider value={{ openMobileNav }}>
       <>
-        <PageLayout
-          sidebar={
+        <div className="min-h-screen bg-[#f4f6f8] text-slate-900">
+          <PageLayout
+            className="!bg-[#f4f6f8]"
+            sidebar={
+              <Sidebar
+                {...sidebarShared}
+                variant="fixed"
+                className="hidden border-slate-200/90 lg:flex"
+                renderLink={renderDesktopLink}
+              />
+            }
+          >
+            <div className="mx-auto max-w-[1440px] px-4 pb-10 pt-4 lg:px-8 lg:pt-6">
+              <SellerTopbar />
+              <Outlet />
+            </div>
+          </PageLayout>
+
+          <Drawer
+            open={mobileNavOpen}
+            onClose={() => setMobileNavOpen(false)}
+            side="left"
+            showHeader={false}
+            panelClassName="w-[260px] max-w-[min(260px,92vw)] border-slate-200/90 p-0"
+          >
             <Sidebar
               {...sidebarShared}
-              variant="fixed"
-              className="hidden lg:flex"
-              renderLink={renderDesktopLink}
+              variant="embedded"
+              className="h-full min-h-0 border-0 pt-12"
+              renderLink={renderMobileLink}
             />
-          }
-        >
-          <div className="px-4 pb-10 pt-4 lg:px-8 lg:pt-6">
-            <Outlet />
-          </div>
-        </PageLayout>
-
-        <Drawer
-          open={mobileNavOpen}
-          onClose={() => setMobileNavOpen(false)}
-          side="left"
-          showHeader={false}
-          panelClassName="w-[260px] max-w-[min(260px,92vw)] p-0"
-        >
-          <Sidebar
-            {...sidebarShared}
-            variant="embedded"
-            className="h-full min-h-0 border-0 pt-12"
-            renderLink={renderMobileLink}
-          />
-        </Drawer>
+          </Drawer>
+        </div>
       </>
-    </AdminMobileNavContext.Provider>
+    </SellerMobileNavContext.Provider>
   );
 }

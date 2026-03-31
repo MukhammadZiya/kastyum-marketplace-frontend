@@ -1,9 +1,7 @@
 import type { ReactNode } from "react";
 import { Menu } from "lucide-react";
 import { Topbar } from "@repo/ui";
-import { useAdminMobileNav } from "../contexts/AdminMobileNavContext";
-import { logoutAdmin } from "../lib/logoutAdmin";
-import { AdminTopbarActions } from "./AdminTopbarActions";
+import { useSellerMobileNav } from "../../contexts/SellerMobileNavContext";
 
 type Props = {
   title: string;
@@ -11,8 +9,8 @@ type Props = {
   children: ReactNode;
 };
 
-export function AdminPageFrame({ title, addon, children }: Props) {
-  const mobileNav = useAdminMobileNav();
+export function SellerPageFrame({ title, addon, children }: Props) {
+  const mobileNav = useSellerMobileNav();
 
   return (
     <>
@@ -31,7 +29,7 @@ export function AdminPageFrame({ title, addon, children }: Props) {
           ) : null
         }
         addon={addon}
-        rightSlot={<AdminTopbarActions onLogout={logoutAdmin} />}
+        className="border-b border-slate-200/90 bg-white/90 shadow-sm shadow-slate-200/30 backdrop-blur-sm supports-[backdrop-filter]:bg-white/80"
       />
       <div className="space-y-6 pt-1">{children}</div>
     </>
