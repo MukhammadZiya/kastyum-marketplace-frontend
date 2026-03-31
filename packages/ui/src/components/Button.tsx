@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
-type ButtonVariant = "primary" | "secondary" | "ghost";
+type ButtonVariant = "primary" | "secondary" | "ghost" | "accent";
 type ButtonSize = "sm" | "md" | "lg";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -12,11 +12,13 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    "bg-black text-white border border-black hover:bg-neutral-800",
+    "bg-black text-white border border-black hover:bg-neutral-800 focus-visible:ring-neutral-400",
   secondary:
-    "bg-white text-black border border-neutral-300 hover:bg-neutral-100",
+    "bg-white text-black border border-neutral-300 hover:bg-neutral-100 focus-visible:ring-neutral-400",
   ghost:
-    "bg-transparent text-black border border-transparent hover:bg-neutral-100",
+    "bg-transparent text-black border border-transparent hover:bg-neutral-100 focus-visible:ring-neutral-400",
+  accent:
+    "bg-blue-600 text-white border border-blue-600 hover:bg-blue-700 focus-visible:ring-blue-400",
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -38,7 +40,7 @@ export function Button({
     <button
       className={[
         "inline-flex items-center justify-center rounded-lg font-medium transition-colors duration-200",
-        "focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2",
+        "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
         "disabled:cursor-not-allowed disabled:opacity-50",
         variantClasses[variant],
         sizeClasses[size],

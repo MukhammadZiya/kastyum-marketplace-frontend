@@ -1,43 +1,46 @@
-import {
-  SELLER_NAV_ITEMS,
-  type SellerSection,
-} from "../../constants/sellerNavigation";
+import { LogOut } from "lucide-react";
+import { Button } from "@repo/ui";
+import { logoutSeller } from "../../lib/logoutSeller";
 
-type Props = {
-  activeSection: SellerSection;
-  onSelect: (section: SellerSection) => void;
-};
-
-export function SellerSidebar({ activeSection, onSelect }: Props) {
+export function SellerSidebarHeader() {
   return (
-    <aside className="w-[260px] border-r border-slate-200 bg-white p-6">
-      <div className="mb-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-          Marketplace
-        </p>
-        <h1 className="mt-2 text-2xl font-bold">Seller Panel</h1>
+    <div className="flex items-center gap-3">
+      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#00966d] text-sm font-bold text-white shadow-sm shadow-[#00966d]/30">
+        S
       </div>
-
-      <nav className="space-y-2">
-        {SELLER_NAV_ITEMS.map((item) => {
-          const isActive = item === activeSection;
-          return (
-            <button
-              key={item}
-              type="button"
-              onClick={() => onSelect(item)}
-              className={`w-full rounded-lg px-3 py-2 text-left text-sm font-medium transition ${
-                isActive
-                  ? "bg-emerald-600 text-white"
-                  : "text-slate-700 hover:bg-slate-100"
-              }`}
-            >
-              {item}
-            </button>
-          );
-        })}
-      </nav>
-    </aside>
+      <div>
+        <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
+          Kastyum
+        </p>
+        <p className="text-sm font-semibold text-slate-900">Seller</p>
+      </div>
+    </div>
   );
 }
 
+export function SellerSidebarFooter() {
+  return (
+    <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/80 p-3">
+      <div
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#00966d]/15 text-sm font-semibold text-[#006b4d]"
+        aria-hidden
+      >
+        SE
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium text-slate-900">seller</p>
+        <p className="truncate text-xs text-slate-500">Store account</p>
+      </div>
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        className="!h-9 !w-9 shrink-0 !p-0 text-slate-500 hover:text-slate-900"
+        onClick={logoutSeller}
+        aria-label="Log out"
+      >
+        <LogOut className="h-4 w-4" strokeWidth={2} />
+      </Button>
+    </div>
+  );
+}
