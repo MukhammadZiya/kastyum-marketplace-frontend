@@ -7,7 +7,7 @@ export type QuickAction = {
 };
 
 type Props = {
-  actions: QuickAction[];
+  actions: readonly QuickAction[];
 };
 
 export function QuickActions({ actions }: Props) {

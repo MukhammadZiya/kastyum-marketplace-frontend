@@ -3,9 +3,7 @@ export type AdminNavId =
   | "users"
   | "sellers"
   | "products"
-  | "orders"
-  | "reports"
-  | "cms";
+  | "orders";
 
 export type AdminNavItem = {
   id: AdminNavId;
@@ -19,8 +17,6 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
   { id: "sellers", label: "Sellers", path: "/sellers" },
   { id: "products", label: "Products", path: "/products" },
   { id: "orders", label: "Orders", path: "/orders" },
-  { id: "reports", label: "Reports", path: "/reports" },
-  { id: "cms", label: "CMS", path: "/cms" },
 ];
 
 export const ADMIN_PAGE_TITLES: Record<AdminNavId, string> = {
@@ -29,6 +25,4 @@ export const ADMIN_PAGE_TITLES: Record<AdminNavId, string> = {
   sellers: "Sellers",
   products: "Products",
   orders: "Orders",
-  reports: "Reports",
-  cms: "CMS",
 };

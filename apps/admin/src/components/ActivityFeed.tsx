@@ -1,14 +1,14 @@
-export type ActivityItem = {
+export type ActivityFeedItem = {
   id: string;
   title: string;
   time: string;
 };
 
 type Props = {
-  items: ActivityItem[];
+  items: readonly ActivityFeedItem[];
 };
 
-export function RecentActivity({ items }: Props) {
+export function ActivityFeed({ items }: Props) {
   return (
     <ul className="divide-y divide-slate-100">
       {items.map((item) => (

@@ -1,9 +1,9 @@
 import { Card } from "@repo/ui";
+import { ActivityFeed } from "../../components/ActivityFeed";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
+import { QuickActions } from "../../components/QuickActions";
+import { StatGrid } from "../../components/StatGrid";
 import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
-import { DashboardStats } from "./DashboardStats";
-import { QuickActions } from "./QuickActions";
-import { RecentActivity } from "./RecentActivity";
 
 const DASHBOARD_STATS = [
   { label: "Total Users", value: "12,480", hint: "Last 30 days" },
@@ -44,11 +44,11 @@ export function DashboardPage() {
         </p>
       }
     >
-      <DashboardStats stats={[...DASHBOARD_STATS]} />
+      <StatGrid stats={[...DASHBOARD_STATS]} />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card title="Recent Activity" description="Latest actions across the platform">
-          <RecentActivity items={[...RECENT_ACTIVITY]} />
+          <ActivityFeed items={[...RECENT_ACTIVITY]} />
         </Card>
 
         <Card title="Quick Actions" description="Common moderation tasks">

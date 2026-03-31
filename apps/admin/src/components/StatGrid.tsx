@@ -1,16 +1,16 @@
 import { StatCard } from "@repo/ui";
 
-export type DashboardStat = {
+export type StatItem = {
   label: string;
   value: string;
   hint?: string;
 };
 
 type Props = {
-  stats: DashboardStat[];
+  stats: readonly StatItem[];
 };
 
-export function DashboardStats({ stats }: Props) {
+export function StatGrid({ stats }: Props) {
   return (
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {stats.map((s) => (
