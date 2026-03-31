@@ -1,9 +1,12 @@
+import { useNavigate } from "react-router-dom";
 import { Card } from "@repo/ui";
 import { ActivityFeed } from "../../components/ActivityFeed";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
+import { ModuleSubNav } from "../../components/ModuleSubNav";
 import { QuickActions } from "../../components/QuickActions";
 import { StatGrid } from "../../components/StatGrid";
 import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
+import { USERS_SUBNAV } from "./usersNav";
 
 const USER_STATS = [
   { label: "Registered buyers", value: "12,480", hint: "All time" },
@@ -35,9 +38,12 @@ const USER_EVENTS = [
 ] as const;
 
 export function UsersPage() {
+  const navigate = useNavigate();
+
   return (
     <AdminPageFrame
       title={ADMIN_PAGE_TITLES.users}
+      tabs={<ModuleSubNav items={USERS_SUBNAV} />}
       addon={
         <p className="text-sm text-slate-500">
           Buyer accounts, verification, and access
@@ -58,14 +64,14 @@ export function UsersPage() {
           <QuickActions
             actions={[
               {
-                id: "export-users",
-                label: "Export CSV",
-                onClick: () => console.info("admin:users-export"),
+                id: "see-users",
+                label: "See all users",
+                onClick: () => navigate("/users/list"),
               },
               {
-                id: "invite-user",
-                label: "Invite buyer",
-                onClick: () => console.info("admin:users-invite"),
+                id: "add-user",
+                label: "Add user",
+                onClick: () => navigate("/users/new"),
               },
             ]}
           />

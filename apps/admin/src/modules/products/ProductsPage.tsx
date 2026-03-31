@@ -1,9 +1,12 @@
+import { useNavigate } from "react-router-dom";
 import { Card } from "@repo/ui";
 import { ActivityFeed } from "../../components/ActivityFeed";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
+import { ModuleSubNav } from "../../components/ModuleSubNav";
 import { QuickActions } from "../../components/QuickActions";
 import { StatGrid } from "../../components/StatGrid";
 import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
+import { PRODUCTS_SUBNAV } from "./productsNav";
 
 const PRODUCT_STATS = [
   { label: "Live listings", value: "48,200", hint: "Buyer-visible" },
@@ -35,9 +38,12 @@ const PRODUCT_EVENTS = [
 ] as const;
 
 export function ProductsPage() {
+  const navigate = useNavigate();
+
   return (
     <AdminPageFrame
       title={ADMIN_PAGE_TITLES.products}
+      tabs={<ModuleSubNav items={PRODUCTS_SUBNAV} />}
       addon={
         <p className="text-sm text-slate-500">
           Moderation, policy, and catalog health
@@ -58,14 +64,14 @@ export function ProductsPage() {
           <QuickActions
             actions={[
               {
-                id: "moderation-queue",
-                label: "Moderation queue",
-                onClick: () => console.info("admin:products-moderation-queue"),
+                id: "see-products",
+                label: "See all products",
+                onClick: () => navigate("/products/list"),
               },
               {
-                id: "bulk-unlist",
-                label: "Bulk unlist",
-                onClick: () => console.info("admin:products-bulk-unlist"),
+                id: "add-product",
+                label: "Add product",
+                onClick: () => navigate("/products/new"),
               },
             ]}
           />

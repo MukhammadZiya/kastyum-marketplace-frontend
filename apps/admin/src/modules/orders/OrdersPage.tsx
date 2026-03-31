@@ -1,9 +1,12 @@
+import { useNavigate } from "react-router-dom";
 import { Card } from "@repo/ui";
 import { ActivityFeed } from "../../components/ActivityFeed";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
+import { ModuleSubNav } from "../../components/ModuleSubNav";
 import { QuickActions } from "../../components/QuickActions";
 import { StatGrid } from "../../components/StatGrid";
 import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
+import { ORDERS_SUBNAV } from "./ordersNav";
 
 const ORDER_STATS = [
   { label: "Needs attention", value: "37", hint: "SLA or risk" },
@@ -35,9 +38,12 @@ const ORDER_EVENTS = [
 ] as const;
 
 export function OrdersPage() {
+  const navigate = useNavigate();
+
   return (
     <AdminPageFrame
       title={ADMIN_PAGE_TITLES.orders}
+      tabs={<ModuleSubNav items={ORDERS_SUBNAV} />}
       addon={
         <p className="text-sm text-slate-500">
           Fulfillment, payments, and exceptions
@@ -58,13 +64,13 @@ export function OrdersPage() {
           <QuickActions
             actions={[
               {
-                id: "open-orders",
-                label: "Open orders list",
-                onClick: () => console.info("admin:orders-open-list"),
+                id: "see-orders",
+                label: "See all orders",
+                onClick: () => navigate("/orders/list"),
               },
               {
                 id: "export-orders",
-                label: "Export orders",
+                label: "Export CSV",
                 onClick: () => console.info("admin:orders-export"),
               },
             ]}

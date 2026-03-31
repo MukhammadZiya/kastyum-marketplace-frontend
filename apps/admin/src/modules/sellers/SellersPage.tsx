@@ -1,9 +1,12 @@
+import { useNavigate } from "react-router-dom";
 import { Card } from "@repo/ui";
 import { ActivityFeed } from "../../components/ActivityFeed";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
+import { ModuleSubNav } from "../../components/ModuleSubNav";
 import { QuickActions } from "../../components/QuickActions";
 import { StatGrid } from "../../components/StatGrid";
 import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
+import { SELLERS_SUBNAV } from "./sellersNav";
 
 const SELLER_STATS = [
   { label: "Active stores", value: "842", hint: "Live on marketplace" },
@@ -35,9 +38,12 @@ const SELLER_EVENTS = [
 ] as const;
 
 export function SellersPage() {
+  const navigate = useNavigate();
+
   return (
     <AdminPageFrame
       title={ADMIN_PAGE_TITLES.sellers}
+      tabs={<ModuleSubNav items={SELLERS_SUBNAV} />}
       addon={
         <p className="text-sm text-slate-500">
           Stores, onboarding, compliance, and payouts
@@ -58,14 +64,14 @@ export function SellersPage() {
           <QuickActions
             actions={[
               {
-                id: "review-queue",
-                label: "Open review queue",
-                onClick: () => console.info("admin:sellers-review-queue"),
+                id: "see-sellers",
+                label: "See all sellers",
+                onClick: () => navigate("/sellers/list"),
               },
               {
-                id: "export-sellers",
-                label: "Export sellers",
-                onClick: () => console.info("admin:sellers-export"),
+                id: "add-seller",
+                label: "Add seller",
+                onClick: () => navigate("/sellers/new"),
               },
             ]}
           />
