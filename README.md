@@ -4,6 +4,8 @@ This repository is a frontend monorepo for a marketplace platform built with **p
 
 It contains three separate frontend applications:
 
+/// 
+
 * **users** — customer-facing storefront
 * **sellers** — seller dashboard and product/order management
 * **admin** — platform administration panel
