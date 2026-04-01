@@ -1,103 +1,89 @@
+import { Link } from "react-router-dom";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination } from "swiper/modules";
 
 import "swiper/css";
+import "swiper/css/navigation";
 import "swiper/css/pagination";
+
+import { getHeroTrendingSlides } from "./heroTrendingSlides";
+
+const slides = getHeroTrendingSlides();
 
 export default function HeroCarousel() {
   return (
-    <Swiper
-      spaceBetween={30}
-      centeredSlides
-      autoplay={{ delay: 2500, disableOnInteraction: false }}
-      pagination={{ clickable: true }}
-      modules={[Autoplay, Pagination]}
-      className="hero-carousel"
-    >
-      <SwiperSlide>
-        <div className="flex items-center pt-6 sm:pt-0 flex-col-reverse sm:flex-row">
-          <div className="max-w-[394px] py-10 sm:py-[60px] lg:py-[98px] pl-4 sm:pl-[30px] lg:pl-[50px]">
-            <div className="flex items-center gap-4 mb-[30px] sm:mb-10">
-              <span className="block font-semibold text-[44px] sm:text-[64px] text-blue-600">
-                30%
-              </span>
-              <span className="block text-neutral-900 text-sm sm:text-[20px] sm:leading-[24px]">
-                Sale
-                <br />
-                Off
-              </span>
+    <div className="trending-hero-carousel group relative overflow-hidden rounded-2xl bg-[#E8E0D5] shadow-sm ring-1 ring-black/5">
+      <span className="absolute right-3 top-3 z-20 rounded-full bg-white/85 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-neutral-600 shadow-sm backdrop-blur-sm md:right-4 md:top-4">
+        Featured
+      </span>
+
+      <Swiper
+        modules={[Autoplay, Navigation, Pagination]}
+        spaceBetween={0}
+        slidesPerView={1}
+        loop={slides.length > 1}
+        speed={600}
+        autoplay={{
+          delay: 5200,
+          disableOnInteraction: false,
+        }}
+        pagination={{
+          clickable: true,
+          dynamicBullets: true,
+        }}
+        navigation={true}
+        className="!pb-12 [&_.swiper-pagination]:bottom-3 [&_.swiper-pagination-bullet]:h-2 [&_.swiper-pagination-bullet]:w-2 [&_.swiper-pagination-bullet]:bg-white/50 [&_.swiper-pagination-bullet]:opacity-100 [&_.swiper-pagination-bullet-active]:w-6 [&_.swiper-pagination-bullet-active]:rounded-full [&_.swiper-pagination-bullet-active]:bg-neutral-800/90"
+      >
+        {slides.map((slide) => (
+          <SwiperSlide key={slide.id}>
+            <div className="grid min-h-[200px] grid-cols-1 items-center gap-4 px-5 py-6 sm:min-h-[220px] sm:px-8 sm:py-5 md:grid-cols-2 md:gap-8 md:px-10 lg:min-h-[240px] lg:py-4">
+              <div className="order-2 flex flex-col justify-center md:order-1">
+                <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-neutral-600">
+                  {slide.eyebrow}
+                </p>
+                <h2 className="hero-serif-title text-[1.65rem] font-normal leading-[1.15] tracking-tight text-neutral-900 sm:text-3xl md:text-4xl lg:text-[2.35rem]">
+                  {slide.headline}
+                </h2>
+                <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-neutral-600 sm:text-[15px]">
+                  {slide.subline}
+                </p>
+                <p className="mt-3 text-sm font-medium text-neutral-800">{slide.priceLabel}</p>
+                <div className="mt-4 flex flex-wrap gap-3">
+                  <Link
+                    to={`/shop-details?id=${slide.id}`}
+                    className="inline-flex w-fit items-center rounded-lg bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-neutral-800"
+                  >
+                    View product
+                  </Link>
+                  <Link
+                    to="/shop-with-sidebar"
+                    className="inline-flex w-fit items-center rounded-lg border border-neutral-400/60 bg-white/40 px-5 py-2.5 text-sm font-medium text-neutral-800 backdrop-blur-sm transition hover:bg-white/70"
+                  >
+                    Browse shop
+                  </Link>
+                </div>
+              </div>
+
+              <div className="order-1 flex justify-center md:order-2 md:justify-end">
+                <Link
+                  to={`/shop-details?id=${slide.id}`}
+                  className="flex items-center justify-center rounded-lg outline-offset-4 transition hover:opacity-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-neutral-800"
+                  aria-label={`View product: ${slide.imageAlt}`}
+                >
+                  <img
+                    src={slide.image}
+                    alt={slide.imageAlt}
+                    width={320}
+                    height={320}
+                    className="h-auto max-h-[140px] w-auto max-w-[min(100%,220px)] object-contain drop-shadow-[0_12px_32px_rgba(0,0,0,0.12)] sm:max-h-[160px] sm:max-w-[260px] md:max-h-[200px] md:max-w-[300px] lg:max-h-[220px]"
+                    loading={slide.id === slides[0]?.id ? "eager" : "lazy"}
+                  />
+                </Link>
+              </div>
             </div>
-
-            <h1 className="font-semibold text-neutral-900 text-xl sm:text-3xl mb-3">
-              <a href="#">True Wireless Noise Cancelling Headphone</a>
-            </h1>
-
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi at ipsum
-              at risus euismod lobortis in
-            </p>
-
-            <a
-              href="#"
-              className="inline-flex font-medium text-white text-[14px] rounded-md bg-neutral-900 py-3 px-9 ease-out duration-200 hover:bg-blue-600 mt-10"
-            >
-              Shop Now
-            </a>
-          </div>
-
-          <div>
-            <img
-              src="/images/hero/hero-01.png"
-              alt="headphone"
-              width={351}
-              height={358}
-            />
-          </div>
-        </div>
-      </SwiperSlide>
-
-      <SwiperSlide>
-        <div className="flex items-center pt-6 sm:pt-0 flex-col-reverse sm:flex-row">
-          <div className="max-w-[394px] py-10 sm:py-[60px] lg:py-[104px] pl-4 sm:pl-[30px] lg:pl-[50px]">
-            <div className="flex items-center gap-4 mb-[30px] sm:mb-10">
-              <span className="block font-semibold text-[44px] sm:text-[64px] text-blue-600">
-                30%
-              </span>
-              <span className="block text-neutral-900 text-sm sm:text-[20px] sm:leading-[24px]">
-                Sale
-                <br />
-                Off
-              </span>
-            </div>
-
-            <h1 className="font-semibold text-neutral-900 text-xl sm:text-3xl mb-3">
-              <a href="#">True Wireless Noise Cancelling Headphone</a>
-            </h1>
-
-            <p>
-              Lorem ipsum dolor sit, consectetur elit nunc suscipit non ipsum nec
-              suscipit.
-            </p>
-
-            <a
-              href="#"
-              className="inline-flex font-medium text-white text-[14px] rounded-md bg-neutral-900 py-3 px-9 ease-out duration-200 hover:bg-blue-600 mt-10"
-            >
-              Shop Now
-            </a>
-          </div>
-
-          <div>
-            <img
-              src="/images/hero/hero-01.png"
-              alt="headphone"
-              width={351}
-              height={358}
-            />
-          </div>
-        </div>
-      </SwiperSlide>
-    </Swiper>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
   );
 }
-

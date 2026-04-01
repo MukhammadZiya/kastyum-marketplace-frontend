@@ -2,13 +2,16 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import type { MenuItem } from "../../types/menu";
 
-export default function Dropdown({
-  menuItem,
-  stickyMenu,
-}: {
+type Props = {
   menuItem: MenuItem;
-  stickyMenu: boolean;
-}) {
+  stickyMenu?: boolean;
+};
+
+/**
+ * Header-style dropdown for a `MenuItem` with `submenu`.
+ * Not wired into the nav by default — import when you need it.
+ */
+export default function Dropdown({ menuItem, stickyMenu = false }: Props) {
   const [dropdownToggler, setDropdownToggler] = useState(false);
   const { pathname } = useLocation();
 
@@ -17,24 +20,25 @@ export default function Dropdown({
   return (
     <li
       onClick={() => setDropdownToggler((v) => !v)}
-      className={`group relative before:w-0 before:h-[3px] before:bg-blue-600 before:absolute before:left-0 before:top-0 before:rounded-b-[3px] before:ease-out before:duration-200 hover:before:w-full ${
+      className={`group relative before:absolute before:left-0 before:top-0 before:h-[3px] before:w-0 before:rounded-b-[3px] before:bg-blue-600 before:duration-200 before:ease-out hover:before:w-full ${
         isActive ? "before:!w-full" : ""
       }`}
     >
       <button
         type="button"
-        className={`hover:text-blue-600 text-[14px] font-medium text-neutral-900 flex items-center gap-[6px] capitalize ${
+        className={`flex items-center gap-[6px] text-[14px] font-medium capitalize text-neutral-900 hover:text-blue-600 ${
           stickyMenu ? "xl:py-4" : "xl:py-6"
         } ${isActive ? "!text-blue-600" : ""}`}
       >
         {menuItem.title}
         <svg
-          className="fill-current cursor-pointer"
+          className="cursor-pointer fill-current"
           width="16"
           height="16"
           viewBox="0 0 16 16"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          aria-hidden
         >
           <path
             fillRule="evenodd"
@@ -48,14 +52,14 @@ export default function Dropdown({
       <ul
         className={`absolute left-0 top-full z-50 hidden min-w-[220px] flex-col rounded-md border border-neutral-200 bg-white py-2 shadow-lg xl:group-hover:flex ${
           dropdownToggler ? "flex" : ""
-        } ${stickyMenu ? "xl:translate-y-0" : "xl:translate-y-0"}`}
+        }`}
       >
         {(menuItem.submenu ?? []).map((item) => (
           <li key={item.id}>
             <Link
               to={item.path}
-              className={`flex text-[14px] hover:text-blue-600 hover:bg-neutral-50 py-[7px] px-[18px] ${
-                pathname === item.path ? "text-blue-600 bg-neutral-50" : ""
+              className={`flex px-[18px] py-[7px] text-[14px] hover:bg-neutral-50 hover:text-blue-600 ${
+                pathname === item.path ? "bg-neutral-50 text-blue-600" : ""
               }`}
               onClick={() => setDropdownToggler(false)}
             >
@@ -67,4 +71,3 @@ export default function Dropdown({
     </li>
   );
 }
-

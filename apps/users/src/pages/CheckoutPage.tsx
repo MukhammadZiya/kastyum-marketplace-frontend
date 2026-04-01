@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Breadcrumb from "../components/Common/Breadcrumb";
 import { useCart } from "../context/cart";
 
@@ -38,7 +39,12 @@ export function CheckoutPage() {
                 ) : (
                   items.map((item) => (
                     <div key={item.id} className="flex justify-between gap-4">
-                      <span className="text-neutral-700">{item.title}</span>
+                      <Link
+                        to={`/shop-details?id=${item.id}`}
+                        className="min-w-0 text-left text-neutral-700 hover:text-blue-600"
+                      >
+                        {item.title}
+                      </Link>
                       <span className="font-medium text-neutral-900">
                         ${(item.discountedPrice * item.quantity).toFixed(2)}
                       </span>
