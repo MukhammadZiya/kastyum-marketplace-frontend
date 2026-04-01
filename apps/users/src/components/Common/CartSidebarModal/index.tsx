@@ -73,14 +73,14 @@ export default function CartSidebarModal() {
               <Link
                 onClick={closeCartModal}
                 to="/cart"
-                className="w-full flex justify-center font-medium text-white bg-blue-600 py-[13px] px-6 rounded-md ease-out duration-200 hover:bg-blue-700"
+                className="flex w-full justify-center rounded-md bg-blue-600 px-6 py-[13px] font-medium text-white shadow-sm transition duration-200 ease-out hover:-translate-y-px hover:bg-blue-700 hover:shadow-md active:translate-y-0 active:shadow-sm"
               >
                 View Cart
               </Link>
 
               <Link
                 to="/checkout"
-                className="w-full flex justify-center font-medium text-white bg-neutral-900 py-[13px] px-6 rounded-md ease-out duration-200 hover:bg-opacity-95"
+                className="flex w-full justify-center rounded-md bg-neutral-900 px-6 py-[13px] font-medium text-white shadow-sm transition duration-200 ease-out hover:-translate-y-px hover:bg-neutral-800 hover:shadow-md active:translate-y-0 active:shadow-sm"
               >
                 Checkout
               </Link>

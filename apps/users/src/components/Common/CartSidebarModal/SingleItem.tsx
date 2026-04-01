@@ -9,7 +9,7 @@ export default function CartSidebarItem({
   onRemove: (id: number) => void;
 }) {
   return (
-    <div className="flex items-center justify-between gap-5">
+    <div className="flex items-center justify-between gap-5 rounded-lg border border-transparent px-1 py-1 transition duration-200 ease-out hover:border-neutral-100 hover:bg-neutral-50/80">
       <div className="flex w-full items-center gap-6">
         <Link
           to={`/shop-details?id=${item.id}`}

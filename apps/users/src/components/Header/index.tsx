@@ -169,7 +169,8 @@ const Header = () => {
 
                 <button
                   onClick={openCartModal}
-                  className="flex items-center gap-[10px]"
+                  type="button"
+                  className="-mx-1 flex items-center gap-[10px] rounded-xl px-2.5 py-1.5 transition duration-200 ease-out hover:bg-neutral-100/90 hover:shadow-sm active:scale-[0.99]"
                 >
                   <span className="inline-block relative">
                     <svg
