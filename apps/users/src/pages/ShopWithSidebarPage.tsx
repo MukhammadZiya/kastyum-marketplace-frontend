@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Breadcrumb from "../components/Common/Breadcrumb";
 import { HEADER_CATALOG_OPTIONS } from "../data/headerCatalogOptions";
@@ -162,6 +162,7 @@ export function ShopWithSidebarPage() {
 
   const device = searchParams.get("device");
   const q = searchParams.get("q") ?? "";
+  const catParam = searchParams.get("cat");
 
   const deviceLabel = useMemo(() => {
     if (!device) return "";
@@ -186,6 +187,15 @@ export function ShopWithSidebarPage() {
     () => shopFilterOptionLists(shopData),
     [],
   );
+
+  useEffect(() => {
+    if (!catParam) return;
+    if (!categories.includes(catParam)) return;
+    setFilters((prev) => ({
+      ...prev,
+      categories: new Set([catParam]),
+    }));
+  }, [catParam, categories]);
 
   const products = useMemo(() => {
     let list = filterShopProducts(shopData, filters);

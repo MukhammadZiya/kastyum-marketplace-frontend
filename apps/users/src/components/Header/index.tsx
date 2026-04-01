@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import CustomSelect from "./CustomSelect";
 import { menuData } from "./menuData";
-import Dropdown from "./Dropdown";
 import { useCart } from "../../context/cart";
 import { useCartModal } from "../../context/cartSidebarModal";
 import { HEADER_CATALOG_OPTIONS } from "../../data/headerCatalogOptions";
@@ -258,31 +257,23 @@ const Header = () => {
                   : ""
               }`}
             >
-              <nav>
-                <ul className="flex xl:items-center flex-col xl:flex-row gap-5 xl:gap-6">
-                  {menuData.map((menuItem, i) =>
-                    menuItem.submenu ? (
-                      <Dropdown
-                        key={i}
-                        menuItem={menuItem}
-                        stickyMenu={stickyMenu}
-                      />
-                    ) : (
-                      <li
-                        key={i}
-                        className="group relative before:w-0 before:h-[3px] before:bg-blue-600 before:absolute before:left-0 before:top-0 before:rounded-b-[3px] before:ease-out before:duration-200 hover:before:w-full"
+              <nav className="min-w-0 xl:max-w-[calc(100vw-12rem)] xl:overflow-x-auto xl:pb-1">
+                <ul className="flex flex-col gap-5 xl:flex-row xl:flex-nowrap xl:items-center xl:gap-5">
+                  {menuData.map((menuItem) => (
+                    <li
+                      key={menuItem.id}
+                      className="group relative before:absolute before:left-0 before:top-0 before:h-[3px] before:w-0 before:rounded-b-[3px] before:bg-blue-600 before:duration-200 before:ease-out hover:before:w-full"
+                    >
+                      <Link
+                        to={menuItem.path}
+                        className={`flex text-[14px] font-medium text-neutral-900 hover:text-blue-600 ${
+                          stickyMenu ? "xl:py-4" : "xl:py-6"
+                        }`}
                       >
-                        <Link
-                          to={menuItem.path}
-                          className={`hover:text-blue-600 text-[14px] font-medium text-neutral-900 flex ${
-                            stickyMenu ? "xl:py-4" : "xl:py-6"
-                          }`}
-                        >
-                          {menuItem.title}
-                        </Link>
-                      </li>
-                    )
-                  )}
+                        {menuItem.title}
+                      </Link>
+                    </li>
+                  ))}
                 </ul>
               </nav>
             </div>
