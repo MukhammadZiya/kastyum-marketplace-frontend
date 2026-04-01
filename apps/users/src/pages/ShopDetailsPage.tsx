@@ -114,7 +114,7 @@ export function ShopDetailsPage() {
               <div className="mt-7 flex gap-3">
                 <button
                   onClick={() => addItem({ ...product, quantity: qty })}
-                  className="rounded-md bg-blue-600 px-7 py-3 text-white hover:bg-blue-700"
+                  className="rounded-md bg-blue-600 px-7 py-3 text-white shadow-sm transition duration-200 ease-out hover:-translate-y-px hover:bg-blue-700 hover:shadow-md active:translate-y-0 active:shadow-sm"
                   type="button"
                 >
                   Purchase Now

@@ -8,10 +8,10 @@ export default function SingleListItem({ item }: { item: Product }) {
   const { open } = useQuickViewModal();
 
   return (
-    <div className="flex items-center gap-6 rounded-lg border border-neutral-200 bg-white p-5">
+    <div className="group flex items-center gap-6 rounded-lg border border-neutral-200 bg-white p-5 transition duration-200 ease-out hover:-translate-y-0.5 hover:border-neutral-300 hover:shadow-[0_10px_32px_-10px_rgba(15,23,42,0.1)]">
       <Link
         to={`/shop-details?id=${item.id}`}
-        className="shrink-0 rounded-lg bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+        className="shrink-0 rounded-lg bg-neutral-50 transition-colors duration-200 group-hover:bg-[#E8ECF4] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
         aria-label={`View ${item.title}`}
       >
         <img src={item.imgs.previews[0]} alt="" className="h-36 w-36 object-contain" />
@@ -30,7 +30,7 @@ export default function SingleListItem({ item }: { item: Product }) {
         <div className="mt-4 flex gap-3">
           <button
             onClick={() => addItem({ ...item, quantity: 1 })}
-            className="px-4 py-2 rounded-md bg-blue-600 text-white text-sm hover:bg-blue-700"
+            className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white shadow-sm transition duration-200 ease-out hover:-translate-y-px hover:bg-blue-700 hover:shadow-md active:translate-y-0 active:shadow-sm"
             type="button"
           >
             Add to cart

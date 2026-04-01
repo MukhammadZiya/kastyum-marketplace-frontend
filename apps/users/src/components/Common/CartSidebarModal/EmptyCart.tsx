@@ -30,7 +30,7 @@ export default function EmptyCart() {
       <Link
         onClick={closeCartModal}
         to="/shop-with-sidebar"
-        className="w-full lg:w-10/12 mx-auto flex justify-center font-medium text-white bg-neutral-900 py-[13px] px-6 rounded-md ease-out duration-200 hover:bg-opacity-95"
+        className="mx-auto flex w-full justify-center rounded-md bg-neutral-900 px-6 py-[13px] font-medium text-white shadow-sm transition duration-200 ease-out hover:-translate-y-px hover:bg-neutral-800 hover:shadow-md active:translate-y-0 active:shadow-sm lg:w-10/12"
       >
         Continue Shopping
       </Link>

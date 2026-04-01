@@ -15,8 +15,8 @@ export default function ProductItem({ item }: { item: Product }) {
   const detailTo = productDetailPath(item.id);
 
   return (
-    <div className="group">
-      <div className="relative mb-4 min-h-[270px] overflow-hidden rounded-lg bg-[#F6F7FB]">
+    <div className="group rounded-xl p-1 transition duration-200 ease-out hover:-translate-y-1 hover:shadow-[0_14px_40px_-14px_rgba(15,23,42,0.12)] hover:ring-1 hover:ring-neutral-200/70">
+      <div className="relative mb-4 min-h-[270px] overflow-hidden rounded-lg bg-[#F6F7FB] transition-colors duration-200 group-hover:bg-[#E8ECF4]">
         <Link
           to={detailTo}
           className="absolute inset-0 z-[1]"
@@ -64,7 +64,7 @@ export default function ProductItem({ item }: { item: Product }) {
 
           <button
             onClick={() => addItem({ ...item, quantity: 1 })}
-            className="inline-flex rounded-[5px] bg-blue-600 px-5 py-[7px] text-[14px] font-medium text-white duration-200 ease-out hover:bg-blue-700"
+            className="inline-flex rounded-[5px] bg-blue-600 px-5 py-[7px] text-[14px] font-medium text-white shadow-sm transition duration-200 ease-out hover:-translate-y-px hover:bg-blue-700 hover:shadow-md active:translate-y-0 active:shadow-sm"
             type="button"
           >
             Add to cart

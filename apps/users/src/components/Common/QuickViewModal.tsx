@@ -160,7 +160,7 @@ export default function QuickViewModal() {
                     addItem({ ...product, quantity });
                     close();
                   }}
-                  className="inline-flex font-medium text-white bg-blue-600 py-3 px-7 rounded-md ease-out duration-200 hover:bg-blue-700"
+                  className="inline-flex rounded-md bg-blue-600 px-7 py-3 font-medium text-white shadow-sm transition duration-200 ease-out hover:-translate-y-px hover:bg-blue-700 hover:shadow-md active:translate-y-0 active:shadow-sm"
                   type="button"
                 >
                   Add to Cart
