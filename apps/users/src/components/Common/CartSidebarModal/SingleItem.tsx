@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import type { CartItem } from "../../../context/cart";
 
 export default function CartSidebarItem({
@@ -9,14 +10,23 @@ export default function CartSidebarItem({
 }) {
   return (
     <div className="flex items-center justify-between gap-5">
-      <div className="w-full flex items-center gap-6">
-        <div className="flex items-center justify-center rounded-[10px] bg-neutral-100 max-w-[90px] w-full h-[90px]">
-          <img src={item.imgs?.thumbnails[0]} alt="product" width={100} height={100} />
-        </div>
+      <div className="flex w-full items-center gap-6">
+        <Link
+          to={`/shop-details?id=${item.id}`}
+          className="flex h-[90px] w-full max-w-[90px] items-center justify-center rounded-[10px] bg-neutral-100"
+          aria-label={`View ${item.title}`}
+        >
+          <img src={item.imgs?.thumbnails[0]} alt="" width={100} height={100} />
+        </Link>
 
-        <div>
-          <h3 className="font-medium text-neutral-900 mb-1 ease-out duration-200 hover:text-blue-600">
-            <a href="#"> {item.title} </a>
+        <div className="min-w-0">
+          <h3 className="mb-1 font-medium text-neutral-900">
+            <Link
+              to={`/shop-details?id=${item.id}`}
+              className="ease-out duration-200 hover:text-blue-600"
+            >
+              {item.title}
+            </Link>
           </h3>
           <p className="text-[14px] text-neutral-600">Price: ${item.discountedPrice}</p>
         </div>

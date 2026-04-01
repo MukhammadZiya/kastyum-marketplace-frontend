@@ -1,13 +1,16 @@
-import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import CustomSelect from "./CustomSelect";
 import { menuData } from "./menuData";
 import Dropdown from "./Dropdown";
 import { useCart } from "../../context/cart";
 import { useCartModal } from "../../context/cartSidebarModal";
+import { HEADER_CATALOG_OPTIONS } from "../../data/headerCatalogOptions";
 
 const Header = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchCatalog, setSearchCatalog] = useState("all");
   const [navigationOpen, setNavigationOpen] = useState(false);
   const [stickyMenu, setStickyMenu] = useState(false);
   const { openCartModal } = useCartModal();
@@ -23,19 +26,14 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleStickyMenu);
   }, []);
 
-  const options = useMemo(
-    () => [
-      { label: "All Categories", value: "0" },
-      { label: "Desktop", value: "1" },
-      { label: "Laptop", value: "2" },
-      { label: "Monitor", value: "3" },
-      { label: "Phone", value: "4" },
-      { label: "Watch", value: "5" },
-      { label: "Mouse", value: "6" },
-      { label: "Tablet", value: "7" },
-    ],
-    []
-  );
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    if (searchCatalog !== "all") params.set("device", searchCatalog);
+    if (searchQuery.trim()) params.set("q", searchQuery.trim());
+    const qs = params.toString();
+    navigate(qs ? `/shop-with-sidebar?${qs}` : "/shop-with-sidebar");
+  };
 
   return (
     <header
@@ -60,9 +58,13 @@ const Header = () => {
             </Link>
 
             <div className="max-w-[475px] w-full">
-              <form onSubmit={(e) => e.preventDefault()}>
+              <form onSubmit={handleSearchSubmit}>
                 <div className="flex items-center">
-                  <CustomSelect options={options} />
+                  <CustomSelect
+                    options={HEADER_CATALOG_OPTIONS}
+                    value={searchCatalog}
+                    onChange={setSearchCatalog}
+                  />
 
                   <div className="relative max-w-[333px] sm:min-w-[333px] w-full">
                     <span className="absolute left-0 top-1/2 -translate-y-1/2 inline-block w-px h-[22px] bg-gray-200" />
@@ -81,7 +83,7 @@ const Header = () => {
                       id="search-btn"
                       aria-label="Search"
                       className="flex items-center justify-center absolute right-3 top-1/2 -translate-y-1/2 ease-in duration-200 hover:text-blue-600"
-                      type="button"
+                      type="submit"
                     >
                       <svg
                         className="fill-current"

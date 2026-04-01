@@ -4,7 +4,28 @@ export type ShopProduct = Product & {
   category: string;
   colors: readonly string[];
   sizes: readonly string[];
+  /** Matches header catalog dropdown (desktop, laptop, …). Empty = only “All categories”. */
+  storeTypes: readonly string[];
 };
+
+export { HEADER_CATALOG_OPTIONS } from "./headerCatalogOptions";
+
+export function filterByHeaderCatalog(
+  products: readonly ShopProduct[],
+  device: string | null,
+): ShopProduct[] {
+  if (!device || device === "all" || device === "0") return [...products];
+  return products.filter((p) => p.storeTypes.includes(device));
+}
+
+export function filterByTitleSearch(
+  products: readonly ShopProduct[],
+  q: string,
+): ShopProduct[] {
+  const t = q.trim().toLowerCase();
+  if (!t) return [...products];
+  return products.filter((p) => p.title.toLowerCase().includes(t));
+}
 
 /** Sale price used for display and price-range filtering */
 export function productEffectivePrice(p: Product): number {
@@ -92,6 +113,7 @@ export const shopData: ShopProduct[] = [
     category: "Accessories",
     colors: ["Black"],
     sizes: ["One size"],
+    storeTypes: [],
     imgs: {
       thumbnails: ["/images/products/product-1-sm-1.png", "/images/products/product-1-sm-2.png"],
       previews: ["/images/products/product-1-bg-1.png", "/images/products/product-1-bg-2.png"],
@@ -106,6 +128,7 @@ export const shopData: ShopProduct[] = [
     category: "Electronics",
     colors: ["Black", "Silver"],
     sizes: ["128GB"],
+    storeTypes: ["phone"],
     imgs: {
       thumbnails: ["/images/products/product-2-sm-1.png", "/images/products/product-2-sm-2.png"],
       previews: ["/images/products/product-2-bg-1.png", "/images/products/product-2-bg-2.png"],
@@ -120,6 +143,7 @@ export const shopData: ShopProduct[] = [
     category: "Computers",
     colors: ["Blue", "Silver"],
     sizes: ['24"'],
+    storeTypes: ["desktop", "monitor"],
     imgs: {
       thumbnails: ["/images/products/product-3-sm-1.png", "/images/products/product-3-sm-2.png"],
       previews: ["/images/products/product-3-bg-1.png", "/images/products/product-3-bg-2.png"],
@@ -134,6 +158,7 @@ export const shopData: ShopProduct[] = [
     category: "Computers",
     colors: ["Space Gray"],
     sizes: ['13"', "256GB"],
+    storeTypes: ["laptop"],
     imgs: {
       thumbnails: ["/images/products/product-4-sm-1.png", "/images/products/product-4-sm-2.png"],
       previews: ["/images/products/product-4-bg-1.png", "/images/products/product-4-bg-2.png"],
@@ -148,6 +173,7 @@ export const shopData: ShopProduct[] = [
     category: "Wearables",
     colors: ["Titanium"],
     sizes: ["One size"],
+    storeTypes: ["watch"],
     imgs: {
       thumbnails: ["/images/products/product-5-sm-1.png", "/images/products/product-5-sm-2.png"],
       previews: ["/images/products/product-5-bg-1.png", "/images/products/product-5-bg-2.png"],
@@ -162,6 +188,7 @@ export const shopData: ShopProduct[] = [
     category: "Accessories",
     colors: ["Black"],
     sizes: ["One size"],
+    storeTypes: ["mouse"],
     imgs: {
       thumbnails: ["/images/products/product-6-sm-1.png", "/images/products/product-6-sm-2.png"],
       previews: ["/images/products/product-6-bg-1.png", "/images/products/product-6-bg-2.png"],
@@ -176,6 +203,7 @@ export const shopData: ShopProduct[] = [
     category: "Electronics",
     colors: ["Blue"],
     sizes: ["64GB"],
+    storeTypes: ["tablet"],
     imgs: {
       thumbnails: ["/images/products/product-7-sm-1.png", "/images/products/product-7-sm-2.png"],
       previews: ["/images/products/product-7-bg-1.png", "/images/products/product-7-bg-2.png"],
@@ -190,6 +218,7 @@ export const shopData: ShopProduct[] = [
     category: "Networking",
     colors: ["Black"],
     sizes: ["One size"],
+    storeTypes: [],
     imgs: {
       thumbnails: ["/images/products/product-8-sm-1.png", "/images/products/product-8-sm-2.png"],
       previews: ["/images/products/product-8-bg-1.png", "/images/products/product-8-bg-1.png"],

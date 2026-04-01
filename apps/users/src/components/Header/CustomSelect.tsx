@@ -1,15 +1,22 @@
 import { useEffect, useState } from "react";
 
-type Option = { label: string; value: string };
+export type SelectOption = { label: string; value: string };
 
-export default function CustomSelect({ options }: { options: Option[] }) {
+type Props = {
+  options: readonly SelectOption[];
+  value: string;
+  onChange: (value: string) => void;
+};
+
+export default function CustomSelect({ options, value, onChange }: Props) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<Option>(options[0]!);
+  const selectedOption =
+    options.find((o) => o.value === value) ?? options[0] ?? { label: "", value: "" };
 
   const toggleDropdown = () => setIsOpen((v) => !v);
 
-  const handleOptionClick = (option: Option) => {
-    setSelectedOption(option);
+  const handleOptionClick = (option: SelectOption) => {
+    onChange(option.value);
     setIsOpen(false);
   };
 
@@ -26,7 +33,7 @@ export default function CustomSelect({ options }: { options: Option[] }) {
     <div className="dropdown-content relative" style={{ width: "200px" }}>
       <button
         type="button"
-        className={`whitespace-nowrap rounded-l-[5px] bg-neutral-50 border border-neutral-200 py-2.5 pl-4 pr-10 text-left w-full ${
+        className={`w-full whitespace-nowrap rounded-l-[5px] border border-neutral-200 bg-neutral-50 py-2.5 pl-4 pr-10 text-left ${
           isOpen ? "ring-1 ring-blue-600" : ""
         }`}
         onClick={toggleDropdown}
@@ -35,17 +42,19 @@ export default function CustomSelect({ options }: { options: Option[] }) {
       </button>
 
       <div
-        className={`absolute left-0 top-full z-[70] mt-1 w-full rounded-md border border-neutral-200 bg-white shadow-lg overflow-hidden ${
+        className={`absolute left-0 top-full z-[70] mt-1 w-full overflow-hidden rounded-md border border-neutral-200 bg-white shadow-lg ${
           isOpen ? "block" : "hidden"
         }`}
       >
-        {options.slice(1).map((option) => (
+        {options.map((option) => (
           <button
             key={option.value}
             type="button"
             onClick={() => handleOptionClick(option)}
-            className={`block w-full text-left px-4 py-2 text-[14px] hover:bg-neutral-50 ${
-              selectedOption.value === option.value ? "text-blue-600" : "text-neutral-900"
+            className={`block w-full px-4 py-2 text-left text-[14px] hover:bg-neutral-50 ${
+              selectedOption.value === option.value
+                ? "text-blue-600"
+                : "text-neutral-900"
             }`}
           >
             {option.label}
@@ -55,4 +64,3 @@ export default function CustomSelect({ options }: { options: Option[] }) {
     </div>
   );
 }
-

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useQuickViewModal } from "../../context/quickViewModal";
 import { useCart } from "../../context/cart";
+import { getReviewStats } from "../../data/productReviews";
 
 export default function QuickViewModal() {
   const { isOpen, close, product } = useQuickViewModal();
@@ -23,6 +25,8 @@ export default function QuickViewModal() {
   }, [isOpen, close]);
 
   if (!product) return null;
+
+  const reviewStats = getReviewStats(product.id);
 
   return (
     <div
@@ -95,8 +99,15 @@ export default function QuickViewModal() {
 
               <div className="flex flex-wrap items-center gap-5 mb-6">
                 <span>
-                  <span className="font-medium text-neutral-900"> 4.7 Rating </span>
-                  <span className="text-neutral-500"> (5 reviews) </span>
+                  <span className="font-medium text-neutral-900">
+                    {reviewStats.count > 0
+                      ? `${reviewStats.average.toFixed(1)} rating`
+                      : "New"}
+                  </span>
+                  <span className="text-neutral-500">
+                    {" "}
+                    ({reviewStats.count > 0 ? `${reviewStats.count} reviews` : `${product.reviews} ratings`})
+                  </span>
                 </span>
                 <span className="font-medium text-green-600">In Stock</span>
               </div>
@@ -160,6 +171,13 @@ export default function QuickViewModal() {
                 >
                   Add to Wishlist
                 </button>
+                <Link
+                  to={`/shop-details?id=${product.id}`}
+                  onClick={close}
+                  className="inline-flex font-medium text-blue-600 underline-offset-4 hover:underline"
+                >
+                  Full details &amp; reviews
+                </Link>
               </div>
             </div>
           </div>

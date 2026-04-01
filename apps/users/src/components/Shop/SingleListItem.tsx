@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import type { Product } from "../../types/product";
 import { useCart } from "../../context/cart";
 import { useQuickViewModal } from "../../context/quickViewModal";
@@ -7,10 +8,20 @@ export default function SingleListItem({ item }: { item: Product }) {
   const { open } = useQuickViewModal();
 
   return (
-    <div className="bg-white rounded-lg border border-neutral-200 p-5 flex gap-6 items-center">
-      <img src={item.imgs.previews[0]} alt={item.title} className="w-36 h-36 object-contain bg-neutral-50 rounded-lg" />
+    <div className="flex items-center gap-6 rounded-lg border border-neutral-200 bg-white p-5">
+      <Link
+        to={`/shop-details?id=${item.id}`}
+        className="shrink-0 rounded-lg bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+        aria-label={`View ${item.title}`}
+      >
+        <img src={item.imgs.previews[0]} alt="" className="h-36 w-36 object-contain" />
+      </Link>
       <div className="flex-1">
-        <h3 className="font-semibold text-lg text-neutral-900">{item.title}</h3>
+        <h3 className="font-semibold text-lg text-neutral-900">
+          <Link to={`/shop-details?id=${item.id}`} className="hover:text-blue-600">
+            {item.title}
+          </Link>
+        </h3>
         <p className="text-sm text-neutral-600 mt-2">({item.reviews}) reviews</p>
         <div className="mt-3 flex items-center gap-2">
           <span className="font-semibold text-neutral-900">${item.discountedPrice}</span>
