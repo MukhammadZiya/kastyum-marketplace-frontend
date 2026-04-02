@@ -7,6 +7,7 @@ import ProductItem from "./ProductItem";
 
 export default function NewArrivals() {
   const { data, isPending } = useProductList({ page: 1, limit: 8 });
+  const hasListItems = Boolean(data?.list?.length);
 
   const items = useMemo(() => {
     if (data?.list?.length) {
@@ -55,7 +56,7 @@ export default function NewArrivals() {
           </Link>
         </div>
 
-        {isPending && !data?.list?.length ? (
+        {isPending && !hasListItems ? (
           <p className="text-sm text-neutral-600 py-8">Loading products…</p>
         ) : null}
 

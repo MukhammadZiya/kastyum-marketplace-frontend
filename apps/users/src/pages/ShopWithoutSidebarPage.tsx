@@ -9,6 +9,7 @@ import SingleListItem from "../components/Shop/SingleListItem";
 export function ShopWithoutSidebarPage() {
   const [view, setView] = useState<"grid" | "list">("grid");
   const { data, isPending } = useProductList({ page: 1, limit: 48 });
+  const hasListItems = Boolean(data?.list?.length);
 
   const products = useMemo(() => {
     if (data?.list?.length) {
@@ -27,7 +28,7 @@ export function ShopWithoutSidebarPage() {
               Showing{" "}
               <span className="font-medium text-neutral-900">{products.length}</span>{" "}
               products
-              {isPending && !data?.list?.length ? (
+              {isPending && !hasListItems ? (
                 <span className="text-neutral-500"> · loading</span>
               ) : null}
             </p>
