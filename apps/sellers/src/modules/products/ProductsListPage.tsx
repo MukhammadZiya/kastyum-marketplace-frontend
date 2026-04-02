@@ -3,6 +3,7 @@ import { SellerPageFrame } from "../../components/seller/SellerPageFrame";
 import { SellerShortcutNav } from "../../components/seller/SellerShortcutNav";
 import { SellerTableScaffold } from "../../components/seller/SellerTableScaffold";
 import { SELLER_PAGE_COPY } from "../../constants/sellerNavigation";
+import type { SellerProductListResponse } from "../../lib/marketplaceTypes";
 
 const c = SELLER_PAGE_COPY.productsList;
 
@@ -22,6 +23,8 @@ const COLUMNS = [
 ] as const;
 
 export function ProductsListPage() {
+  const inventory: SellerProductListResponse = { list: [], total: 0 };
+
   return (
     <SellerPageFrame
       title={c.title}
@@ -40,7 +43,11 @@ export function ProductsListPage() {
         >
           <SellerTableScaffold
             columns={COLUMNS}
-            emptyLabel="No rows yet — connect your list endpoint to populate this table."
+            emptyLabel={
+              inventory.total === 0
+                ? "No rows yet — connect your list endpoint to populate this table."
+                : ""
+            }
           />
         </Card>
 

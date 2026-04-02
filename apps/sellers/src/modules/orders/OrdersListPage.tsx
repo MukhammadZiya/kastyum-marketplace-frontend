@@ -3,6 +3,7 @@ import { SellerPageFrame } from "../../components/seller/SellerPageFrame";
 import { SellerShortcutNav } from "../../components/seller/SellerShortcutNav";
 import { SellerTableScaffold } from "../../components/seller/SellerTableScaffold";
 import { SELLER_PAGE_COPY } from "../../constants/sellerNavigation";
+import type { SellerOrderListResponse } from "../../lib/marketplaceTypes";
 
 const c = SELLER_PAGE_COPY.ordersList;
 
@@ -22,6 +23,8 @@ const COLUMNS = [
 ] as const;
 
 export function OrdersListPage() {
+  const orders: SellerOrderListResponse = { list: [], total: 0 };
+
   return (
     <SellerPageFrame
       title={c.title}
@@ -40,7 +43,11 @@ export function OrdersListPage() {
         >
           <SellerTableScaffold
             columns={COLUMNS}
-            emptyLabel="No orders loaded — bind your orders list API to fill this grid."
+            emptyLabel={
+              orders.total === 0
+                ? "No orders loaded — bind your orders list API to fill this grid."
+                : ""
+            }
           />
         </Card>
 

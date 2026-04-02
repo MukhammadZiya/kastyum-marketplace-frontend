@@ -1,7 +1,14 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import Breadcrumb from "../components/Common/Breadcrumb";
+import type { MemberLoginBody } from "../lib/marketplaceTypes";
 
 export function SignInPage() {
+  const [values, setValues] = useState<MemberLoginBody>({
+    email: "",
+    password: "",
+  });
+
   return (
     <>
       <Breadcrumb title="Signin" pages={["signin"]} />
@@ -15,11 +22,26 @@ export function SignInPage() {
             <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
               <div>
                 <label className="block mb-2">Email</label>
-                <input className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 px-5" placeholder="Enter your email" />
+                <input
+                  className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 px-5"
+                  placeholder="Enter your email"
+                  value={values.email}
+                  onChange={(e) =>
+                    setValues((v) => ({ ...v, email: e.target.value }))
+                  }
+                />
               </div>
               <div>
                 <label className="block mb-2">Password</label>
-                <input type="password" className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 px-5" placeholder="Enter your password" />
+                <input
+                  type="password"
+                  className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 px-5"
+                  placeholder="Enter your password"
+                  value={values.password}
+                  onChange={(e) =>
+                    setValues((v) => ({ ...v, password: e.target.value }))
+                  }
+                />
               </div>
               <button className="w-full py-3 rounded-lg bg-neutral-900 text-white hover:bg-blue-600" type="submit">
                 Sign in to account

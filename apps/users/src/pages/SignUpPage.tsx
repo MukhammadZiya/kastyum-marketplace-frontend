@@ -1,7 +1,16 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import Breadcrumb from "../components/Common/Breadcrumb";
+import type { MemberSignupBody } from "../lib/marketplaceTypes";
 
 export function SignUpPage() {
+  const [values, setValues] = useState<MemberSignupBody>({
+    nick: "",
+    email: "",
+    password: "",
+  });
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   return (
     <>
       <Breadcrumb title="Signup" pages={["signup"]} />
@@ -11,10 +20,38 @@ export function SignUpPage() {
             <h2 className="text-2xl font-semibold text-neutral-900 text-center mb-2">Create an Account</h2>
             <p className="text-center text-neutral-600 mb-8">Enter your detail below</p>
             <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
-              <input className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 px-5" placeholder="Enter your full name" />
-              <input className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 px-5" placeholder="Enter your email" />
-              <input type="password" className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 px-5" placeholder="Enter your password" />
-              <input type="password" className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 px-5" placeholder="Re-type your password" />
+              <input
+                className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 px-5"
+                placeholder="Nickname"
+                value={values.nick}
+                onChange={(e) =>
+                  setValues((v) => ({ ...v, nick: e.target.value }))
+                }
+              />
+              <input
+                className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 px-5"
+                placeholder="Enter your email"
+                value={values.email}
+                onChange={(e) =>
+                  setValues((v) => ({ ...v, email: e.target.value }))
+                }
+              />
+              <input
+                type="password"
+                className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 px-5"
+                placeholder="Enter your password"
+                value={values.password}
+                onChange={(e) =>
+                  setValues((v) => ({ ...v, password: e.target.value }))
+                }
+              />
+              <input
+                type="password"
+                className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 px-5"
+                placeholder="Re-type your password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
               <button className="w-full py-3 rounded-lg bg-neutral-900 text-white hover:bg-blue-600" type="submit">
                 Create Account
               </button>

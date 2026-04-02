@@ -2,8 +2,11 @@ import { TableCard } from "@repo/ui";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
 import { DataTablePlaceholder } from "../../components/DataTablePlaceholder";
 import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
+import type { AdminProductListResponse } from "../../lib/marketplaceTypes";
 
 export function ProductsListPage() {
+  const catalog: AdminProductListResponse = { list: [], total: 0 };
+
   return (
     <AdminPageFrame
       title={ADMIN_PAGE_TITLES.products}
@@ -19,7 +22,11 @@ export function ProductsListPage() {
       >
         <DataTablePlaceholder
           columns={["Title", "SKU", "Seller", "Status", "Updated"]}
-          emptyMessage="No rows loaded yet — fetch from your API and map rows here."
+          emptyMessage={
+            catalog.total === 0
+              ? "No rows loaded yet — fetch from your API and map rows here."
+              : ""
+          }
         />
       </TableCard>
     </AdminPageFrame>
