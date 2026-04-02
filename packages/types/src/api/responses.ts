@@ -18,6 +18,6 @@ export type PaginatedResult<T> = {
 };
 
 export type ApiErrorBody = {
-  code: number;
-  message: string;
+  code: number | string;
+  message: string | string[];
 };

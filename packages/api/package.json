@@ -5,6 +5,7 @@
   "type": "module",
   "main": "./src/index.ts",
   "dependencies": {
+    "@repo/types": "workspace:*",
     "axios": "^1.13.6"
   }
 }
