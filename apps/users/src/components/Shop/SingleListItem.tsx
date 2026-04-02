@@ -3,14 +3,21 @@ import type { Product } from "../../types/product";
 import { useCart } from "../../context/cart";
 import { useQuickViewModal } from "../../context/quickViewModal";
 
+function detailQuery(item: Product) {
+  return item.mongoId
+    ? encodeURIComponent(item.mongoId)
+    : String(item.id);
+}
+
 export default function SingleListItem({ item }: { item: Product }) {
   const { addItem } = useCart();
   const { open } = useQuickViewModal();
+  const q = detailQuery(item);
 
   return (
     <div className="group flex items-center gap-6 rounded-lg border border-neutral-200 bg-white p-5 transition duration-200 ease-out hover:-translate-y-0.5 hover:border-neutral-300 hover:shadow-[0_10px_32px_-10px_rgba(15,23,42,0.1)]">
       <Link
-        to={`/shop-details?id=${item.id}`}
+        to={`/shop-details?id=${q}`}
         className="shrink-0 rounded-lg bg-neutral-50 transition-colors duration-200 group-hover:bg-[#E8ECF4] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
         aria-label={`View ${item.title}`}
       >
@@ -18,7 +25,7 @@ export default function SingleListItem({ item }: { item: Product }) {
       </Link>
       <div className="flex-1">
         <h3 className="font-semibold text-lg text-neutral-900">
-          <Link to={`/shop-details?id=${item.id}`} className="hover:text-blue-600">
+          <Link to={`/shop-details?id=${q}`} className="hover:text-blue-600">
             {item.title}
           </Link>
         </h3>

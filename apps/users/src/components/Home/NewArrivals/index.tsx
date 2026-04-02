@@ -1,8 +1,20 @@
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { shopData } from "../../../data/shopData";
+import { useProductList } from "../../../hooks/products";
+import { apiProductToStorefront } from "../../../lib/apiProductToStorefront";
 import ProductItem from "./ProductItem";
 
 export default function NewArrivals() {
+  const { data, isPending } = useProductList({ page: 1, limit: 8 });
+
+  const items = useMemo(() => {
+    if (data?.list?.length) {
+      return data.list.map(apiProductToStorefront);
+    }
+    return shopData.slice(0, 8);
+  }, [data]);
+
   return (
     <section className="overflow-hidden pt-[60px]">
       <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
@@ -43,13 +55,19 @@ export default function NewArrivals() {
           </Link>
         </div>
 
+        {isPending && !data?.list?.length ? (
+          <p className="text-sm text-neutral-600 py-8">Loading products…</p>
+        ) : null}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-[30px] gap-y-9">
-          {shopData.map((item) => (
-            <ProductItem item={item} key={item.id} />
+          {items.map((item) => (
+            <ProductItem
+              item={item}
+              key={item.mongoId ?? String(item.id)}
+            />
           ))}
         </div>
       </div>
     </section>
   );
 }
-

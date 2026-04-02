@@ -30,3 +30,28 @@ export type Style = {
   _id: string;
   name: string;
 };
+
+export type AttributeKind =
+  | "color"
+  | "size"
+  | "brand"
+  | "material"
+  | "fit"
+  | "style";
+
+export type AttributeEntity =
+  | Color
+  | Size
+  | Brand
+  | Material
+  | Fit
+  | Style;
+
+export type AllAttributesBundle = {
+  color: Color[];
+  size: Size[];
+  brand: Brand[];
+  material: Material[];
+  fit: Fit[];
+  style: Style[];
+};

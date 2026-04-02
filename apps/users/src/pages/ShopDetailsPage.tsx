@@ -5,8 +5,15 @@ import { StarRating } from "../components/Common/StarRating";
 import { ProductReviewsSection } from "../components/Shop/ProductReviewsSection";
 import { shopData } from "../data/shopData";
 import { getReviewStats } from "../data/productReviews";
+import { useProductDetail } from "../hooks/products";
+import { apiProductToStorefront } from "../lib/apiProductToStorefront";
 import { useCart } from "../context/cart";
 import { useWishlist } from "../context/wishlist";
+import type { Product } from "../types/product";
+
+function isMongoObjectId(value: string | null): value is string {
+  return !!value && /^[0-9a-fA-F]{24}$/.test(value);
+}
 
 export function ShopDetailsPage() {
   const [searchParams] = useSearchParams();
@@ -15,15 +22,27 @@ export function ShopDetailsPage() {
   const { addItem } = useCart();
   const { addItem: addWishlistItem } = useWishlist();
 
-  const product = useMemo(() => {
-    const raw = searchParams.get("id");
-    const id = raw ? Number.parseInt(raw, 10) : NaN;
-    if (Number.isFinite(id)) {
-      const found = shopData.find((p) => p.id === id);
+  const rawId = searchParams.get("id");
+  const mongoId = isMongoObjectId(rawId) ? rawId : undefined;
+  const { data: apiProduct, isPending, isError, error } =
+    useProductDetail(mongoId);
+
+  const mockProduct = useMemo((): Product | null => {
+    const idNum = rawId ? Number.parseInt(rawId, 10) : NaN;
+    if (Number.isFinite(idNum)) {
+      const found = shopData.find((p) => p.id === idNum);
       if (found) return found;
     }
     return shopData[0] ?? null;
-  }, [searchParams]);
+  }, [rawId]);
+
+  const product = useMemo((): Product | null => {
+    if (mongoId) {
+      if (!apiProduct) return null;
+      return apiProductToStorefront(apiProduct);
+    }
+    return mockProduct;
+  }, [mongoId, apiProduct, mockProduct]);
 
   const reviewStats = useMemo(
     () => (product ? getReviewStats(product.id) : null),
@@ -33,9 +52,38 @@ export function ShopDetailsPage() {
   useEffect(() => {
     setPreview(0);
     setQty(1);
-  }, [product?.id]);
+  }, [product?.id, product?.mongoId]);
+
+  if (mongoId && isPending) {
+    return (
+      <>
+        <Breadcrumb title="Shop Details" pages={["shop", "shop details"]} />
+        <section className="py-10 px-4">
+          <p className="mx-auto max-w-[1170px] text-neutral-600">Loading…</p>
+        </section>
+      </>
+    );
+  }
+
+  if (mongoId && isError) {
+    return (
+      <>
+        <Breadcrumb title="Shop Details" pages={["shop", "shop details"]} />
+        <section className="py-10 px-4">
+          <p className="mx-auto max-w-[1170px] text-red-600" role="alert">
+            {error instanceof Error ? error.message : "Could not load product."}
+          </p>
+        </section>
+      </>
+    );
+  }
 
   if (!product) return null;
+
+  const description =
+    mongoId && apiProduct
+      ? apiProduct.description
+      : "Lorem Ipsum is simply dummy text of the printing and typesetting industry.";
 
   return (
     <>
@@ -46,7 +94,7 @@ export function ShopDetailsPage() {
             <div>
               <div className="flex min-h-[500px] items-center justify-center rounded-lg bg-neutral-100 p-8">
                 <img
-                  src={product.imgs.previews[preview]}
+                  src={product.imgs.previews[preview] || ""}
                   alt={product.title}
                   className="max-h-[380px] object-contain"
                 />
@@ -54,7 +102,7 @@ export function ShopDetailsPage() {
               <div className="mt-5 flex gap-3">
                 {product.imgs.thumbnails.map((img, i) => (
                   <button
-                    key={img}
+                    key={`${img}-${i}`}
                     onClick={() => setPreview(i)}
                     className={`flex h-20 w-20 items-center justify-center rounded-md border bg-neutral-50 ${
                       i === preview ? "border-blue-600" : "border-neutral-200"
@@ -89,9 +137,7 @@ export function ShopDetailsPage() {
                 </span>
                 <span className="text-neutral-500 line-through">${product.price}</span>
               </div>
-              <p className="mt-5 text-neutral-600">
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-              </p>
+              <p className="mt-5 text-neutral-600">{description}</p>
 
               <div className="mt-6 flex items-center gap-3">
                 <button

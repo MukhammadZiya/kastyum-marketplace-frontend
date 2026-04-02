@@ -8,6 +8,9 @@ export type {
 } from "./enums";
 
 export type {
+  AllAttributesBundle,
+  AttributeEntity,
+  AttributeKind,
   Brand,
   Color,
   Fit,

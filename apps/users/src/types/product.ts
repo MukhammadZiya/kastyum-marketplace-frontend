@@ -11,6 +11,7 @@ export type ProductImages = {
 
 export type StorefrontProduct = {
   id: number;
+  mongoId?: string;
   title: string;
   reviews: number;
   price: number;
