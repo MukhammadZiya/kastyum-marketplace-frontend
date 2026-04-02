@@ -27,7 +27,7 @@ export type {
   ProductWithRelations,
 } from "./entities/product";
 
-export type { Order, OrderItem } from "./entities/order";
+export type { Order, OrderItem, OrderListRow } from "./entities/order";
 
 export type { Notification } from "./entities/notification";
 

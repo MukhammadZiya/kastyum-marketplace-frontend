@@ -1,4 +1,5 @@
 import type { OrderStatus } from "../enums";
+import type { Member } from "./member";
 
 export type OrderItem = {
   productId: string;
@@ -20,4 +21,9 @@ export type Order = {
   shippingAddress?: string;
   createdAt?: string;
   updatedAt?: string;
+};
+
+export type OrderListRow = Omit<Order, "memberId" | "sellerId"> & {
+  memberId: Member;
+  sellerId: Member;
 };
