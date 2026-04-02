@@ -1,13 +1,17 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Breadcrumb from "../components/Common/Breadcrumb";
+import { useMemberLogin } from "../hooks/members";
 import type { MemberLoginBody } from "../lib/marketplaceTypes";
 
 export function SignInPage() {
+  const navigate = useNavigate();
+  const login = useMemberLogin();
   const [values, setValues] = useState<MemberLoginBody>({
     email: "",
     password: "",
   });
+  const [formError, setFormError] = useState("");
 
   return (
     <>
@@ -19,7 +23,26 @@ export function SignInPage() {
               Sign In to Your Account
             </h2>
             <p className="text-center text-neutral-600 mb-8">Enter your detail below</p>
-            <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+            <form
+              className="space-y-5"
+              onSubmit={(e) => {
+                e.preventDefault();
+                setFormError("");
+                login.mutate(values, {
+                  onSuccess: () => navigate("/"),
+                  onError: (err) => {
+                    setFormError(
+                      err instanceof Error ? err.message : "Request failed",
+                    );
+                  },
+                });
+              }}
+            >
+              {formError ? (
+                <p className="text-sm text-red-600" role="alert">
+                  {formError}
+                </p>
+              ) : null}
               <div>
                 <label className="block mb-2">Email</label>
                 <input
@@ -43,8 +66,12 @@ export function SignInPage() {
                   }
                 />
               </div>
-              <button className="w-full py-3 rounded-lg bg-neutral-900 text-white hover:bg-blue-600" type="submit">
-                Sign in to account
+              <button
+                className="w-full py-3 rounded-lg bg-neutral-900 text-white hover:bg-blue-600 disabled:opacity-60"
+                type="submit"
+                disabled={login.isPending}
+              >
+                {login.isPending ? "Signing in…" : "Sign in to account"}
               </button>
               <p className="text-center text-sm">
                 Don&apos;t have an account?
@@ -59,4 +86,3 @@ export function SignInPage() {
     </>
   );
 }
-
