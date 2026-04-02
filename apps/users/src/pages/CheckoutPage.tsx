@@ -1,9 +1,26 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Breadcrumb from "../components/Common/Breadcrumb";
 import { useCart } from "../context/cart";
+import { useCreateOrder } from "../hooks/orders";
+import { getAuthToken } from "@repo/api";
 
 export function CheckoutPage() {
-  const { items, totalPrice } = useCart();
+  const navigate = useNavigate();
+  const { items, totalPrice, clear } = useCart();
+  const createOrder = useCreateOrder();
+  const [address, setAddress] = useState("");
+  const [formError, setFormError] = useState("");
+
+  const lineItems = items
+    .filter((i) => i.mongoId)
+    .map((i) => ({
+      productId: i.mongoId as string,
+      quantity: i.quantity,
+    }));
+
+  const hasOnlyApiItems = items.length > 0 && lineItems.length === items.length;
+  const signedIn = !!getAuthToken();
 
   return (
     <>
@@ -18,7 +35,12 @@ export function CheckoutPage() {
                   <input className="border border-neutral-200 rounded-md px-4 py-3" placeholder="First Name" />
                   <input className="border border-neutral-200 rounded-md px-4 py-3" placeholder="Last Name" />
                   <input className="border border-neutral-200 rounded-md px-4 py-3 sm:col-span-2" placeholder="Email" />
-                  <input className="border border-neutral-200 rounded-md px-4 py-3 sm:col-span-2" placeholder="Address" />
+                  <input
+                    className="border border-neutral-200 rounded-md px-4 py-3 sm:col-span-2"
+                    placeholder="Shipping address"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                  />
                 </div>
               </div>
               <div className="bg-white border border-neutral-200 rounded-lg p-6">
@@ -33,6 +55,24 @@ export function CheckoutPage() {
             </div>
             <div className="bg-white border border-neutral-200 rounded-lg p-6 h-fit">
               <h3 className="font-semibold text-neutral-900 mb-4">Your Order</h3>
+              {formError ? (
+                <p className="mb-3 text-sm text-red-600" role="alert">
+                  {formError}
+                </p>
+              ) : null}
+              {!signedIn ? (
+                <p className="mb-3 text-sm text-neutral-600">
+                  <Link to="/signin" className="text-blue-600 font-medium">
+                    Sign in
+                  </Link>{" "}
+                  to place an order.
+                </p>
+              ) : null}
+              {items.length > 0 && !hasOnlyApiItems ? (
+                <p className="mb-3 text-sm text-amber-800 bg-amber-50 border border-amber-100 rounded-md p-3">
+                  Only products from the live catalog can be ordered. Remove template-only items or add products from the shop.
+                </p>
+              ) : null}
               <div className="space-y-3 text-sm">
                 {items.length === 0 ? (
                   <p className="text-neutral-500">No items in cart.</p>
@@ -40,7 +80,11 @@ export function CheckoutPage() {
                   items.map((item) => (
                     <div key={item.id} className="flex justify-between gap-4">
                       <Link
-                        to={`/shop-details?id=${item.id}`}
+                        to={
+                          item.mongoId
+                            ? `/shop-details?id=${encodeURIComponent(item.mongoId)}`
+                            : `/shop-details?id=${item.id}`
+                        }
                         className="min-w-0 text-left text-neutral-700 hover:text-blue-600"
                       >
                         {item.title}
@@ -58,10 +102,44 @@ export function CheckoutPage() {
                 <span className="font-semibold">${totalPrice.toFixed(2)}</span>
               </div>
               <button
-                className="w-full mt-6 rounded-md bg-blue-600 hover:bg-blue-700 text-white py-3 font-medium"
+                className="w-full mt-6 rounded-md bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white py-3 font-medium"
                 type="button"
+                disabled={
+                  createOrder.isPending ||
+                  items.length === 0 ||
+                  !signedIn ||
+                  !hasOnlyApiItems
+                }
+                onClick={() => {
+                  setFormError("");
+                  if (!signedIn) {
+                    setFormError("Sign in to place an order.");
+                    return;
+                  }
+                  if (!hasOnlyApiItems) {
+                    setFormError("Your cart must only contain catalog products.");
+                    return;
+                  }
+                  createOrder.mutate(
+                    {
+                      items: lineItems,
+                      shippingAddress: address.trim() || undefined,
+                    },
+                    {
+                      onSuccess: () => {
+                        clear();
+                        navigate("/my-account");
+                      },
+                      onError: (err) => {
+                        setFormError(
+                          err instanceof Error ? err.message : "Order failed.",
+                        );
+                      },
+                    },
+                  );
+                }}
               >
-                Process to Checkout
+                {createOrder.isPending ? "Placing order…" : "Place order"}
               </button>
             </div>
           </div>
@@ -70,4 +148,3 @@ export function CheckoutPage() {
     </>
   );
 }
-

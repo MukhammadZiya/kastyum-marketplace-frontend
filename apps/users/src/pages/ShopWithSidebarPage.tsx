@@ -15,6 +15,7 @@ import {
 } from "../data/shopData";
 import SingleGridItem from "../components/Shop/SingleGridItem";
 import SingleListItem from "../components/Shop/SingleListItem";
+import { useAllAttributes } from "../hooks/attributes";
 
 function toggleSetKey<K extends keyof ShopFilterState>(
   key: K,
@@ -183,10 +184,26 @@ export function ShopWithSidebarPage() {
     });
   }, [setSearchParams]);
 
-  const { categories, colors, sizes } = useMemo(
+  const { data: attrBundle } = useAllAttributes();
+
+  const { categories, colors: fallbackColors, sizes: fallbackSizes } = useMemo(
     () => shopFilterOptionLists(shopData),
     [],
   );
+
+  const colors = useMemo(() => {
+    if (attrBundle?.color?.length) {
+      return [...new Set(attrBundle.color.map((c) => c.name))].sort();
+    }
+    return fallbackColors;
+  }, [attrBundle, fallbackColors]);
+
+  const sizes = useMemo(() => {
+    if (attrBundle?.size?.length) {
+      return [...new Set(attrBundle.size.map((s) => s.name))].sort();
+    }
+    return fallbackSizes;
+  }, [attrBundle, fallbackSizes]);
 
   useEffect(() => {
     if (!catParam) return;

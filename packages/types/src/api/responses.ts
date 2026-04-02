@@ -1,0 +1,23 @@
+import type { MemberType } from "../enums";
+import type { Member } from "../entities/member";
+
+export type MemberAuthResponse = {
+  member: Member;
+  accessToken: string;
+};
+
+export type TokenPayload = {
+  sub: string;
+  email: string;
+  type: MemberType;
+};
+
+export type PaginatedResult<T> = {
+  list: T[];
+  total: number;
+};
+
+export type ApiErrorBody = {
+  code: number | string;
+  message: string | string[];
+};

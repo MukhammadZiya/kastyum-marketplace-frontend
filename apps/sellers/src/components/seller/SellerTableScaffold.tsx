@@ -1,9 +1,16 @@
+import type { ReactNode } from "react";
+
 type Props = {
   columns: readonly string[];
   emptyLabel: string;
+  children?: ReactNode;
 };
 
-export function SellerTableScaffold({ columns, emptyLabel }: Props) {
+export function SellerTableScaffold({
+  columns,
+  emptyLabel,
+  children,
+}: Props) {
   return (
     <div className="overflow-hidden rounded-xl border border-slate-200">
       <table className="w-full text-left text-sm">
@@ -17,14 +24,16 @@ export function SellerTableScaffold({ columns, emptyLabel }: Props) {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td
-              colSpan={columns.length}
-              className="px-4 py-14 text-center text-slate-500"
-            >
-              {emptyLabel}
-            </td>
-          </tr>
+          {children ?? (
+            <tr>
+              <td
+                colSpan={columns.length}
+                className="px-4 py-14 text-center text-slate-500"
+              >
+                {emptyLabel}
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>

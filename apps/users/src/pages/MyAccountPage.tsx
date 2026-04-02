@@ -1,7 +1,78 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import Breadcrumb from "../components/Common/Breadcrumb";
+import { useMyOrders } from "../hooks/orders";
+import { getAuthToken } from "@repo/api";
 
 const tabs = ["Profile", "Address", "Orders", "Security"] as const;
+
+function OrdersPanel() {
+  const signedIn = !!getAuthToken();
+  const { data, isPending, isError, error } = useMyOrders({
+    page: 1,
+    limit: 20,
+  });
+
+  if (!signedIn) {
+    return (
+      <p className="text-neutral-700">
+        <Link to="/signin" className="text-blue-600 font-medium">
+          Sign in
+        </Link>{" "}
+        to see your orders.
+      </p>
+    );
+  }
+
+  if (isPending) {
+    return <p className="text-neutral-600">Loading orders…</p>;
+  }
+
+  if (isError) {
+    return (
+      <p className="text-red-600" role="alert">
+        {error instanceof Error ? error.message : "Could not load orders."}
+      </p>
+    );
+  }
+
+  if (!data?.list.length) {
+    return <p className="text-neutral-700">You have no orders yet.</p>;
+  }
+
+  return (
+    <ul className="space-y-4">
+      {data.list.map((o) => (
+        <li
+          key={o._id}
+          className="rounded-lg border border-neutral-200 p-4"
+        >
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="font-medium text-neutral-900">{o.status}</span>
+            <span className="font-semibold text-neutral-900">
+              ${o.totalAmount.toFixed(2)}
+            </span>
+          </div>
+          <p className="mt-1 text-sm text-neutral-600">
+            Seller: {o.sellerId.nick}
+          </p>
+          <p className="mt-1 text-xs text-neutral-500">
+            {o.createdAt
+              ? new Date(o.createdAt).toLocaleString()
+              : ""}
+          </p>
+          <ul className="mt-3 space-y-1 border-t border-neutral-100 pt-3 text-sm text-neutral-700">
+            {o.items.map((line) => (
+              <li key={`${o._id}-${line.productId}`}>
+                {line.productTitle} × {line.quantity} — ${line.price.toFixed(2)}
+              </li>
+            ))}
+          </ul>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export function MyAccountPage() {
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>("Profile");
@@ -37,7 +108,12 @@ export function MyAccountPage() {
               </div>
             )}
             {activeTab === "Address" && <p className="text-neutral-700">Manage your shipping and billing addresses.</p>}
-            {activeTab === "Orders" && <p className="text-neutral-700">Track your order history and statuses.</p>}
+            {activeTab === "Orders" && (
+              <div className="space-y-4">
+                <h2 className="text-2xl font-semibold text-neutral-900">Your orders</h2>
+                <OrdersPanel />
+              </div>
+            )}
             {activeTab === "Security" && <p className="text-neutral-700">Update password and security settings.</p>}
           </div>
         </div>
@@ -45,4 +121,3 @@ export function MyAccountPage() {
     </>
   );
 }
-

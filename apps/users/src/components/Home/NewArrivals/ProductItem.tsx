@@ -4,15 +4,18 @@ import { useCart } from "../../../context/cart";
 import { useQuickViewModal } from "../../../context/quickViewModal";
 import { useWishlist } from "../../../context/wishlist";
 
-function productDetailPath(id: number) {
-  return `/shop-details?id=${id}`;
+function productDetailPath(item: Product) {
+  if (item.mongoId) {
+    return `/shop-details?id=${encodeURIComponent(item.mongoId)}`;
+  }
+  return `/shop-details?id=${item.id}`;
 }
 
 export default function ProductItem({ item }: { item: Product }) {
   const { addItem } = useCart();
   const { open } = useQuickViewModal();
   const { addItem: addWishlistItem } = useWishlist();
-  const detailTo = productDetailPath(item.id);
+  const detailTo = productDetailPath(item);
 
   return (
     <div className="group rounded-xl p-1 transition duration-200 ease-out hover:-translate-y-1 hover:shadow-[0_14px_40px_-14px_rgba(15,23,42,0.12)] hover:ring-1 hover:ring-neutral-200/70">

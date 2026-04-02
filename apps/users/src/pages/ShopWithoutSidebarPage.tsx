@@ -1,12 +1,22 @@
 import { useMemo, useState } from "react";
 import Breadcrumb from "../components/Common/Breadcrumb";
 import { shopData } from "../data/shopData";
+import { useProductList } from "../hooks/products";
+import { apiProductToStorefront } from "../lib/apiProductToStorefront";
 import SingleGridItem from "../components/Shop/SingleGridItem";
 import SingleListItem from "../components/Shop/SingleListItem";
 
 export function ShopWithoutSidebarPage() {
   const [view, setView] = useState<"grid" | "list">("grid");
-  const products = useMemo(() => shopData, []);
+  const { data, isPending } = useProductList({ page: 1, limit: 48 });
+  const hasListItems = Boolean(data?.list?.length);
+
+  const products = useMemo(() => {
+    if (data?.list?.length) {
+      return data.list.map(apiProductToStorefront);
+    }
+    return shopData;
+  }, [data]);
 
   return (
     <>
@@ -15,7 +25,12 @@ export function ShopWithoutSidebarPage() {
         <div className="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0">
           <div className="bg-white rounded-lg border border-neutral-200 p-3 mb-6 flex items-center justify-between">
             <p className="text-sm text-neutral-600">
-              Showing <span className="text-neutral-900">{products.length}</span> products
+              Showing{" "}
+              <span className="font-medium text-neutral-900">{products.length}</span>{" "}
+              products
+              {isPending && !hasListItems ? (
+                <span className="text-neutral-500"> · loading</span>
+              ) : null}
             </p>
             <div className="flex gap-2">
               <button
@@ -38,10 +53,16 @@ export function ShopWithoutSidebarPage() {
           <div className={view === "grid" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7" : "flex flex-col gap-6"}>
             {products.map((item) =>
               view === "grid" ? (
-                <SingleGridItem key={item.id} item={item} />
+                <SingleGridItem
+                  key={item.mongoId ?? String(item.id)}
+                  item={item}
+                />
               ) : (
-                <SingleListItem key={item.id} item={item} />
-              )
+                <SingleListItem
+                  key={item.mongoId ?? String(item.id)}
+                  item={item}
+                />
+              ),
             )}
           </div>
         </div>
@@ -49,4 +70,3 @@ export function ShopWithoutSidebarPage() {
     </>
   );
 }
-
