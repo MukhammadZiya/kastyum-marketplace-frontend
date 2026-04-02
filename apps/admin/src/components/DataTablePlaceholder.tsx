@@ -1,12 +1,16 @@
+import type { ReactNode } from "react";
+
 type Props = {
   columns: readonly string[];
   emptyMessage: string;
+  children?: ReactNode;
 };
 
-/**
- * Table shell for list views; swap body for React Query rows later.
- */
-export function DataTablePlaceholder({ columns, emptyMessage }: Props) {
+export function DataTablePlaceholder({
+  columns,
+  emptyMessage,
+  children,
+}: Props) {
   return (
     <table className="w-full min-w-[520px] text-left text-sm">
       <thead>
@@ -19,14 +23,16 @@ export function DataTablePlaceholder({ columns, emptyMessage }: Props) {
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td
-            colSpan={columns.length}
-            className="px-4 py-12 text-center text-slate-500"
-          >
-            {emptyMessage}
-          </td>
-        </tr>
+        {children ?? (
+          <tr>
+            <td
+              colSpan={columns.length}
+              className="px-4 py-12 text-center text-slate-500"
+            >
+              {emptyMessage}
+            </td>
+          </tr>
+        )}
       </tbody>
     </table>
   );
