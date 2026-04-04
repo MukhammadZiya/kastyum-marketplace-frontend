@@ -1,12 +1,12 @@
 import type { MenuItem } from "../../types/menu";
 import { categoryDataUniqueForNav } from "../../data/categoryData";
+import type { TranslateFn } from "../../i18n/types";
 
-const categoryNavItems: MenuItem[] = categoryDataUniqueForNav().map((c) => ({
-  id: 100 + c.id,
-  title: c.title,
-  newTab: false,
-  path: `/shop-with-sidebar?q=${encodeURIComponent(c.shopSearchQuery)}`,
-}));
-
-/** Header primary nav: category links only. */
-export const menuData: MenuItem[] = categoryNavItems;
+export function getNavMenuItems(t: TranslateFn): MenuItem[] {
+  return categoryDataUniqueForNav().map((c) => ({
+    id: 100 + c.id,
+    title: t(c.titleKey),
+    newTab: false,
+    path: `/shop-with-sidebar?q=${encodeURIComponent(c.shopSearchQuery)}`,
+  }));
+}

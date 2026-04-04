@@ -9,8 +9,6 @@ export type ShopProduct = Product & {
   storeTypes: readonly string[];
 };
 
-export { HEADER_CATALOG_OPTIONS } from "./headerCatalogOptions";
-
 export function filterByHeaderCatalog(
   products: readonly ShopProduct[],
   device: string | null,
@@ -33,14 +31,14 @@ export function productEffectivePrice(p: Product): number {
   return p.discountedPrice;
 }
 
-export const PRICE_FILTER_OPTIONS = [
-  { id: "under-50", label: "Under $50" },
-  { id: "50-100", label: "$50 – $100" },
-  { id: "100-500", label: "$100 – $500" },
-  { id: "500-plus", label: "$500+" },
+export const PRICE_FILTER_SPECS = [
+  { id: "under-50", labelKey: "shopPriceUnder50" },
+  { id: "50-100", labelKey: "shopPrice50to100" },
+  { id: "100-500", labelKey: "shopPrice100to500" },
+  { id: "500-plus", labelKey: "shopPrice500Plus" },
 ] as const;
 
-export type PriceFilterId = (typeof PRICE_FILTER_OPTIONS)[number]["id"];
+export type PriceFilterId = (typeof PRICE_FILTER_SPECS)[number]["id"];
 
 function priceMatchesBucket(price: number, id: PriceFilterId): boolean {
   if (id === "under-50") return price < 50;

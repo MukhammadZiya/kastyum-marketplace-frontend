@@ -1,4 +1,7 @@
+import { useT } from "../../i18n";
+
 export default function Footer() {
+  const t = useT();
   const year = new Date().getFullYear();
 
   return (
@@ -7,7 +10,7 @@ export default function Footer() {
         <div className="flex flex-wrap xl:flex-nowrap gap-10 xl:gap-[76px] xl:justify-between pt-[70px] xl:pt-[90px] pb-10 xl:pb-[60px]">
           <div className="max-w-[330px] w-full">
             <h2 className="mb-[30px] text-[20px] font-medium text-neutral-900">
-              Help &amp; Support
+              {t("footerHelpTitle")}
             </h2>
 
             <ul className="flex flex-col gap-3">
@@ -28,7 +31,7 @@ export default function Footer() {
                     />
                   </svg>
                 </span>
-                685 Market Street,Las Vegas, LA 95820,United States.
+                {t("footerAddressLine")}
               </li>
 
               <li>
@@ -47,7 +50,7 @@ export default function Footer() {
                       fill="#3C50E0"
                     />
                   </svg>
-                  (+099) 532-786-9843
+                  {t("footerPhoneDisplay")}
                 </a>
               </li>
 
@@ -67,7 +70,7 @@ export default function Footer() {
                       fill="#3C50E0"
                     />
                   </svg>
-                  support@example.com
+                  {t("footerEmailDisplay")}
                 </a>
               </li>
             </ul>
@@ -102,32 +105,32 @@ export default function Footer() {
 
           <div className="w-full sm:w-auto">
             <h2 className="mb-[30px] text-[20px] font-medium text-neutral-900">
-              Account
+              {t("footerAccountTitle")}
             </h2>
             <ul className="flex flex-col gap-[14px]">
               <li>
                 <a className="ease-out duration-200 hover:text-blue-600" href="#">
-                  My Account
+                  {t("footerLinkMyAccount")}
                 </a>
               </li>
               <li>
                 <a className="ease-out duration-200 hover:text-blue-600" href="#">
-                  Login / Register
+                  {t("footerLinkLoginRegister")}
                 </a>
               </li>
               <li>
                 <a className="ease-out duration-200 hover:text-blue-600" href="#">
-                  Cart
+                  {t("footerLinkCart")}
                 </a>
               </li>
               <li>
                 <a className="ease-out duration-200 hover:text-blue-600" href="#">
-                  Wishlist
+                  {t("footerLinkWishlist")}
                 </a>
               </li>
               <li>
                 <a className="ease-out duration-200 hover:text-blue-600" href="/shop-with-sidebar">
-                  Shop collection
+                  {t("footerLinkShopCollection")}
                 </a>
               </li>
             </ul>
@@ -135,32 +138,32 @@ export default function Footer() {
 
           <div className="w-full sm:w-auto">
             <h2 className="mb-[30px] text-[20px] font-medium text-neutral-900">
-              Quick Link
+              {t("footerQuickLinksTitle")}
             </h2>
             <ul className="flex flex-col gap-3">
               <li>
                 <a className="ease-out duration-200 hover:text-blue-600" href="#">
-                  Privacy Policy
+                  {t("footerLinkPrivacy")}
                 </a>
               </li>
               <li>
                 <a className="ease-out duration-200 hover:text-blue-600" href="#">
-                  Refund Policy
+                  {t("footerLinkRefund")}
                 </a>
               </li>
               <li>
                 <a className="ease-out duration-200 hover:text-blue-600" href="#">
-                  Terms of Use
+                  {t("footerLinkTerms")}
                 </a>
               </li>
               <li>
                 <a className="ease-out duration-200 hover:text-blue-600" href="#">
-                  FAQ’s
+                  {t("footerLinkFaq")}
                 </a>
               </li>
               <li>
                 <a className="ease-out duration-200 hover:text-blue-600" href="#">
-                  Contact
+                  {t("footerLinkContact")}
                 </a>
               </li>
             </ul>
@@ -168,11 +171,11 @@ export default function Footer() {
 
           <div className="w-full sm:w-auto">
             <h2 className="mb-[30px] text-[20px] font-medium text-neutral-900 lg:text-right">
-              Download App
+              {t("footerDownloadAppTitle")}
             </h2>
 
             <p className="lg:text-right text-[14px] mb-4">
-              Extra 10% off your first in-app order
+              {t("footerDownloadAppPromo")}
             </p>
 
             <ul className="flex flex-col lg:items-end gap-3">
@@ -196,8 +199,8 @@ export default function Footer() {
                     </svg>
                   </span>
                   <div>
-                    <span className="block text-[11px]">Download on the</span>
-                    <p className="font-medium">App Store</p>
+                    <span className="block text-[11px]">{t("footerAppStoreLine1")}</span>
+                    <p className="font-medium">{t("footerAppStoreLine2")}</p>
                   </div>
                 </a>
               </li>
@@ -222,8 +225,8 @@ export default function Footer() {
                     </svg>
                   </span>
                   <div>
-                    <span className="block text-[11px]">Get in On</span>
-                    <p className="font-medium">Google Play</p>
+                    <span className="block text-[11px]">{t("footerGooglePlayLine1")}</span>
+                    <p className="font-medium">{t("footerGooglePlayLine2")}</p>
                   </div>
                 </a>
               </li>
@@ -236,11 +239,11 @@ export default function Footer() {
         <div className="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0">
           <div className="flex gap-5 flex-wrap items-center justify-between">
             <p className="text-neutral-900 font-medium">
-              &copy; {year} Kastyum. All rights reserved.
+              &copy; {year} {t("footerCopyright")}
             </p>
 
             <div className="flex flex-wrap items-center gap-4">
-              <p className="font-medium">We Accept:</p>
+              <p className="font-medium">{t("footerWeAccept")}</p>
 
               <div className="flex flex-wrap items-center gap-6">
                 <a href="#" aria-label="payment system with visa card">

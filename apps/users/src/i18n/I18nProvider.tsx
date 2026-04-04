@@ -1,5 +1,5 @@
-import { useMemo, useState, type ReactNode } from "react";
-import { dictionaries } from "./dictionaries";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { mergeLocaleMessages } from "./dictionaries";
 import { I18nActionsContext, I18nStateContext } from "./contexts";
 import { defaultLocale, type Locale } from "./types";
 
@@ -14,10 +14,18 @@ export function I18nProvider({
 }: I18nProviderProps) {
   const [locale, setLocale] = useState<Locale>(initialLocale);
 
+  useEffect(() => {
+    document.documentElement.lang = locale;
+    const title = mergeLocaleMessages(locale).documentTitle;
+    if (title) {
+      document.title = title;
+    }
+  }, [locale]);
+
   const state = useMemo(
     () => ({
       locale,
-      messages: dictionaries[locale],
+      messages: mergeLocaleMessages(locale),
     }),
     [locale],
   );

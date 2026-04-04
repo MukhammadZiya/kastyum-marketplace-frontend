@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Breadcrumb from "../components/Common/Breadcrumb";
-import { HEADER_CATALOG_OPTIONS } from "../data/headerCatalogOptions";
+import { headerCatalogLabel } from "../data/headerCatalogOptions";
 import {
   emptyShopFilterState,
   filterByHeaderCatalog,
   filterByTitleSearch,
   filterShopProducts,
-  PRICE_FILTER_OPTIONS,
+  PRICE_FILTER_SPECS,
   shopData,
   shopFilterOptionLists,
   type PriceFilterId,
@@ -16,6 +16,8 @@ import {
 import SingleGridItem from "../components/Shop/SingleGridItem";
 import SingleListItem from "../components/Shop/SingleListItem";
 import { useAllAttributes } from "../hooks/attributes";
+import { useT } from "../i18n";
+import type { TranslateFn } from "../i18n/types";
 
 function toggleSetKey<K extends keyof ShopFilterState>(
   key: K,
@@ -65,6 +67,8 @@ function ShopFiltersBody({
   colors,
   sizes,
   activeFilterCount,
+  t,
+  priceOptions,
 }: {
   filters: ShopFilterState;
   onToggleCategory: (v: string) => void;
@@ -76,24 +80,28 @@ function ShopFiltersBody({
   colors: string[];
   sizes: string[];
   activeFilterCount: number;
+  t: TranslateFn;
+  priceOptions: { id: PriceFilterId; label: string }[];
 }) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-2">
-        <h3 className="font-semibold text-neutral-900">Filters</h3>
+        <h3 className="font-semibold text-neutral-900">{t("common.filters")}</h3>
         {activeFilterCount > 0 ? (
           <button
             type="button"
             onClick={onClear}
             className="text-xs font-medium text-blue-600 hover:text-blue-800"
           >
-            Clear all ({activeFilterCount})
+            {t("common.clearAll")} ({activeFilterCount})
           </button>
         ) : null}
       </div>
 
       <fieldset className="space-y-2 border-0 p-0">
-        <legend className="mb-2 text-sm font-medium text-neutral-900">Category</legend>
+        <legend className="mb-2 text-sm font-medium text-neutral-900">
+          {t("shopFilterCategory")}
+        </legend>
         <div className="space-y-2">
           {categories.map((cat) => (
             <FilterCheckbox
@@ -108,10 +116,12 @@ function ShopFiltersBody({
       </fieldset>
 
       <fieldset className="space-y-2 border-0 p-0">
-        <legend className="mb-2 text-sm font-medium text-neutral-900">Price</legend>
-        <p className="mb-2 text-xs text-neutral-500">Based on current sale price</p>
+        <legend className="mb-2 text-sm font-medium text-neutral-900">
+          {t("shopFilterPrice")}
+        </legend>
+        <p className="mb-2 text-xs text-neutral-500">{t("shopFilterPriceHint")}</p>
         <div className="space-y-2">
-          {PRICE_FILTER_OPTIONS.map((opt) => (
+          {priceOptions.map((opt) => (
             <FilterCheckbox
               key={opt.id}
               id={`price-${opt.id}`}
@@ -124,7 +134,9 @@ function ShopFiltersBody({
       </fieldset>
 
       <fieldset className="space-y-2 border-0 p-0">
-        <legend className="mb-2 text-sm font-medium text-neutral-900">Color</legend>
+        <legend className="mb-2 text-sm font-medium text-neutral-900">
+          {t("shopFilterColor")}
+        </legend>
         <div className="space-y-2">
           {colors.map((color) => (
             <FilterCheckbox
@@ -139,7 +151,9 @@ function ShopFiltersBody({
       </fieldset>
 
       <fieldset className="space-y-2 border-0 p-0">
-        <legend className="mb-2 text-sm font-medium text-neutral-900">Size</legend>
+        <legend className="mb-2 text-sm font-medium text-neutral-900">
+          {t("shopFilterSize")}
+        </legend>
         <div className="space-y-2">
           {sizes.map((size) => (
             <FilterCheckbox
@@ -157,6 +171,7 @@ function ShopFiltersBody({
 }
 
 export function ShopWithSidebarPage() {
+  const t = useT();
   const [searchParams, setSearchParams] = useSearchParams();
   const [view, setView] = useState<"grid" | "list">("grid");
   const [filters, setFilters] = useState<ShopFilterState>(emptyShopFilterState);
@@ -165,11 +180,19 @@ export function ShopWithSidebarPage() {
   const q = searchParams.get("q") ?? "";
   const catParam = searchParams.get("cat");
 
+  const priceOptions = useMemo(
+    () =>
+      PRICE_FILTER_SPECS.map(({ id, labelKey }) => ({
+        id,
+        label: t(labelKey),
+      })),
+    [t],
+  );
+
   const deviceLabel = useMemo(() => {
     if (!device) return "";
-    const opt = HEADER_CATALOG_OPTIONS.find((o) => o.value === device);
-    return opt?.label ?? device;
-  }, [device]);
+    return headerCatalogLabel(device, t);
+  }, [device, t]);
 
   const hasHeaderSearch = Boolean(
     (device && device !== "all") || q.trim().length > 0,
@@ -255,15 +278,22 @@ export function ShopWithSidebarPage() {
     colors,
     sizes,
     activeFilterCount,
+    t,
+    priceOptions,
   };
 
   return (
     <>
-      <Breadcrumb title="Shop collection" pages={["shop", "all pieces"]} />
+      <Breadcrumb
+        title={t("shopBreadcrumbCollection")}
+        pages={[t("breadcrumbShop"), t("shopBreadcrumbAllPieces")]}
+      />
       {hasHeaderSearch ? (
         <div className="mx-auto max-w-[1170px] px-4 sm:px-8 xl:px-0">
           <div className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border border-blue-100 bg-blue-50/90 px-4 py-3 text-sm text-neutral-700">
-            <span className="font-medium text-neutral-900">Search filters</span>
+            <span className="font-medium text-neutral-900">
+              {t("shopSearchFiltersLabel")}
+            </span>
             {device && device !== "all" ? (
               <span className="rounded-md bg-white px-2 py-0.5 text-neutral-800 ring-1 ring-neutral-200/80">
                 {deviceLabel}
@@ -279,7 +309,7 @@ export function ShopWithSidebarPage() {
               onClick={clearHeaderParams}
               className="ml-auto text-sm font-medium text-blue-600 hover:text-blue-800"
             >
-              Clear search filters
+              {t("shopClearSearchFilters")}
             </button>
           </div>
         </div>
@@ -288,7 +318,7 @@ export function ShopWithSidebarPage() {
         <div className="mx-auto flex max-w-[1170px] flex-col gap-6 px-4 sm:px-8 xl:flex-row xl:gap-8 xl:px-0">
           <details className="xl:hidden rounded-lg border border-neutral-200 bg-white [&_summary::-webkit-details-marker]:hidden">
             <summary className="flex cursor-pointer list-none items-center justify-between p-4 font-semibold text-neutral-900">
-              Filters
+              {t("common.filters")}
               {activeFilterCount > 0 ? (
                 <span className="rounded-full bg-blue-600 px-2 py-0.5 text-xs text-white">
                   {activeFilterCount}
@@ -307,11 +337,13 @@ export function ShopWithSidebarPage() {
           <div className="min-w-0 flex-1">
             <div className="mb-6 flex items-center justify-between rounded-lg border border-neutral-200 bg-white p-3">
               <p className="text-sm text-neutral-600" aria-live="polite">
-                Showing{" "}
+                {t("common.showing")}{" "}
                 <span className="font-medium text-neutral-900">{products.length}</span>{" "}
-                {products.length === 1 ? "product" : "products"}
+                {products.length === 1
+                  ? t("common.productSingular")
+                  : t("common.productPlural")}
                 {activeFilterCount > 0 || hasHeaderSearch ? (
-                  <span className="text-neutral-500"> (filtered)</span>
+                  <span className="text-neutral-500"> {t("common.filtered")}</span>
                 ) : null}
               </p>
               <div className="flex gap-2">
@@ -320,24 +352,22 @@ export function ShopWithSidebarPage() {
                   className={`rounded px-3 py-1.5 ${view === "grid" ? "bg-blue-600 text-white" : "bg-neutral-100"}`}
                   type="button"
                 >
-                  Grid
+                  {t("common.grid")}
                 </button>
                 <button
                   onClick={() => setView("list")}
                   className={`rounded px-3 py-1.5 ${view === "list" ? "bg-blue-600 text-white" : "bg-neutral-100"}`}
                   type="button"
                 >
-                  List
+                  {t("common.list")}
                 </button>
               </div>
             </div>
 
             {products.length === 0 ? (
               <div className="rounded-lg border border-dashed border-neutral-300 bg-white p-12 text-center text-neutral-600">
-                <p className="font-medium text-neutral-900">No products match these filters</p>
-                <p className="mt-2 text-sm">
-                  Try different filters, or clear your search to see more pieces.
-                </p>
+                <p className="font-medium text-neutral-900">{t("shopNoProductsMatch")}</p>
+                <p className="mt-2 text-sm">{t("shopAdjustFiltersHint")}</p>
                 <div className="mt-4 flex flex-wrap justify-center gap-2">
                   {hasHeaderSearch ? (
                     <button
@@ -345,7 +375,7 @@ export function ShopWithSidebarPage() {
                       onClick={clearHeaderParams}
                       className="rounded-md border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-800 hover:bg-blue-100"
                     >
-                      Clear search filters
+                      {t("shopClearSearchFilters")}
                     </button>
                   ) : null}
                   <button
@@ -353,7 +383,7 @@ export function ShopWithSidebarPage() {
                     onClick={onClear}
                     className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
                   >
-                    Clear sidebar filters
+                    {t("shopClearSidebarFilters")}
                   </button>
                 </div>
               </div>

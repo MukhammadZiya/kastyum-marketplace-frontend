@@ -1,6 +1,6 @@
 export type Locale = "en" | "ru" | "uz";
 
-export const defaultLocale: Locale = "en";
+export const defaultLocale: Locale = "uz";
 
 export type FlatMessages = Record<string, string>;
 

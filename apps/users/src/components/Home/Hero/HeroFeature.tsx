@@ -1,24 +1,9 @@
-const featureData = [
-  {
-    title: "Free shipping",
-    description: "On orders over $200",
-  },
-  {
-    title: "Easy returns",
-    description: "30 days on unworn items",
-  },
-  {
-    title: "Secure checkout",
-    description: "Encrypted payments",
-  },
-  {
-    title: "Styling support",
-    description: "Fit & size help, 7 days a week",
-  },
-];
+import { useT } from "../../../i18n";
 
-function FeatureIcon({ title }: { title: string }) {
-  if (title === "Free shipping") {
+const FEATURE_IDS = ["shipping", "returns", "secure", "support"] as const;
+
+function FeatureIcon({ id }: { id: (typeof FEATURE_IDS)[number] }) {
+  if (id === "shipping") {
     return (
       <svg width="40" height="41" viewBox="0 0 40 41" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <path d="M5.00511 21.0941C5.49296 21.5826 5.49248 22.3741 5.00403 22.8619L4.74771 23.1179C4.52876 23.3366 4.52876 23.6905 4.74771 23.9092C4.96749 24.1287 5.32447 24.1287 5.54426 23.9092L8.36382 21.0931C8.85228 20.6052 9.64373 20.6057 10.1316 21.0941C10.6194 21.5826 10.619 22.3741 10.1305 22.8619L7.31095 25.6781C6.1151 26.8724 4.17687 26.8724 2.98102 25.6781C1.78432 24.4828 1.78432 22.5443 2.98102 21.3491L3.23734 21.0931C3.72579 20.6052 4.51725 20.6057 5.00511 21.0941Z" fill="#1C274C"/>
@@ -31,7 +16,7 @@ function FeatureIcon({ title }: { title: string }) {
     );
   }
 
-  if (title === "Easy returns") {
+  if (id === "returns") {
     return (
       <svg width="40" height="41" viewBox="0 0 40 41" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <path d="M11.1878 18.2893C11.9453 14.0915 15.6422 10.9166 20.0728 10.9166C22.7019 10.9166 25.0718 12.0348 26.7212 13.8178C27.19 14.3246 27.1592 15.1154 26.6525 15.5842C26.1457 16.053 25.3548 16.0223 24.886 15.5155C23.6923 14.2251 21.9797 13.4166 20.0728 13.4166C17.0092 13.4166 14.4495 15.5035 13.7408 18.3088L14.1348 17.931C14.6331 17.4533 15.4244 17.4699 15.9022 17.9682C16.38 18.4665 16.3633 19.2578 15.865 19.7356L13.161 22.3282C12.9155 22.5636 12.5847 22.6887 12.2448 22.6749C11.905 22.661 11.5855 22.5092 11.3601 22.2546L9.06412 19.662C8.60643 19.1452 8.65437 18.3552 9.1712 17.8975C9.68802 17.4398 10.478 17.4878 10.9357 18.0046L11.1878 18.2893Z" fill="#1C274C"/>
@@ -41,7 +26,7 @@ function FeatureIcon({ title }: { title: string }) {
     );
   }
 
-  if (title === "Secure checkout") {
+  if (id === "secure") {
     return (
       <svg width="40" height="41" viewBox="0 0 40 41" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <path d="M25.0991 17.9992C25.5589 17.4842 25.5141 16.694 24.9992 16.2342C24.4842 15.7744 23.694 15.8192 23.2342 16.3341L18.2143 21.9565L16.7658 20.3341C16.306 19.8192 15.5158 19.7744 15.0008 20.2342C14.4859 20.694 14.4411 21.4842 14.9009 21.9992L17.2819 24.6658C17.519 24.9314 17.8582 25.0833 18.2143 25.0833C18.5704 25.0833 18.9096 24.9314 19.1467 24.6658L25.0991 17.9992Z" fill="#1C274C"/>
@@ -60,23 +45,47 @@ function FeatureIcon({ title }: { title: string }) {
   );
 }
 
+const FEATURE_COPY: Record<
+  (typeof FEATURE_IDS)[number],
+  { titleKey: string; descKey: string }
+> = {
+  shipping: {
+    titleKey: "homeHeroFeatureFreeShippingTitle",
+    descKey: "homeHeroFeatureFreeShippingDesc",
+  },
+  returns: {
+    titleKey: "homeHeroFeatureReturnsTitle",
+    descKey: "homeHeroFeatureReturnsDesc",
+  },
+  secure: {
+    titleKey: "homeHeroFeatureSecureTitle",
+    descKey: "homeHeroFeatureSecureDesc",
+  },
+  support: {
+    titleKey: "homeHeroFeatureSupportTitle",
+    descKey: "homeHeroFeatureSupportDesc",
+  },
+};
+
 export default function HeroFeature() {
+  const t = useT();
+
   return (
     <div className="max-w-[1060px] w-full mx-auto px-4 sm:px-8 xl:px-0">
       <div className="flex flex-wrap items-center gap-[30px] xl:gap-[50px] mt-10">
-        {featureData.map((item) => (
-          <div className="flex items-center gap-4" key={item.title}>
-            <FeatureIcon title={item.title} />
-            <div>
-              <h3 className="font-medium text-lg text-neutral-900">
-                {item.title}
-              </h3>
-              <p className="text-sm text-neutral-600">{item.description}</p>
+        {FEATURE_IDS.map((id) => {
+          const copy = FEATURE_COPY[id];
+          return (
+            <div className="flex items-center gap-4" key={id}>
+              <FeatureIcon id={id} />
+              <div>
+                <h3 className="font-medium text-lg text-neutral-900">{t(copy.titleKey)}</h3>
+                <p className="text-sm text-neutral-600">{t(copy.descKey)}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
 }
-

@@ -1,6 +1,9 @@
 import { primaryImageForGroup } from "../../data/lightWebpImages";
+import { useT } from "../../i18n";
 
 export default function Newsletter() {
+  const t = useT();
+
   return (
     <section className="overflow-hidden">
       <div className="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0">
@@ -17,11 +20,9 @@ export default function Newsletter() {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 px-4 sm:px-[30px] xl:pl-[50px] xl:pr-14 py-11">
             <div className="max-w-[491px] w-full">
               <h2 className="max-w-[399px] text-white font-bold text-lg sm:text-xl xl:text-[34px] mb-3">
-                New drops, restocks & private sales
+                {t("newsletterHeading")}
               </h2>
-              <p className="text-white">
-                Get edits for suits, seasonal layers, and member-only tailoring offers in your inbox.
-              </p>
+              <p className="text-white">{t("newsletterDescription")}</p>
             </div>
 
             <div className="max-w-[477px] w-full">
@@ -31,14 +32,14 @@ export default function Newsletter() {
                     type="email"
                     name="email"
                     id="email"
-                    placeholder="Enter your email"
+                    placeholder={t("newsletterEmailPlaceholder")}
                     className="w-full bg-neutral-100 border border-neutral-200 outline-none rounded-md placeholder:text-neutral-500 py-3 px-5"
                   />
                   <button
                     type="submit"
                     className="inline-flex justify-center py-3 px-7 text-white bg-blue-600 font-medium rounded-md ease-out duration-200 hover:bg-blue-700"
                   >
-                    Subscribe
+                    {t("common.subscribe")}
                   </button>
                 </div>
               </form>

@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -6,15 +7,18 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
+import { useT } from "../../../i18n";
 import { getHeroTrendingSlides } from "./heroTrendingSlides";
 
-const slides = getHeroTrendingSlides();
-
 export default function HeroCarousel() {
+  const t = useT();
+  const slides = useMemo(() => getHeroTrendingSlides(t), [t]);
+  const firstId = slides[0]?.id;
+
   return (
     <div className="trending-hero-carousel group relative overflow-hidden rounded-2xl bg-[#E8E0D5] shadow-sm ring-1 ring-black/5">
       <span className="absolute right-3 top-3 z-20 rounded-full bg-white/85 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-neutral-600 shadow-sm backdrop-blur-sm md:right-4 md:top-4">
-        Featured
+        {t("homeHeroBadgeFeatured")}
       </span>
 
       <Swiper
@@ -53,13 +57,13 @@ export default function HeroCarousel() {
                     to={`/shop-details?id=${slide.id}`}
                     className="inline-flex w-fit items-center rounded-lg bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-neutral-800"
                   >
-                    View product
+                    {t("homeHeroCtaViewProduct")}
                   </Link>
                   <Link
                     to="/shop-with-sidebar"
                     className="inline-flex w-fit items-center rounded-lg border border-neutral-400/60 bg-white/40 px-5 py-2.5 text-sm font-medium text-neutral-800 backdrop-blur-sm transition hover:bg-white/70"
                   >
-                    Browse shop
+                    {t("homeHeroCtaBrowseShop")}
                   </Link>
                 </div>
               </div>
@@ -68,7 +72,7 @@ export default function HeroCarousel() {
                 <Link
                   to={`/shop-details?id=${slide.id}`}
                   className="flex items-center justify-center rounded-lg outline-offset-4 transition hover:opacity-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-neutral-800"
-                  aria-label={`View product: ${slide.imageAlt}`}
+                  aria-label={`${t("homeHeroCtaViewProduct")}: ${slide.imageAlt}`}
                 >
                   <img
                     src={slide.image}
@@ -76,7 +80,7 @@ export default function HeroCarousel() {
                     width={320}
                     height={320}
                     className="h-auto max-h-[140px] w-auto max-w-[min(100%,220px)] object-contain drop-shadow-[0_12px_32px_rgba(0,0,0,0.12)] sm:max-h-[160px] sm:max-w-[260px] md:max-h-[200px] md:max-w-[300px] lg:max-h-[220px]"
-                    loading={slide.id === slides[0]?.id ? "eager" : "lazy"}
+                    loading={slide.id === firstId ? "eager" : "lazy"}
                   />
                 </Link>
               </div>

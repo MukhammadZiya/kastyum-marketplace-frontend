@@ -4,9 +4,11 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 import { categoryData } from "../../../data/categoryData";
+import { useT } from "../../../i18n";
 import CategoryCard from "./SingleItem";
 
 export default function Categories() {
+  const t = useT();
   const sliderRef = useRef<any>(null);
 
   const handlePrev = useCallback(() => {
@@ -37,10 +39,10 @@ export default function Categories() {
                     strokeWidth="1.5"
                   />
                 </svg>
-                Categories
+                {t("homeCategoriesEyebrow")}
               </span>
               <h2 className="font-semibold text-xl xl:text-[28px] text-neutral-900">
-                Shop by category
+                {t("homeCategoriesTitle")}
               </h2>
             </div>
 
@@ -48,7 +50,7 @@ export default function Categories() {
               <button
                 onClick={handlePrev}
                 className="flex items-center justify-center w-10 h-10 rounded-md border border-neutral-200 bg-white hover:bg-neutral-50"
-                aria-label="Previous"
+                aria-label={t("common.ariaPrevious")}
                 type="button"
               >
                 <svg
@@ -71,7 +73,7 @@ export default function Categories() {
               <button
                 onClick={handleNext}
                 className="flex items-center justify-center w-10 h-10 rounded-md border border-neutral-200 bg-white hover:bg-neutral-50"
-                aria-label="Next"
+                aria-label={t("common.ariaNext")}
                 type="button"
               >
                 <svg
