@@ -5,6 +5,7 @@ import { DataTablePlaceholder } from "../../components/DataTablePlaceholder";
 import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
 import { useAdminMemberList } from "../../hooks/admin-members";
 import { getAuthToken } from "@repo/api";
+import { getAdminListEmptyMessage } from "../../lib/adminListEmptyMessage";
 
 export function UsersListPage() {
   const signedIn = !!getAuthToken();
@@ -16,15 +17,14 @@ export function UsersListPage() {
   const buyers =
     data?.list.filter((m: Member) => m.type === "USER") ?? [];
 
-  const emptyMessage = !signedIn
-    ? "Sign in as admin to load members."
-    : isPending
-      ? "Loading…"
-      : isError
-        ? error instanceof Error
-          ? error.message
-          : "Request failed."
-        : "No buyers in this result set.";
+  const emptyMessage = getAdminListEmptyMessage({
+    signedIn,
+    isPending,
+    isError,
+    error,
+    signInHint: "Sign in as admin to load members.",
+    whenEmpty: "No buyers in this result set.",
+  });
 
   const rowEls =
     buyers.length > 0 ?

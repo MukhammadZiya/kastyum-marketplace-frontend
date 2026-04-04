@@ -8,6 +8,7 @@ import {
   useAdminProductList,
 } from "../../hooks/admin-products";
 import { getAuthToken } from "@repo/api";
+import { getAdminListEmptyMessage } from "../../lib/adminListEmptyMessage";
 
 export function ProductsListPage() {
   const signedIn = !!getAuthToken();
@@ -17,15 +18,14 @@ export function ProductsListPage() {
   });
   const deleteProduct = useAdminProductDelete();
 
-  const emptyMessage = !signedIn
-    ? "Sign in as admin to load products."
-    : isPending
-      ? "Loading…"
-      : isError
-        ? error instanceof Error
-          ? error.message
-          : "Request failed."
-        : "No products.";
+  const emptyMessage = getAdminListEmptyMessage({
+    signedIn,
+    isPending,
+    isError,
+    error,
+    signInHint: "Sign in as admin to load products.",
+    whenEmpty: "No products.",
+  });
 
   const rowEls =
     data?.list.length ?
