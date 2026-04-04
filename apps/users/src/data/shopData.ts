@@ -1,4 +1,5 @@
 import type { Product } from "../types/product";
+import { productLightWebImgs } from "./lightWebpImages";
 
 export type ShopProduct = Product & {
   category: string;
@@ -114,10 +115,7 @@ export const shopData: ShopProduct[] = [
     colors: ["Black"],
     sizes: ["One size"],
     storeTypes: [],
-    imgs: {
-      thumbnails: ["/images/products/product-1-sm-1.png", "/images/products/product-1-sm-2.png"],
-      previews: ["/images/products/product-1-bg-1.png", "/images/products/product-1-bg-2.png"],
-    },
+    imgs: productLightWebImgs(1),
   },
   {
     title: "iPhone 14 Plus , 6/128GB",
@@ -129,10 +127,7 @@ export const shopData: ShopProduct[] = [
     colors: ["Black", "Silver"],
     sizes: ["128GB"],
     storeTypes: ["phone"],
-    imgs: {
-      thumbnails: ["/images/products/product-2-sm-1.png", "/images/products/product-2-sm-2.png"],
-      previews: ["/images/products/product-2-bg-1.png", "/images/products/product-2-bg-2.png"],
-    },
+    imgs: productLightWebImgs(2),
   },
   {
     title: "Apple iMac M1 24-inch 2021",
@@ -144,10 +139,7 @@ export const shopData: ShopProduct[] = [
     colors: ["Blue", "Silver"],
     sizes: ['24"'],
     storeTypes: ["desktop", "monitor"],
-    imgs: {
-      thumbnails: ["/images/products/product-3-sm-1.png", "/images/products/product-3-sm-2.png"],
-      previews: ["/images/products/product-3-bg-1.png", "/images/products/product-3-bg-2.png"],
-    },
+    imgs: productLightWebImgs(3),
   },
   {
     title: "MacBook Air M1 chip, 8/256GB",
@@ -159,10 +151,7 @@ export const shopData: ShopProduct[] = [
     colors: ["Space Gray"],
     sizes: ['13"', "256GB"],
     storeTypes: ["laptop"],
-    imgs: {
-      thumbnails: ["/images/products/product-4-sm-1.png", "/images/products/product-4-sm-2.png"],
-      previews: ["/images/products/product-4-bg-1.png", "/images/products/product-4-bg-2.png"],
-    },
+    imgs: productLightWebImgs(4),
   },
   {
     title: "Apple Watch Ultra",
@@ -174,10 +163,7 @@ export const shopData: ShopProduct[] = [
     colors: ["Titanium"],
     sizes: ["One size"],
     storeTypes: ["watch"],
-    imgs: {
-      thumbnails: ["/images/products/product-5-sm-1.png", "/images/products/product-5-sm-2.png"],
-      previews: ["/images/products/product-5-bg-1.png", "/images/products/product-5-bg-2.png"],
-    },
+    imgs: productLightWebImgs(5),
   },
   {
     title: "Logitech MX Master 3 Mouse",
@@ -189,10 +175,7 @@ export const shopData: ShopProduct[] = [
     colors: ["Black"],
     sizes: ["One size"],
     storeTypes: ["mouse"],
-    imgs: {
-      thumbnails: ["/images/products/product-6-sm-1.png", "/images/products/product-6-sm-2.png"],
-      previews: ["/images/products/product-6-bg-1.png", "/images/products/product-6-bg-2.png"],
-    },
+    imgs: productLightWebImgs(6),
   },
   {
     title: "Apple iPad Air 5th Gen - 64GB",
@@ -204,10 +187,7 @@ export const shopData: ShopProduct[] = [
     colors: ["Blue"],
     sizes: ["64GB"],
     storeTypes: ["tablet"],
-    imgs: {
-      thumbnails: ["/images/products/product-7-sm-1.png", "/images/products/product-7-sm-2.png"],
-      previews: ["/images/products/product-7-bg-1.png", "/images/products/product-7-bg-2.png"],
-    },
+    imgs: productLightWebImgs(7),
   },
   {
     title: "Asus RT Dual Band Router",
@@ -219,9 +199,6 @@ export const shopData: ShopProduct[] = [
     colors: ["Black"],
     sizes: ["One size"],
     storeTypes: [],
-    imgs: {
-      thumbnails: ["/images/products/product-8-sm-1.png", "/images/products/product-8-sm-2.png"],
-      previews: ["/images/products/product-8-bg-1.png", "/images/products/product-8-bg-1.png"],
-    },
+    imgs: productLightWebImgs(8),
   },
 ];

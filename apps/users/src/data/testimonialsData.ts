@@ -1,3 +1,5 @@
+import { primaryImageForGroup } from "./lightWebpImages";
+
 export type Testimonial = {
   id: number;
   name: string;
@@ -13,7 +15,7 @@ export const testimonialsData: Testimonial[] = [
     designation: "Customer",
     content:
       "Great quality and fast delivery. The product looked even better in person than online.",
-    img: "/images/users/user-01.jpg",
+    img: primaryImageForGroup(5),
   },
   {
     id: 2,
@@ -21,7 +23,7 @@ export const testimonialsData: Testimonial[] = [
     designation: "Customer",
     content:
       "Smooth checkout, nice packaging, and excellent support. Definitely shopping again.",
-    img: "/images/users/user-02.jpg",
+    img: primaryImageForGroup(6),
   },
   {
     id: 3,
@@ -29,7 +31,7 @@ export const testimonialsData: Testimonial[] = [
     designation: "Customer",
     content:
       "Really impressed with the design and comfort. The deals are genuinely worth it.",
-    img: "/images/users/user-03.jpg",
+    img: primaryImageForGroup(7),
   },
   {
     id: 4,
@@ -37,7 +39,7 @@ export const testimonialsData: Testimonial[] = [
     designation: "Customer",
     content:
       "The site is clean and easy to use. Shipping was quick and the product is top-notch.",
-    img: "/images/users/user-04.jpg",
+    img: primaryImageForGroup(1),
   },
 ];
 

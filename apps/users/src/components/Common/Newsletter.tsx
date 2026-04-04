@@ -1,10 +1,12 @@
+import { primaryImageForGroup } from "../../data/lightWebpImages";
+
 export default function Newsletter() {
   return (
     <section className="overflow-hidden">
       <div className="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0">
         <div className="relative z-[1] overflow-hidden rounded-xl">
           <img
-            src="/images/shapes/newsletter-bg.jpg"
+            src={primaryImageForGroup(7)}
             alt="background illustration"
             className="absolute -z-[1] w-full h-full left-0 top-0 rounded-xl object-cover"
             width={1170}

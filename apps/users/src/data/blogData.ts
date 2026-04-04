@@ -1,3 +1,5 @@
+import { primaryImageForGroup } from "./lightWebpImages";
+
 export type BlogPost = {
   id: number;
   title: string;
@@ -14,7 +16,7 @@ export const blogData: BlogPost[] = [
     title: "Top 10 Smart Gadgets You Should Buy in 2026",
     excerpt:
       "Discover the newest gadgets that improve productivity and daily life with smart automation.",
-    image: "/images/products/product-1-bg-1.png",
+    image: primaryImageForGroup(1),
     date: "March 12, 2026",
     author: "Admin",
     category: "Technology",
@@ -24,7 +26,7 @@ export const blogData: BlogPost[] = [
     title: "How to Choose a Perfect Laptop for Development",
     excerpt:
       "A practical checklist for selecting CPU, RAM, battery and display for modern coding workloads.",
-    image: "/images/products/product-2-bg-1.png",
+    image: primaryImageForGroup(2),
     date: "March 15, 2026",
     author: "Admin",
     category: "Guides",
@@ -34,7 +36,7 @@ export const blogData: BlogPost[] = [
     title: "E-commerce Trends That Will Shape Online Stores",
     excerpt:
       "From AI recommendations to fast checkout, these trends can boost conversion and customer trust.",
-    image: "/images/products/product-3-bg-1.png",
+    image: primaryImageForGroup(3),
     date: "March 18, 2026",
     author: "Admin",
     category: "Business",
@@ -44,7 +46,7 @@ export const blogData: BlogPost[] = [
     title: "Best Accessories to Upgrade Your Workspace",
     excerpt:
       "Build a more comfortable and efficient desk setup with these must-have accessories.",
-    image: "/images/products/product-4-bg-1.png",
+    image: primaryImageForGroup(4),
     date: "March 21, 2026",
     author: "Admin",
     category: "Lifestyle",

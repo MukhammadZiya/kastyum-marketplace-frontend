@@ -70,18 +70,21 @@ export default function QuickViewModal() {
                       }`}
                       type="button"
                     >
-                      <img src={img} alt="thumbnail" width={61} height={61} className="aspect-square" />
+                      <img
+                        src={img}
+                        alt="thumbnail"
+                        className="max-h-[61px] max-w-[61px] object-contain object-center"
+                      />
                     </button>
                   ))}
                 </div>
 
-                <div className="relative z-[1] overflow-hidden flex items-center justify-center w-full sm:min-h-[508px] bg-neutral-100 rounded-lg border border-neutral-200">
+                <div className="relative z-[1] flex w-full min-h-[280px] items-center justify-center overflow-hidden rounded-lg border border-neutral-200 bg-neutral-100 sm:min-h-[min(508px,60vh)]">
                   {product?.imgs?.previews?.[activePreview] && (
                     <img
                       src={product.imgs.previews[activePreview]}
                       alt="product details"
-                      width={400}
-                      height={400}
+                      className="max-h-[min(508px,58vh)] w-full max-w-full object-contain object-center p-4"
                     />
                   )}
                 </div>

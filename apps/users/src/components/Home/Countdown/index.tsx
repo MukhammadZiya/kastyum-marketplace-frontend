@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { primaryImageForGroup } from "../../../data/lightWebpImages";
 
 export default function Countdown() {
   const [days, setDays] = useState(0);
@@ -65,14 +66,14 @@ export default function Countdown() {
           </div>
 
           <img
-            src="/images/countdown/countdown-bg.png"
+            src={primaryImageForGroup(5)}
             alt="bg"
             className="hidden sm:block absolute right-0 bottom-0 -z-[1]"
             width={737}
             height={482}
           />
           <img
-            src="/images/countdown/countdown-01.png"
+            src={primaryImageForGroup(6)}
             alt="product"
             className="hidden lg:block absolute right-4 xl:right-[132px] bottom-4 xl:bottom-10 -z-[1]"
             width={411}
