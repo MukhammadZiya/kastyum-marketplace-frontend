@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import CustomSelect from "./CustomSelect";
-import { menuData } from "./menuData";
+import { LanguageSwitcher } from "./LanguageSwitcher";
+import { getNavMenuItems } from "./menuData";
 import { useCart } from "../../context/cart";
 import { useCartModal } from "../../context/cartSidebarModal";
-import { HEADER_CATALOG_OPTIONS } from "../../data/headerCatalogOptions";
+import { headerCatalogOptions } from "../../data/headerCatalogOptions";
+import { useT } from "../../i18n";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -15,6 +17,9 @@ const Header = () => {
   const { openCartModal } = useCartModal();
 
   const { items, totalPrice } = useCart();
+  const t = useT();
+  const menuItems = useMemo(() => getNavMenuItems(t), [t]);
+  const catalogOptions = useMemo(() => headerCatalogOptions(t), [t]);
 
   const handleStickyMenu = () => {
     setStickyMenu(window.scrollY >= 80);
@@ -60,7 +65,7 @@ const Header = () => {
               <form onSubmit={handleSearchSubmit}>
                 <div className="flex items-center">
                   <CustomSelect
-                    options={HEADER_CATALOG_OPTIONS}
+                    options={catalogOptions}
                     value={searchCatalog}
                     onChange={setSearchCatalog}
                   />
@@ -73,14 +78,14 @@ const Header = () => {
                       type="search"
                       name="search"
                       id="search"
-                      placeholder="I am shopping for..."
+                      placeholder={t("headerSearchPlaceholder")}
                       autoComplete="off"
                       className="w-full rounded-r-[5px] bg-neutral-50 border border-neutral-200 border-l-0 py-2.5 pl-4 pr-10 outline-none ease-in duration-200"
                     />
 
                     <button
                       id="search-btn"
-                      aria-label="Search"
+                      aria-label={t("common.ariaSearch")}
                       className="flex items-center justify-center absolute right-3 top-1/2 -translate-y-1/2 ease-in duration-200 hover:text-blue-600"
                       type="submit"
                     >
@@ -104,37 +109,10 @@ const Header = () => {
             </div>
           </div>
 
-          <div className="flex w-full lg:w-auto items-center gap-[30px]">
-            <div className="hidden xl:flex items-center gap-[14px]">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M4.7177 3.09215C5.94388 1.80121 7.9721 2.04307 8.98569 3.47665L10.2467 5.26014C11.0574 6.4068 10.9889 8.00097 10.0214 9.01965L9.7765 9.27743C9.77582 9.27921 9.7751 9.28115 9.77436 9.28323C9.76142 9.31959 9.7287 9.43538 9.7609 9.65513C9.82765 10.1107 10.1793 11.0364 11.607 12.5394C13.0391 14.0472 13.9078 14.4025 14.3103 14.4679C14.484 14.4961 14.5748 14.4716 14.6038 14.4614L15.0124 14.0312C15.8862 13.1113 17.2485 12.9301 18.347 13.5623L20.2575 14.662C21.8904 15.6019 22.2705 17.9011 20.9655 19.275L19.545 20.7705C19.1016 21.2373 18.497 21.6358 17.75 21.7095C15.9261 21.8895 11.701 21.655 7.27161 16.9917C3.13844 12.6403 2.35326 8.85538 2.25401 7.00615L2.92011 6.9704L2.25401 7.00615C2.20497 6.09248 2.61224 5.30879 3.1481 4.74464L4.7177 3.09215Z"
-                  fill="#3C50E0"
-                />
-              </svg>
+          <div className="flex w-full lg:w-auto justify-between items-center gap-5">
+              <div className="flex items-center gap-4 sm:gap-5">
+                <LanguageSwitcher />
 
-              <div>
-                <span className="block text-[10px] text-neutral-500 uppercase">
-                  24/7 SUPPORT
-                </span>
-                <p className="font-medium text-[14px] text-neutral-900">
-                  (+965) 7492-3477
-                </p>
-              </div>
-            </div>
-
-            <span className="hidden xl:block w-px h-[30px] bg-neutral-200" />
-
-            <div className="flex w-full lg:w-auto justify-between items-center gap-5">
-              <div className="flex items-center gap-5">
                 <Link to="/signin" className="flex items-center gap-[10px]">
                   <svg
                     width="24"
@@ -159,10 +137,10 @@ const Header = () => {
 
                   <div>
                     <span className="block text-[10px] text-neutral-500 uppercase">
-                      account
+                      {t("common.account")}
                     </span>
                     <p className="font-medium text-[14px] text-neutral-900">
-                      Sign In
+                      {t("common.signIn")}
                     </p>
                   </div>
                 </Link>
@@ -195,7 +173,7 @@ const Header = () => {
 
                   <div>
                     <span className="block text-[10px] text-neutral-500 uppercase">
-                      cart
+                      {t("common.cart")}
                     </span>
                     <p className="font-medium text-[14px] text-neutral-900">
                       ${totalPrice.toFixed(2)}
@@ -206,7 +184,7 @@ const Header = () => {
 
               <button
                 id="Toggle"
-                aria-label="Toggler"
+                aria-label={t("common.ariaToggler")}
                 className="xl:hidden block"
                 onClick={() => setNavigationOpen(!navigationOpen)}
               >
@@ -243,7 +221,6 @@ const Header = () => {
                   </span>
                 </span>
               </button>
-            </div>
           </div>
         </div>
       </div>
@@ -260,7 +237,7 @@ const Header = () => {
             >
               <nav className="min-w-0 xl:max-w-[calc(100vw-12rem)] xl:overflow-x-auto xl:pb-1">
                 <ul className="flex flex-col gap-5 xl:flex-row xl:flex-nowrap xl:items-center xl:gap-5">
-                  {menuData.map((menuItem) => (
+                  {menuItems.map((menuItem) => (
                     <li
                       key={menuItem.id}
                       className="group relative before:absolute before:left-0 before:top-0 before:h-[3px] before:w-0 before:rounded-b-[3px] before:bg-blue-600 before:duration-200 before:ease-out hover:before:w-full"
@@ -279,18 +256,19 @@ const Header = () => {
               </nav>
             </div>
 
-            <div className="hidden xl:block">
+            {/* Wishlist link hidden for now — restore when ready */}
+            {/* <div className="hidden xl:block">
               <ul className="flex items-center gap-[22px]">
                 <li className="py-4">
                   <Link
                     to="/wishlist"
                     className="flex items-center gap-[6px] font-medium text-[14px] text-neutral-900 hover:text-blue-600"
                   >
-                    Wishlist
+                    {t("common.wishlist")}
                   </Link>
                 </li>
               </ul>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

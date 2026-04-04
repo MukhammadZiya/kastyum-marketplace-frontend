@@ -1,17 +1,19 @@
 import { Badge, Button } from "@repo/ui";
+import { useT } from "../i18n";
 
 type Props = {
-  roleLabel?: string;
+  roleLabelKey?: string;
   onLogout: () => void;
 };
 
 export function AdminTopbarActions({
-  roleLabel = "Superadmin",
+  roleLabelKey = "common.adminRoleSuperadmin",
   onLogout,
 }: Props) {
+  const t = useT();
   return (
     <>
-      <Badge variant="accent">{roleLabel}</Badge>
+      <Badge variant="accent">{t(roleLabelKey)}</Badge>
       <Button
         type="button"
         variant="ghost"
@@ -19,7 +21,7 @@ export function AdminTopbarActions({
         className="text-slate-600 hover:text-slate-900"
         onClick={onLogout}
       >
-        Log out
+        {t("common.adminLogOut")}
       </Button>
     </>
   );

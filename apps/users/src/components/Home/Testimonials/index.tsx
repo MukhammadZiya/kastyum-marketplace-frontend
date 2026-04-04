@@ -4,9 +4,11 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 import { testimonialsData } from "../../../data/testimonialsData";
+import { useT } from "../../../i18n";
 import TestimonialCard from "./SingleItem";
 
 export default function Testimonials() {
+  const t = useT();
   const sliderRef = useRef<any>(null);
 
   const handlePrev = useCallback(() => {
@@ -49,10 +51,10 @@ export default function Testimonials() {
                     fill="#3C50E0"
                   />
                 </svg>
-                Testimonials
+                {t("homeTestimonialsEyebrow")}
               </span>
               <h2 className="font-semibold text-xl xl:text-[28px] text-neutral-900">
-                User Feedbacks
+                {t("homeTestimonialsTitle")}
               </h2>
             </div>
 
@@ -60,7 +62,7 @@ export default function Testimonials() {
               <button
                 onClick={handlePrev}
                 className="flex items-center justify-center w-10 h-10 rounded-md border border-neutral-200 bg-white hover:bg-neutral-50"
-                aria-label="Previous"
+                aria-label={t("common.ariaPrevious")}
                 type="button"
               >
                 <svg
@@ -83,7 +85,7 @@ export default function Testimonials() {
               <button
                 onClick={handleNext}
                 className="flex items-center justify-center w-10 h-10 rounded-md border border-neutral-200 bg-white hover:bg-neutral-50"
-                aria-label="Next"
+                aria-label={t("common.ariaNext")}
                 type="button"
               >
                 <svg

@@ -15,14 +15,14 @@ export function SignInPage() {
 
   return (
     <>
-      <Breadcrumb title="Signin" pages={["signin"]} />
+      <Breadcrumb title="Sign in" pages={["account", "sign in"]} />
       <section className="py-10 bg-neutral-100">
         <div className="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0">
           <div className="max-w-[570px] mx-auto rounded-xl bg-white border border-neutral-200 p-6 sm:p-10">
             <h2 className="text-2xl font-semibold text-neutral-900 text-center mb-2">
               Sign In to Your Account
             </h2>
-            <p className="text-center text-neutral-600 mb-8">Enter your detail below</p>
+            <p className="text-center text-neutral-600 mb-8">Enter your details below</p>
             <form
               className="space-y-5"
               onSubmit={(e) => {

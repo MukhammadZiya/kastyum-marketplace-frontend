@@ -3,9 +3,11 @@ import { Link } from "react-router-dom";
 import { shopData } from "../../../data/shopData";
 import { useProductList } from "../../../hooks/products";
 import { apiProductToStorefront } from "../../../lib/apiProductToStorefront";
+import { useT } from "../../../i18n";
 import ProductItem from "./ProductItem";
 
 export default function NewArrivals() {
+  const t = useT();
   const { data, isPending } = useProductList({ page: 1, limit: 8 });
   const hasListItems = Boolean(data?.list?.length);
 
@@ -41,10 +43,10 @@ export default function NewArrivals() {
                   strokeLinecap="round"
                 />
               </svg>
-              This Week’s
+              {t("homeNewArrivalsEyebrow")}
             </span>
             <h2 className="font-semibold text-xl xl:text-[28px] text-neutral-900">
-              New Arrivals
+              {t("homeNewArrivalsTitle")}
             </h2>
           </div>
 
@@ -52,12 +54,12 @@ export default function NewArrivals() {
             to="/shop-with-sidebar"
             className="inline-flex font-medium text-[14px] py-2.5 px-7 rounded-md border-neutral-200 border bg-neutral-50 text-neutral-900 ease-out duration-200 hover:bg-neutral-900 hover:text-white hover:border-transparent"
           >
-            View All
+            {t("common.viewAll")}
           </Link>
         </div>
 
         {isPending && !hasListItems ? (
-          <p className="text-sm text-neutral-600 py-8">Loading products…</p>
+          <p className="text-sm text-neutral-600 py-8">{t("common.loadingProducts")}</p>
         ) : null}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-[30px] gap-y-9">

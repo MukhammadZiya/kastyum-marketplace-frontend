@@ -19,14 +19,21 @@ export default function ProductItem({ item }: { item: Product }) {
 
   return (
     <div className="group rounded-xl p-1 transition duration-200 ease-out hover:-translate-y-1 hover:shadow-[0_14px_40px_-14px_rgba(15,23,42,0.12)] hover:ring-1 hover:ring-neutral-200/70">
-      <div className="relative mb-4 min-h-[270px] overflow-hidden rounded-lg bg-[#F6F7FB] transition-colors duration-200 group-hover:bg-[#E8ECF4]">
+      {/* Fixed aspect + object-contain: same card height for every product; image never cropped (letterboxed if needed). */}
+      <div className="relative mb-4 aspect-[3/4] w-full overflow-hidden rounded-lg bg-[#F6F7FB] transition-colors duration-200 group-hover:bg-[#E8ECF4]">
         <Link
           to={detailTo}
           className="absolute inset-0 z-[1]"
           aria-label={`View details: ${item.title}`}
         />
-        <div className="relative z-0 flex items-center justify-center py-8">
-          <img src={item.imgs.previews[0]} alt="" width={250} height={250} />
+        <div className="absolute inset-x-0 top-0 bottom-[5.25rem] z-0 flex items-center justify-center p-3 sm:p-4">
+          <img
+            src={item.imgs.previews[0]}
+            alt=""
+            className="max-h-full max-w-full object-contain object-center"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
 
         <div className="absolute bottom-0 left-0 z-10 flex w-full translate-y-0 items-center justify-center gap-[10px] pb-5">
@@ -98,7 +105,10 @@ export default function ProductItem({ item }: { item: Product }) {
         </div>
       </div>
 
-      <Link to={detailTo} className="block">
+      <Link
+        to={detailTo}
+        className="block text-neutral-900 visited:text-neutral-900 no-underline"
+      >
         <div className="mb-2 flex items-center gap-[10px]">
           <div className="flex items-center gap-1">
             {Array.from({ length: 5 }).map((_, i) => (

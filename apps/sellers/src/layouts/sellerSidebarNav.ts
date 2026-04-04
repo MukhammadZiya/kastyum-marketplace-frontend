@@ -1,36 +1,68 @@
 import type { SidebarNavItem, SidebarSubItem } from "@repo/ui";
+import type { TranslateFn } from "../i18n/types";
 
-export const SELLER_SIDEBAR_ITEMS: SidebarNavItem[] = [
-  { id: "dashboard", label: "Dashboard", to: "/" },
+type SubSpec = { to: string; labelKey: string; end?: boolean };
+
+const PRODUCTS_SUBS: SubSpec[] = [
+  { to: "/products", labelKey: "common.sellerSubOverview", end: true },
+  { to: "/products/list", labelKey: "common.sellerSubAllProducts" },
+  { to: "/products/new", labelKey: "common.sellerSubAddProduct" },
+];
+
+const ORDERS_SUBS: SubSpec[] = [
+  { to: "/orders", labelKey: "common.sellerSubOverview", end: true },
+  { to: "/orders/list", labelKey: "common.sellerSubAllOrders" },
+];
+
+const STORE_SUBS: SubSpec[] = [
+  { to: "/store", labelKey: "common.sellerSubOverview", end: true },
+  { to: "/store/edit", labelKey: "common.sellerSubEditStore" },
+];
+
+type TopSpec = {
+  id: string;
+  labelKey: string;
+  to: string;
+  subs?: readonly SubSpec[];
+};
+
+const TOP: TopSpec[] = [
+  { id: "dashboard", labelKey: "common.sellerNavDashboard", to: "/" },
   {
     id: "products",
-    label: "Products",
+    labelKey: "common.sellerNavProducts",
     to: "/products",
-    subItems: [
-      { to: "/products", label: "Overview", end: true },
-      { to: "/products/list", label: "All products" },
-      { to: "/products/new", label: "Add product" },
-    ],
+    subs: PRODUCTS_SUBS,
   },
   {
     id: "orders",
-    label: "Orders",
+    labelKey: "common.sellerNavOrders",
     to: "/orders",
-    subItems: [
-      { to: "/orders", label: "Overview", end: true },
-      { to: "/orders/list", label: "All orders" },
-    ],
+    subs: ORDERS_SUBS,
   },
   {
     id: "store",
-    label: "Store profile",
+    labelKey: "common.sellerNavStore",
     to: "/store",
-    subItems: [
-      { to: "/store", label: "Overview", end: true },
-      { to: "/store/edit", label: "Edit store" },
-    ],
+    subs: STORE_SUBS,
   },
 ];
+
+export function buildSellerSidebarItems(t: TranslateFn): SidebarNavItem[] {
+  return TOP.map((item) => {
+    const subItems: SidebarSubItem[] | undefined = item.subs?.map((s) => ({
+      to: s.to,
+      label: t(s.labelKey),
+      end: s.end,
+    }));
+    return {
+      id: item.id,
+      label: t(item.labelKey),
+      to: item.to,
+      subItems,
+    };
+  });
+}
 
 export function isSellerSubActive(pathname: string, sub: SidebarSubItem): boolean {
   if (sub.end) return pathname === sub.to;

@@ -20,7 +20,7 @@ export function ShopWithoutSidebarPage() {
 
   return (
     <>
-      <Breadcrumb title="Explore All Products" pages={["shop", "shop without sidebar"]} />
+      <Breadcrumb title="Shop collection" pages={["shop", "full grid"]} />
       <section className="bg-neutral-100 py-10">
         <div className="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0">
           <div className="bg-white rounded-lg border border-neutral-200 p-3 mb-6 flex items-center justify-between">

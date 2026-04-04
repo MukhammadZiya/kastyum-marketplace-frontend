@@ -70,7 +70,7 @@ export function CheckoutPage() {
               ) : null}
               {items.length > 0 && !hasOnlyApiItems ? (
                 <p className="mb-3 text-sm text-amber-800 bg-amber-50 border border-amber-100 rounded-md p-3">
-                  Only products from the live catalog can be ordered. Remove template-only items or add products from the shop.
+                  Only items from the live catalog can be ordered. Remove showcase pieces from your bag or pick a size from the shop.
                 </p>
               ) : null}
               <div className="space-y-3 text-sm">

@@ -1,3 +1,5 @@
+import { primaryImageForGroup } from "./lightWebpImages";
+
 export type Testimonial = {
   id: number;
   name: string;
@@ -12,32 +14,31 @@ export const testimonialsData: Testimonial[] = [
     name: "Esther Howard",
     designation: "Customer",
     content:
-      "Great quality and fast delivery. The product looked even better in person than online.",
-    img: "/images/users/user-01.jpg",
+      "The suit arrived beautifully pressed and true to size. The fabric feels substantial—better in person than on screen.",
+    img: primaryImageForGroup(5),
   },
   {
     id: 2,
     name: "Jacob Jones",
     designation: "Customer",
     content:
-      "Smooth checkout, nice packaging, and excellent support. Definitely shopping again.",
-    img: "/images/users/user-02.jpg",
+      "Smooth checkout and fast shipping. Customer care helped me swap sizes without any fuss.",
+    img: primaryImageForGroup(6),
   },
   {
     id: 3,
     name: "Courtney Henry",
     designation: "Customer",
     content:
-      "Really impressed with the design and comfort. The deals are genuinely worth it.",
-    img: "/images/users/user-03.jpg",
+      "Finally a store where the photos match the product. The cut is modern and the tailoring notes on the site were spot on.",
+    img: primaryImageForGroup(7),
   },
   {
     id: 4,
     name: "Kristin Watson",
     designation: "Customer",
     content:
-      "The site is clean and easy to use. Shipping was quick and the product is top-notch.",
-    img: "/images/users/user-04.jpg",
+      "Clean site, easy to browse fits, and the return window gave me confidence to try a bolder color.",
+    img: primaryImageForGroup(1),
   },
 ];
-

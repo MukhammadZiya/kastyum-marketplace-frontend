@@ -16,7 +16,11 @@ export default function CartSidebarItem({
           className="flex h-[90px] w-full max-w-[90px] items-center justify-center rounded-[10px] bg-neutral-100"
           aria-label={`View ${item.title}`}
         >
-          <img src={item.imgs?.thumbnails[0]} alt="" width={100} height={100} />
+          <img
+            src={item.imgs?.thumbnails[0]}
+            alt=""
+            className="max-h-[78px] max-w-[78px] object-contain object-center"
+          />
         </Link>
 
         <div className="min-w-0">

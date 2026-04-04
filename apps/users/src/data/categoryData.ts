@@ -1,6 +1,10 @@
+import { primaryImageForGroup } from "./lightWebpImages";
+
 export type CategoryItem = {
   id: number;
   title: string;
+  /** i18n key (flat messages) for nav and category cards */
+  titleKey: string;
   img: string;
   /** Passed as `?q=` on shop so results match this category (title substring search). */
   shopSearchQuery: string;
@@ -8,46 +12,60 @@ export type CategoryItem = {
 
 export const categoryData: CategoryItem[] = [
   {
-    title: "Televisions",
+    title: "Men's suits",
+    titleKey: "categoryNavMensSuits",
     id: 1,
-    img: "/images/categories/categories-01.png",
-    shopSearchQuery: "iMac",
+    img: primaryImageForGroup(1),
+    shopSearchQuery: "Navy",
   },
   {
-    title: "Laptop & PC",
+    title: "Formal & evening",
+    titleKey: "categoryNavFormalEvening",
     id: 2,
-    img: "/images/categories/categories-02.png",
-    shopSearchQuery: "MacBook",
+    img: primaryImageForGroup(2),
+    shopSearchQuery: "Tuxedo",
   },
   {
-    title: "Mobile & Tablets",
+    title: "Business tailoring",
+    titleKey: "categoryNavBusinessTailoring",
     id: 3,
-    img: "/images/categories/categories-03.png",
-    shopSearchQuery: "iPhone",
+    img: primaryImageForGroup(3),
+    shopSearchQuery: "Charcoal",
   },
   {
-    title: "Games & Videos",
+    title: "Smart casual",
+    titleKey: "categoryNavSmartCasual",
     id: 4,
-    img: "/images/categories/categories-04.png",
-    shopSearchQuery: "Gamepad",
+    img: primaryImageForGroup(4),
+    shopSearchQuery: "Beige",
   },
   {
-    title: "Home Appliances",
+    title: "Statement suits",
+    titleKey: "categoryNavStatementSuits",
     id: 5,
-    img: "/images/categories/categories-05.png",
-    shopSearchQuery: "Router",
+    img: primaryImageForGroup(5),
+    shopSearchQuery: "Emerald",
   },
   {
-    title: "Health & Sports",
+    title: "Seasonal edit",
+    titleKey: "categoryNavSeasonalEdit",
     id: 6,
-    img: "/images/categories/categories-06.png",
-    shopSearchQuery: "Watch",
+    img: primaryImageForGroup(6),
+    shopSearchQuery: "Ivory",
   },
   {
-    title: "Televisions",
+    title: "Classic three-piece",
+    titleKey: "categoryNavClassicThreePiece",
+    id: 7,
+    img: primaryImageForGroup(7),
+    shopSearchQuery: "Brown",
+  },
+  {
+    title: "Evening suits",
+    titleKey: "categoryNavEveningSuits",
     id: 8,
-    img: "/images/categories/categories-04.png",
-    shopSearchQuery: "iMac",
+    img: primaryImageForGroup(8),
+    shopSearchQuery: "Midnight",
   },
 ];
 

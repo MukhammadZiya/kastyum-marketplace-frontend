@@ -2,10 +2,12 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { Button, Card } from "@repo/ui";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
-import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
+import { ADMIN_PAGE_TITLE_KEYS } from "../../constants/adminNavigation";
 import { adminInputClass } from "../../lib/formFieldStyles";
+import { useT } from "../../i18n";
 
 export function SellerCreatePage() {
+  const t = useT();
   const [storeName, setStoreName] = useState("");
   const [ownerEmail, setOwnerEmail] = useState("");
 
@@ -16,21 +18,21 @@ export function SellerCreatePage() {
 
   return (
     <AdminPageFrame
-      title={ADMIN_PAGE_TITLES.sellers}
+      title={t(ADMIN_PAGE_TITLE_KEYS.sellers)}
       addon={
         <p className="text-sm text-slate-500">
-          Onboard a new seller — extend with tax, payout, and KYC fields later.
+          {t("common.adminSellerCreateAddon")}
         </p>
       }
     >
       <Card
-        title="Add seller"
-        description="Minimal store + owner identity; hook to onboarding API when ready."
+        title={t("common.adminSellerCreateCardTitle")}
+        description={t("common.adminSellerCreateCardDesc")}
       >
         <form onSubmit={handleSubmit} className="max-w-lg space-y-4">
           <div>
             <label htmlFor="seller-store" className="text-sm font-medium text-slate-700">
-              Store name
+              {t("common.adminLabelStoreName")}
             </label>
             <input
               id="seller-store"
@@ -39,12 +41,12 @@ export function SellerCreatePage() {
               value={storeName}
               onChange={(ev) => setStoreName(ev.target.value)}
               className={adminInputClass}
-              placeholder="Northwind Goods"
+              placeholder={t("common.adminPhStoreName")}
             />
           </div>
           <div>
             <label htmlFor="seller-owner" className="text-sm font-medium text-slate-700">
-              Owner email
+              {t("common.adminLabelOwnerEmail")}
             </label>
             <input
               id="seller-owner"
@@ -54,11 +56,11 @@ export function SellerCreatePage() {
               value={ownerEmail}
               onChange={(ev) => setOwnerEmail(ev.target.value)}
               className={adminInputClass}
-              placeholder="owner@store.com"
+              placeholder={t("common.adminPhOwnerEmail")}
             />
           </div>
           <Button type="submit" variant="accent" size="md">
-            Create seller
+            {t("common.adminCreateSeller")}
           </Button>
         </form>
       </Card>

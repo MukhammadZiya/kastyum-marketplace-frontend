@@ -1,13 +1,16 @@
+import { useMemo } from "react";
 import { TableCard } from "@repo/ui";
 import type { Member } from "@repo/types";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
 import { DataTablePlaceholder } from "../../components/DataTablePlaceholder";
-import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
+import { ADMIN_PAGE_TITLE_KEYS } from "../../constants/adminNavigation";
 import { useAdminMemberList } from "../../hooks/admin-members";
 import { getAuthToken } from "@repo/api";
 import { getAdminListEmptyMessage } from "../../lib/adminListEmptyMessage";
+import { useT } from "../../i18n";
 
 export function SellersListPage() {
+  const t = useT();
   const signedIn = !!getAuthToken();
   const { data, isPending, isError, error } = useAdminMemberList({
     page: 1,
@@ -22,9 +25,19 @@ export function SellersListPage() {
     isPending,
     isError,
     error,
-    signInHint: "Sign in as admin to load members.",
-    whenEmpty: "No sellers in this result set.",
+    signInHint: t("common.adminEmptySignInMembers"),
+    whenEmpty: t("common.adminEmptySellers"),
   });
+
+  const columns = useMemo(
+    () => [
+      t("common.adminColStore"),
+      t("common.adminColOwnerEmail"),
+      t("common.adminColStatus"),
+      t("common.adminColCreated"),
+    ],
+    [t],
+  );
 
   const rowEls =
     sellers.length > 0 ?
@@ -42,23 +55,19 @@ export function SellersListPage() {
       ))
     : undefined;
 
+  const tableDescription = `${t("common.adminUsersListShowing")} ${sellers.length} ${t("common.adminOf")} ${data?.list.length ?? 0} ${t("common.adminMembersLoadedSuffix")}`;
+
   return (
     <AdminPageFrame
-      title={ADMIN_PAGE_TITLES.sellers}
+      title={t(ADMIN_PAGE_TITLE_KEYS.sellers)}
       addon={
         <p className="text-sm text-slate-500">
-          Sellers (role SELLER) from admin member list.
+          {t("common.adminSellersListAddon")}
         </p>
       }
     >
-      <TableCard
-        title="All sellers"
-        description={`Showing ${sellers.length} of ${data?.list.length ?? 0} loaded members.`}
-      >
-        <DataTablePlaceholder
-          columns={["Store / nick", "Owner email", "Status", "Created"]}
-          emptyMessage={emptyMessage}
-        >
+      <TableCard title={t("common.adminSellersListTitle")} description={tableDescription}>
+        <DataTablePlaceholder columns={columns} emptyMessage={emptyMessage}>
           {rowEls}
         </DataTablePlaceholder>
       </TableCard>

@@ -1,4 +1,5 @@
 import { shopData } from "../../../data/shopData";
+import type { TranslateFn } from "../../../i18n/types";
 
 export type HeroTrendingSlide = {
   id: number;
@@ -11,10 +12,16 @@ export type HeroTrendingSlide = {
   imageAlt: string;
 };
 
-/** Pick products for the home hero; labels alternate between trending / new. */
-export function getHeroTrendingSlides(): HeroTrendingSlide[] {
-  const brows = ["Trending now", "Just dropped", "New in", "Staff pick", "Hot this week"] as const;
+const EYEBROW_KEYS = [
+  "homeHeroEyebrowTrending",
+  "homeHeroEyebrowJustDropped",
+  "homeHeroEyebrowNewIn",
+  "homeHeroEyebrowStaffPick",
+  "homeHeroEyebrowHotWeek",
+] as const;
 
+/** Pick products for the home hero; labels alternate between trending / new. */
+export function getHeroTrendingSlides(t: TranslateFn): HeroTrendingSlide[] {
   return shopData.slice(0, 5).map((p, i) => {
     const words = p.title.split(/\s+/);
     const headline =
@@ -22,10 +29,13 @@ export function getHeroTrendingSlides(): HeroTrendingSlide[] {
 
     return {
       id: p.id,
-      eyebrow: brows[i % brows.length]!,
+      eyebrow: t(EYEBROW_KEYS[i % EYEBROW_KEYS.length]!),
       headline,
       subline: p.title,
-      priceLabel: `From $${p.discountedPrice.toFixed(0)}`,
+      priceLabel: t("homeHeroPriceFormatted").replace(
+        "{amount}",
+        `$${p.discountedPrice.toFixed(0)}`,
+      ),
       image: p.imgs.previews[0] ?? "",
       imageAlt: p.title,
     };

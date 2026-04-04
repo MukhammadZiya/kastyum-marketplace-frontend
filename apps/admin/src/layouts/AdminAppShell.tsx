@@ -1,6 +1,7 @@
 import {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type MouseEventHandler,
@@ -17,10 +18,12 @@ import {
   type SidebarSubItem,
 } from "@repo/ui";
 import { AdminMobileNavContext } from "../contexts/AdminMobileNavContext";
+import { useT } from "../i18n";
 import { logoutAdmin } from "../lib/logoutAdmin";
-import { ADMIN_SIDEBAR_ITEMS, isSidebarSubActive } from "./adminSidebarNav";
+import { buildAdminSidebarItems, isSidebarSubActive } from "./adminSidebarNav";
 
 function AdminBrand() {
+  const t = useT();
   return (
     <div className="flex items-center gap-3">
       <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-sm font-bold text-white">
@@ -28,15 +31,18 @@ function AdminBrand() {
       </div>
       <div>
         <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
-          Kastyum
+          {t("common.adminBrandName")}
         </p>
-        <p className="text-sm font-semibold text-slate-900">Admin</p>
+        <p className="text-sm font-semibold text-slate-900">
+          {t("common.adminBrandTitle")}
+        </p>
       </div>
     </div>
   );
 }
 
 function AdminSidebarProfile({ onLogout }: { onLogout: () => void }) {
+  const t = useT();
   return (
     <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/80 p-3">
       <div
@@ -46,8 +52,12 @@ function AdminSidebarProfile({ onLogout }: { onLogout: () => void }) {
         SA
       </div>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium text-slate-900">superadmin</p>
-        <p className="truncate text-xs text-slate-500">Administrator</p>
+        <p className="truncate text-sm font-medium text-slate-900">
+          {t("common.adminProfileNick")}
+        </p>
+        <p className="truncate text-xs text-slate-500">
+          {t("common.adminProfileRole")}
+        </p>
       </div>
       <Button
         type="button"
@@ -55,7 +65,7 @@ function AdminSidebarProfile({ onLogout }: { onLogout: () => void }) {
         size="sm"
         className="!h-9 !w-9 shrink-0 !p-0 text-slate-500 hover:text-slate-900"
         onClick={onLogout}
-        aria-label="Log out"
+        aria-label={t("common.adminAriaLogOut")}
       >
         <LogOut className="h-4 w-4" strokeWidth={2} />
       </Button>
@@ -70,6 +80,8 @@ function isParentRouteActive(pathname: string, item: SidebarNavItem) {
 
 export function AdminAppShell() {
   const { pathname } = useLocation();
+  const t = useT();
+  const sidebarItems = useMemo(() => buildAdminSidebarItems(t), [t]);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [sectionOverride, setSectionOverride] = useState<
     Record<string, boolean | undefined>
@@ -82,7 +94,7 @@ export function AdminAppShell() {
 
   const isSectionExpanded = useCallback(
     (id: string) => {
-      const item = ADMIN_SIDEBAR_ITEMS.find((i) => i.id === id);
+      const item = sidebarItems.find((i) => i.id === id);
       if (!item?.subItems?.length) return false;
       const auto = isParentRouteActive(pathname, item);
       const o = sectionOverride[id];
@@ -90,13 +102,13 @@ export function AdminAppShell() {
       if (o === false) return false;
       return auto;
     },
-    [pathname, sectionOverride],
+    [pathname, sectionOverride, sidebarItems],
   );
 
   const toggleSection = useCallback(
     (id: string) => {
       setSectionOverride((prev) => {
-        const item = ADMIN_SIDEBAR_ITEMS.find((i) => i.id === id);
+        const item = sidebarItems.find((i) => i.id === id);
         const auto =
           item && item.subItems?.length
             ? isParentRouteActive(pathname, item)
@@ -106,7 +118,7 @@ export function AdminAppShell() {
         return { ...prev, [id]: !effective };
       });
     },
-    [pathname],
+    [pathname, sidebarItems],
   );
 
   const prevPathnameRef = useRef(pathname);
@@ -116,7 +128,7 @@ export function AdminAppShell() {
     setSectionOverride((prevMap) => {
       const next = { ...prevMap };
       let changed = false;
-      for (const item of ADMIN_SIDEBAR_ITEMS) {
+      for (const item of sidebarItems) {
         if (!item.subItems?.length) continue;
         const inNow = isParentRouteActive(pathname, item);
         const wasIn = isParentRouteActive(prevPath, item);
@@ -127,7 +139,7 @@ export function AdminAppShell() {
       }
       return changed ? next : prevMap;
     });
-  }, [pathname]);
+  }, [pathname, sidebarItems]);
 
   const handleLogout = () => {
     logoutAdmin();
@@ -171,7 +183,7 @@ export function AdminAppShell() {
 
   const sidebarShared = {
     brand: <AdminBrand />,
-    items: ADMIN_SIDEBAR_ITEMS,
+    items: sidebarItems,
     isItemActive,
     isSubItemActive: (sub: SidebarSubItem) => isSidebarSubActive(pathname, sub),
     isSectionExpanded,

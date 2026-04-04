@@ -1,14 +1,13 @@
 import type { Product } from "../types/product";
+import { productLightWebImgs } from "./lightWebpImages";
 
 export type ShopProduct = Product & {
   category: string;
   colors: readonly string[];
   sizes: readonly string[];
-  /** Matches header catalog dropdown (desktop, laptop, …). Empty = only “All categories”. */
+  /** Matches header catalog dropdown. Empty = only “All categories”. */
   storeTypes: readonly string[];
 };
-
-export { HEADER_CATALOG_OPTIONS } from "./headerCatalogOptions";
 
 export function filterByHeaderCatalog(
   products: readonly ShopProduct[],
@@ -32,14 +31,14 @@ export function productEffectivePrice(p: Product): number {
   return p.discountedPrice;
 }
 
-export const PRICE_FILTER_OPTIONS = [
-  { id: "under-50", label: "Under $50" },
-  { id: "50-100", label: "$50 – $100" },
-  { id: "100-500", label: "$100 – $500" },
-  { id: "500-plus", label: "$500+" },
+export const PRICE_FILTER_SPECS = [
+  { id: "under-50", labelKey: "shopPriceUnder50" },
+  { id: "50-100", labelKey: "shopPrice50to100" },
+  { id: "100-500", labelKey: "shopPrice100to500" },
+  { id: "500-plus", labelKey: "shopPrice500Plus" },
 ] as const;
 
-export type PriceFilterId = (typeof PRICE_FILTER_OPTIONS)[number]["id"];
+export type PriceFilterId = (typeof PRICE_FILTER_SPECS)[number]["id"];
 
 function priceMatchesBucket(price: number, id: PriceFilterId): boolean {
   if (id === "under-50") return price < 50;
@@ -105,123 +104,99 @@ export function shopFilterOptionLists(products: readonly ShopProduct[]) {
 
 export const shopData: ShopProduct[] = [
   {
-    title: "Havit HV-G69 USB Gamepad",
+    title: "Navy Double-Breasted Wool Suit",
     reviews: 15,
-    price: 59.0,
-    discountedPrice: 29.0,
+    price: 599.0,
+    discountedPrice: 429.0,
     id: 1,
-    category: "Accessories",
-    colors: ["Black"],
-    sizes: ["One size"],
-    storeTypes: [],
-    imgs: {
-      thumbnails: ["/images/products/product-1-sm-1.png", "/images/products/product-1-sm-2.png"],
-      previews: ["/images/products/product-1-bg-1.png", "/images/products/product-1-bg-2.png"],
-    },
+    category: "Men's tailoring",
+    colors: ["Navy"],
+    sizes: ["38R", "40R", "42R"],
+    storeTypes: ["men", "suits"],
+    imgs: productLightWebImgs(1),
   },
   {
-    title: "iPhone 14 Plus , 6/128GB",
-    reviews: 5,
-    price: 899.0,
-    discountedPrice: 99.0,
+    title: "Charcoal Slim Fit Two-Piece Suit",
+    reviews: 12,
+    price: 549.0,
+    discountedPrice: 389.0,
     id: 2,
-    category: "Electronics",
-    colors: ["Black", "Silver"],
-    sizes: ["128GB"],
-    storeTypes: ["phone"],
-    imgs: {
-      thumbnails: ["/images/products/product-2-sm-1.png", "/images/products/product-2-sm-2.png"],
-      previews: ["/images/products/product-2-bg-1.png", "/images/products/product-2-bg-2.png"],
-    },
+    category: "Men's tailoring",
+    colors: ["Charcoal"],
+    sizes: ["38R", "40R", "42R", "44R"],
+    storeTypes: ["men", "suits"],
+    imgs: productLightWebImgs(2),
   },
   {
-    title: "Apple iMac M1 24-inch 2021",
-    reviews: 5,
-    price: 59.0,
-    discountedPrice: 29.0,
+    title: "Beige Classic Fit Two-Piece Suit",
+    reviews: 9,
+    price: 519.0,
+    discountedPrice: 359.0,
     id: 3,
-    category: "Computers",
-    colors: ["Blue", "Silver"],
-    sizes: ['24"'],
-    storeTypes: ["desktop", "monitor"],
-    imgs: {
-      thumbnails: ["/images/products/product-3-sm-1.png", "/images/products/product-3-sm-2.png"],
-      previews: ["/images/products/product-3-bg-1.png", "/images/products/product-3-bg-2.png"],
-    },
+    category: "Men's tailoring",
+    colors: ["Beige"],
+    sizes: ["40R", "42R"],
+    storeTypes: ["men", "suits", "shirts"],
+    imgs: productLightWebImgs(3),
   },
   {
-    title: "MacBook Air M1 chip, 8/256GB",
-    reviews: 6,
-    price: 59.0,
-    discountedPrice: 29.0,
+    title: "Black Peak Lapel Tuxedo",
+    reviews: 11,
+    price: 689.0,
+    discountedPrice: 499.0,
     id: 4,
-    category: "Computers",
-    colors: ["Space Gray"],
-    sizes: ['13"', "256GB"],
-    storeTypes: ["laptop"],
-    imgs: {
-      thumbnails: ["/images/products/product-4-sm-1.png", "/images/products/product-4-sm-2.png"],
-      previews: ["/images/products/product-4-bg-1.png", "/images/products/product-4-bg-2.png"],
-    },
+    category: "Formal wear",
+    colors: ["Black"],
+    sizes: ["38R", "40R", "42R"],
+    storeTypes: ["men", "suits"],
+    imgs: productLightWebImgs(4),
   },
   {
-    title: "Apple Watch Ultra",
-    reviews: 3,
-    price: 99.0,
-    discountedPrice: 29.0,
+    title: "Emerald Textured Wool Suit",
+    reviews: 8,
+    price: 579.0,
+    discountedPrice: 419.0,
     id: 5,
-    category: "Wearables",
-    colors: ["Titanium"],
-    sizes: ["One size"],
-    storeTypes: ["watch"],
-    imgs: {
-      thumbnails: ["/images/products/product-5-sm-1.png", "/images/products/product-5-sm-2.png"],
-      previews: ["/images/products/product-5-bg-1.png", "/images/products/product-5-bg-2.png"],
-    },
+    category: "Men's tailoring",
+    colors: ["Green"],
+    sizes: ["40R", "42R"],
+    storeTypes: ["men", "suits"],
+    imgs: productLightWebImgs(5),
   },
   {
-    title: "Logitech MX Master 3 Mouse",
-    reviews: 15,
-    price: 59.0,
-    discountedPrice: 29.0,
+    title: "Ivory Tailored Blazer & Trousers",
+    reviews: 14,
+    price: 499.0,
+    discountedPrice: 339.0,
     id: 6,
-    category: "Accessories",
-    colors: ["Black"],
-    sizes: ["One size"],
-    storeTypes: ["mouse"],
-    imgs: {
-      thumbnails: ["/images/products/product-6-sm-1.png", "/images/products/product-6-sm-2.png"],
-      previews: ["/images/products/product-6-bg-1.png", "/images/products/product-6-bg-2.png"],
-    },
+    category: "Seasonal",
+    colors: ["Ivory"],
+    sizes: ["38R", "40R", "42R"],
+    storeTypes: ["men", "suits", "outerwear"],
+    imgs: productLightWebImgs(6),
   },
   {
-    title: "Apple iPad Air 5th Gen - 64GB",
-    reviews: 15,
-    price: 59.0,
-    discountedPrice: 29.0,
+    title: "Brown Three-Piece Suit",
+    reviews: 10,
+    price: 629.0,
+    discountedPrice: 449.0,
     id: 7,
-    category: "Electronics",
-    colors: ["Blue"],
-    sizes: ["64GB"],
-    storeTypes: ["tablet"],
-    imgs: {
-      thumbnails: ["/images/products/product-7-sm-1.png", "/images/products/product-7-sm-2.png"],
-      previews: ["/images/products/product-7-bg-1.png", "/images/products/product-7-bg-2.png"],
-    },
+    category: "Men's tailoring",
+    colors: ["Brown"],
+    sizes: ["40R", "42R", "44R"],
+    storeTypes: ["men", "suits"],
+    imgs: productLightWebImgs(7),
   },
   {
-    title: "Asus RT Dual Band Router",
-    reviews: 15,
-    price: 59.0,
-    discountedPrice: 29.0,
+    title: "Midnight Blue Evening Suit",
+    reviews: 13,
+    price: 649.0,
+    discountedPrice: 469.0,
     id: 8,
-    category: "Networking",
-    colors: ["Black"],
-    sizes: ["One size"],
-    storeTypes: [],
-    imgs: {
-      thumbnails: ["/images/products/product-8-sm-1.png", "/images/products/product-8-sm-2.png"],
-      previews: ["/images/products/product-8-bg-1.png", "/images/products/product-8-bg-1.png"],
-    },
+    category: "Formal wear",
+    colors: ["Blue"],
+    sizes: ["38R", "40R", "42R", "44R"],
+    storeTypes: ["men", "suits"],
+    imgs: productLightWebImgs(8),
   },
 ];

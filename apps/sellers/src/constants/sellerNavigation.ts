@@ -8,42 +8,40 @@ export type SellerPageCopyKey =
   | "storeOverview"
   | "storeEdit";
 
-export const SELLER_PAGE_COPY: Record<
+export const SELLER_PAGE_COPY_KEYS: Record<
   SellerPageCopyKey,
-  { title: string; description: string }
+  { titleKey: string; descriptionKey: string }
 > = {
   dashboard: {
-    title: "Dashboard",
-    description:
-      "Overview of store health: products, orders, and sales highlights.",
+    titleKey: "common.sellerPageDashboardTitle",
+    descriptionKey: "common.sellerPageDashboardDesc",
   },
   productsOverview: {
-    title: "Products",
-    description:
-      "Manage product catalog, update pricing, stock, and publication status.",
+    titleKey: "common.sellerPageProductsOverviewTitle",
+    descriptionKey: "common.sellerPageProductsOverviewDesc",
   },
   productsList: {
-    title: "All products",
-    description: "Browse and edit listings. Wire search and filters with your API.",
+    titleKey: "common.sellerPageProductsListTitle",
+    descriptionKey: "common.sellerPageProductsListDesc",
   },
   productsNew: {
-    title: "Add product",
-    description: "Create a new listing — connect media upload and variants next.",
+    titleKey: "common.sellerPageProductsNewTitle",
+    descriptionKey: "common.sellerPageProductsNewDesc",
   },
   ordersOverview: {
-    title: "Orders",
-    description: "Track and update order fulfillment status for your store.",
+    titleKey: "common.sellerPageOrdersOverviewTitle",
+    descriptionKey: "common.sellerPageOrdersOverviewDesc",
   },
   ordersList: {
-    title: "All orders",
-    description: "Operational list — statuses and shipping updates map here.",
+    titleKey: "common.sellerPageOrdersListTitle",
+    descriptionKey: "common.sellerPageOrdersListDesc",
   },
   storeOverview: {
-    title: "Store profile",
-    description: "Configure store identity, contact details, and shop policies.",
+    titleKey: "common.sellerPageStoreOverviewTitle",
+    descriptionKey: "common.sellerPageStoreOverviewDesc",
   },
   storeEdit: {
-    title: "Edit store",
-    description: "Update branding, policies, and contact information.",
+    titleKey: "common.sellerPageStoreEditTitle",
+    descriptionKey: "common.sellerPageStoreEditDesc",
   },
 };

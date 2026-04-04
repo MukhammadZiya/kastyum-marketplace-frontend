@@ -1,73 +1,97 @@
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@repo/ui";
 import { ActivityFeed } from "../../components/ActivityFeed";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
 import { QuickActions } from "../../components/QuickActions";
 import { StatGrid } from "../../components/StatGrid";
-import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
-
-const USER_STATS = [
-  { label: "Registered buyers", value: "12,480", hint: "All time" },
-  { label: "Active (30d)", value: "6,910", hint: "Signed in or ordered" },
-  { label: "New this week", value: "214", hint: "Awaiting first order" },
-] as const;
-
-const USER_EVENTS = [
-  {
-    id: "u1",
-    title: "Account flagged: repeated failed logins for user@example.com",
-    time: "35m ago",
-  },
-  {
-    id: "u2",
-    title: "Profile email verified: jane.d@mail.com",
-    time: "2h ago",
-  },
-  {
-    id: "u3",
-    title: "Buyer role elevated to wholesale for “Acme Retail”",
-    time: "5h ago",
-  },
-  {
-    id: "u4",
-    title: "User self-deletion requested (cooling-off)",
-    time: "Yesterday",
-  },
-] as const;
+import { ADMIN_PAGE_TITLE_KEYS } from "../../constants/adminNavigation";
+import { useT } from "../../i18n";
 
 export function UsersPage() {
   const navigate = useNavigate();
+  const t = useT();
+
+  const stats = useMemo(
+    () => [
+      {
+        label: t("common.adminUsersStatRegLabel"),
+        value: "12,480",
+        hint: t("common.adminUsersStatRegHint"),
+      },
+      {
+        label: t("common.adminUsersStatActiveLabel"),
+        value: "6,910",
+        hint: t("common.adminUsersStatActiveHint"),
+      },
+      {
+        label: t("common.adminUsersStatNewLabel"),
+        value: "214",
+        hint: t("common.adminUsersStatNewHint"),
+      },
+    ],
+    [t],
+  );
+
+  const events = useMemo(
+    () => [
+      {
+        id: "u1",
+        title: t("common.adminUsersAct1Title"),
+        time: t("common.adminTime35m"),
+      },
+      {
+        id: "u2",
+        title: t("common.adminUsersAct2Title"),
+        time: t("common.adminTime2h"),
+      },
+      {
+        id: "u3",
+        title: t("common.adminUsersAct3Title"),
+        time: t("common.adminTime5h"),
+      },
+      {
+        id: "u4",
+        title: t("common.adminUsersAct4Title"),
+        time: t("common.adminTimeYesterday"),
+      },
+    ],
+    [t],
+  );
 
   return (
     <AdminPageFrame
-      title={ADMIN_PAGE_TITLES.users}
+      title={t(ADMIN_PAGE_TITLE_KEYS.users)}
       addon={
         <p className="text-sm text-slate-500">
-          Buyer accounts, verification, and access
+          {t("common.adminUsersAddon")}
         </p>
       }
     >
-      <StatGrid stats={[...USER_STATS]} />
+      <StatGrid stats={stats} />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card
-          title="Recent user events"
-          description="Sign-ins, changes, and flags"
+          title={t("common.adminUsersEventsTitle")}
+          description={t("common.adminUsersEventsDesc")}
         >
-          <ActivityFeed items={[...USER_EVENTS]} />
+          <ActivityFeed items={events} />
         </Card>
 
-        <Card title="Quick actions" description="Common user admin tasks">
+        <Card
+          title={t("common.adminUsersQuickTitle")}
+          description={t("common.adminUsersQuickDesc")}
+        >
           <QuickActions
             actions={[
               {
                 id: "see-users",
-                label: "See all users",
+                label: t("common.adminUsersQuickSeeAll"),
                 onClick: () => navigate("/users/list"),
               },
               {
                 id: "add-user",
-                label: "Add user",
+                label: t("common.adminUsersQuickAdd"),
                 onClick: () => navigate("/users/new"),
               },
             ]}
