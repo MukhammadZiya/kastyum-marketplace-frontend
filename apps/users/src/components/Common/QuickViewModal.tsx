@@ -3,8 +3,11 @@ import { Link } from "react-router-dom";
 import { useQuickViewModal } from "../../context/quickViewModal";
 import { useCart } from "../../context/cart";
 import { getReviewStats } from "../../data/productReviews";
+import { productDisplayTitle } from "../../lib/productDisplayTitle";
+import { useT } from "../../i18n";
 
 export default function QuickViewModal() {
+  const t = useT();
   const { isOpen, close, product } = useQuickViewModal();
   const { addItem } = useCart();
   const [quantity, setQuantity] = useState(1);
@@ -27,6 +30,17 @@ export default function QuickViewModal() {
   if (!product) return null;
 
   const reviewStats = getReviewStats(product.id);
+  const displayTitle = productDisplayTitle(product, t);
+
+  const ratingPrimary =
+    reviewStats.count > 0 ?
+      `${reviewStats.average.toFixed(1)} ${t("productRatingAverageSuffix")}`
+    : t("productBadgeNew");
+
+  const ratingSecondary =
+    reviewStats.count > 0 ?
+      `(${reviewStats.count} ${t("common.reviews")})`
+    : `(${product.reviews} ${t("common.ratings")})`;
 
   return (
     <div
@@ -36,7 +50,7 @@ export default function QuickViewModal() {
         <div className="w-full max-w-[1100px] rounded-xl shadow-2 bg-white p-[30px] relative modal-content">
           <button
             onClick={close}
-            aria-label="close modal"
+            aria-label={t("common.close")}
             className="absolute top-0 right-0 sm:top-6 sm:right-6 flex items-center justify-center w-10 h-10 rounded-full ease-in duration-150 bg-neutral-100 text-neutral-500 hover:text-neutral-900"
             type="button"
           >
@@ -72,7 +86,7 @@ export default function QuickViewModal() {
                     >
                       <img
                         src={img}
-                        alt="thumbnail"
+                        alt=""
                         className="max-h-[61px] max-w-[61px] object-contain object-center"
                       />
                     </button>
@@ -83,7 +97,7 @@ export default function QuickViewModal() {
                   {product?.imgs?.previews?.[activePreview] && (
                     <img
                       src={product.imgs.previews[activePreview]}
-                      alt="product details"
+                      alt={displayTitle}
                       className="max-h-[min(508px,58vh)] w-full max-w-full object-contain object-center p-4"
                     />
                   )}
@@ -93,36 +107,32 @@ export default function QuickViewModal() {
 
             <div className="max-w-[445px] w-full">
               <span className="inline-block text-[12px] font-medium text-white py-1 px-3 bg-green-600 mb-[26px]">
-                SALE 20% OFF
+                {t("productQuickViewSaleBadge")}
               </span>
 
               <h3 className="font-semibold text-xl xl:text-[28px] text-neutral-900 mb-4">
-                {product.title}
+                {displayTitle}
               </h3>
 
               <div className="flex flex-wrap items-center gap-5 mb-6">
                 <span>
                   <span className="font-medium text-neutral-900">
-                    {reviewStats.count > 0
-                      ? `${reviewStats.average.toFixed(1)} rating`
-                      : "New"}
+                    {ratingPrimary}
                   </span>
-                  <span className="text-neutral-500">
-                    {" "}
-                    ({reviewStats.count > 0 ? `${reviewStats.count} reviews` : `${product.reviews} ratings`})
-                  </span>
+                  <span className="text-neutral-500"> {ratingSecondary}</span>
                 </span>
-                <span className="font-medium text-green-600">In Stock</span>
+                <span className="font-medium text-green-600">
+                  {t("common.inStock")}
+                </span>
               </div>
 
-              <p>
-                Premium fabric, clean tailoring, and a fit meant to be finished by your
-                local alterations team. Check the size chart and care label before first wear.
-              </p>
+              <p>{t("quickViewDescription")}</p>
 
               <div className="flex flex-wrap justify-between gap-5 mt-6 mb-[30px]">
                 <div>
-                  <h4 className="font-semibold text-lg text-neutral-900 mb-[14px]">Price</h4>
+                  <h4 className="font-semibold text-lg text-neutral-900 mb-[14px]">
+                    {t("common.price")}
+                  </h4>
                   <span className="flex items-center gap-2">
                     <span className="font-semibold text-neutral-900 text-xl">
                       ${product.discountedPrice}
@@ -134,7 +144,9 @@ export default function QuickViewModal() {
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-lg text-neutral-900 mb-[14px]">Quantity</h4>
+                  <h4 className="font-semibold text-lg text-neutral-900 mb-[14px]">
+                    {t("common.quantity")}
+                  </h4>
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => quantity > 1 && setQuantity(quantity - 1)}
@@ -166,20 +178,20 @@ export default function QuickViewModal() {
                   className="inline-flex rounded-md bg-blue-600 px-7 py-3 font-medium text-white shadow-sm transition duration-200 ease-out hover:-translate-y-px hover:bg-blue-700 hover:shadow-md active:translate-y-0 active:shadow-sm"
                   type="button"
                 >
-                  Add to Cart
+                  {t("common.addToCart")}
                 </button>
                 <button
                   className="inline-flex items-center gap-2 font-medium text-white bg-neutral-900 py-3 px-6 rounded-md ease-out duration-200 hover:bg-opacity-95"
                   type="button"
                 >
-                  Add to Wishlist
+                  {t("common.addToWishlist")}
                 </button>
                 <Link
                   to={`/shop-details?id=${product.id}`}
                   onClick={close}
                   className="inline-flex font-medium text-blue-600 underline-offset-4 hover:underline"
                 >
-                  Full details &amp; reviews
+                  {t("productFullDetailsReviews")}
                 </Link>
               </div>
             </div>
@@ -189,4 +201,3 @@ export default function QuickViewModal() {
     </div>
   );
 }
-

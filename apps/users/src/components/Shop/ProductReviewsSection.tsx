@@ -4,23 +4,31 @@ import {
   getReviewStats,
   getReviewsForProduct,
 } from "../../data/productReviews";
+import { useI18nState, useT } from "../../i18n";
 
 type Props = {
   productId: number;
 };
 
 export function ProductReviewsSection({ productId }: Props) {
+  const t = useT();
+  const { locale } = useI18nState();
   const reviews = getReviewsForProduct(productId);
   const stats = getReviewStats(productId);
+
+  const basedOnText =
+    stats.count === 1 ?
+      t("productReviewsBasedOnOne")
+    : t("productReviewsBasedOnMany").replace("{n}", String(stats.count));
 
   if (reviews.length === 0) {
     return (
       <section className="mt-14 border-t border-neutral-200 pt-10" aria-labelledby="reviews-heading">
         <h2 id="reviews-heading" className="text-xl font-semibold text-neutral-900">
-          Customer reviews
+          {t("productReviewsHeading")}
         </h2>
         <p className="mt-3 text-sm text-neutral-600">
-          No written reviews yet. Be the first to share your experience once purchases are live.
+          {t("productReviewsEmpty")}
         </p>
       </section>
     );
@@ -29,7 +37,7 @@ export function ProductReviewsSection({ productId }: Props) {
   return (
     <section className="mt-14 border-t border-neutral-200 pt-10" aria-labelledby="reviews-heading">
       <h2 id="reviews-heading" className="text-xl font-semibold text-neutral-900">
-        Customer reviews
+        {t("productReviewsHeading")}
       </h2>
 
       <div className="mt-8 flex flex-col gap-10 lg:flex-row lg:items-start">
@@ -39,7 +47,7 @@ export function ProductReviewsSection({ productId }: Props) {
           </p>
           <StarRating value={stats.average} size="md" className="mt-2" />
           <p className="mt-2 text-sm text-neutral-600">
-            Based on {stats.count} review{stats.count === 1 ? "" : "s"}
+            {basedOnText}
           </p>
         </div>
 
@@ -72,30 +80,32 @@ export function ProductReviewsSection({ productId }: Props) {
           >
             <div className="flex flex-wrap items-start justify-between gap-2">
               <div>
-                <p className="font-medium text-neutral-900">{r.author}</p>
+                <p className="font-medium text-neutral-900">{t(r.authorKey)}</p>
                 <div className="mt-1 flex flex-wrap items-center gap-2">
                   <StarRating value={r.rating} size="sm" />
                   <span className="text-xs text-neutral-500">
-                    {formatReviewDate(r.date)}
+                    {formatReviewDate(r.date, locale)}
                   </span>
-                  {r.verifiedPurchase ? (
+                  {r.verifiedPurchase ?
                     <span className="rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-800">
-                      Verified purchase
+                      {t("productVerifiedPurchase")}
                     </span>
-                  ) : null}
+                  : null}
                 </div>
               </div>
             </div>
-            {r.title ? (
-              <p className="mt-3 font-medium text-neutral-900">{r.title}</p>
-            ) : null}
-            <p className="mt-2 text-sm leading-relaxed text-neutral-600">{r.body}</p>
+            {r.titleKey ?
+              <p className="mt-3 font-medium text-neutral-900">{t(r.titleKey)}</p>
+            : null}
+            <p className="mt-2 text-sm leading-relaxed text-neutral-600">
+              {t(r.bodyKey)}
+            </p>
           </li>
         ))}
       </ul>
 
       <p className="mt-8 text-xs text-neutral-500">
-        Reviews are sample data for the storefront demo. Connect your API to load real buyer feedback.
+        {t("productReviewsDemoDisclaimer")}
       </p>
     </section>
   );
