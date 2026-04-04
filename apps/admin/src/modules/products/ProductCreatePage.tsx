@@ -2,10 +2,12 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { Button, Card } from "@repo/ui";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
-import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
+import { ADMIN_PAGE_TITLE_KEYS } from "../../constants/adminNavigation";
 import { adminInputClass } from "../../lib/formFieldStyles";
+import { useT } from "../../i18n";
 
 export function ProductCreatePage() {
+  const t = useT();
   const [title, setTitle] = useState("");
   const [sku, setSku] = useState("");
   const [sellerId, setSellerId] = useState("");
@@ -17,21 +19,21 @@ export function ProductCreatePage() {
 
   return (
     <AdminPageFrame
-      title={ADMIN_PAGE_TITLES.products}
+      title={t(ADMIN_PAGE_TITLE_KEYS.products)}
       addon={
         <p className="text-sm text-slate-500">
-          Draft a listing — replace seller picker and media upload when APIs exist.
+          {t("common.adminProductCreateAddon")}
         </p>
       }
     >
       <Card
-        title="Add product"
-        description="Admin-created draft; typically ties to a seller and inventory source."
+        title={t("common.adminProductCreateCardTitle")}
+        description={t("common.adminProductCreateCardDesc")}
       >
         <form onSubmit={handleSubmit} className="max-w-lg space-y-4">
           <div>
             <label htmlFor="product-title" className="text-sm font-medium text-slate-700">
-              Title
+              {t("common.adminLabelTitle")}
             </label>
             <input
               id="product-title"
@@ -40,12 +42,12 @@ export function ProductCreatePage() {
               value={title}
               onChange={(ev) => setTitle(ev.target.value)}
               className={adminInputClass}
-              placeholder="Artisan mug set"
+              placeholder={t("common.adminPhProductTitle")}
             />
           </div>
           <div>
             <label htmlFor="product-sku" className="text-sm font-medium text-slate-700">
-              SKU
+              {t("common.adminLabelSku")}
             </label>
             <input
               id="product-sku"
@@ -53,12 +55,12 @@ export function ProductCreatePage() {
               value={sku}
               onChange={(ev) => setSku(ev.target.value)}
               className={adminInputClass}
-              placeholder="SKU-1092"
+              placeholder={t("common.adminPhSku")}
             />
           </div>
           <div>
             <label htmlFor="product-seller" className="text-sm font-medium text-slate-700">
-              Seller ID
+              {t("common.adminLabelSellerId")}
             </label>
             <input
               id="product-seller"
@@ -67,11 +69,11 @@ export function ProductCreatePage() {
               value={sellerId}
               onChange={(ev) => setSellerId(ev.target.value)}
               className={adminInputClass}
-              placeholder="seller_uuid"
+              placeholder={t("common.adminPhSellerId")}
             />
           </div>
           <Button type="submit" variant="accent" size="md">
-            Save product
+            {t("common.adminSaveProduct")}
           </Button>
         </form>
       </Card>

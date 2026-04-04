@@ -7,22 +7,22 @@ export type AdminNavId =
 
 export type AdminNavItem = {
   id: AdminNavId;
-  label: string;
+  labelKey: string;
   path: string;
 };
 
 export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
-  { id: "dashboard", label: "Dashboard", path: "/" },
-  { id: "users", label: "Users", path: "/users" },
-  { id: "sellers", label: "Sellers", path: "/sellers" },
-  { id: "products", label: "Products", path: "/products" },
-  { id: "orders", label: "Orders", path: "/orders" },
+  { id: "dashboard", labelKey: "common.adminNavDashboard", path: "/" },
+  { id: "users", labelKey: "common.adminNavUsers", path: "/users" },
+  { id: "sellers", labelKey: "common.adminNavSellers", path: "/sellers" },
+  { id: "products", labelKey: "common.adminNavProducts", path: "/products" },
+  { id: "orders", labelKey: "common.adminNavOrders", path: "/orders" },
 ];
 
-export const ADMIN_PAGE_TITLES: Record<AdminNavId, string> = {
-  dashboard: "Dashboard",
-  users: "Users",
-  sellers: "Sellers",
-  products: "Products",
-  orders: "Orders",
+export const ADMIN_PAGE_TITLE_KEYS: Record<AdminNavId, string> = {
+  dashboard: "common.adminPageDashboard",
+  users: "common.adminPageUsers",
+  sellers: "common.adminPageSellers",
+  products: "common.adminPageProducts",
+  orders: "common.adminPageOrders",
 };

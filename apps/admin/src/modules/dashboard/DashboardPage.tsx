@@ -1,67 +1,95 @@
+import { useMemo } from "react";
 import { Card } from "@repo/ui";
 import { ActivityFeed } from "../../components/ActivityFeed";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
 import { QuickActions } from "../../components/QuickActions";
 import { StatGrid } from "../../components/StatGrid";
-import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
-
-const DASHBOARD_STATS = [
-  { label: "Total Users", value: "12,480", hint: "Last 30 days" },
-  { label: "Total Sellers", value: "842", hint: "Active storefronts" },
-  { label: "Total Orders", value: "3,291", hint: "All statuses" },
-] as const;
-
-const RECENT_ACTIVITY = [
-  {
-    id: "1",
-    title: "Seller “Northwind Goods” submitted verification documents",
-    time: "2h ago",
-  },
-  {
-    id: "2",
-    title: "Order #48291 marked as refunded",
-    time: "5h ago",
-  },
-  {
-    id: "3",
-    title: "New product queued for moderation: “Artisan mug set”",
-    time: "Yesterday",
-  },
-  {
-    id: "4",
-    title: "CMS banner “Spring drop” published",
-    time: "Yesterday",
-  },
-] as const;
+import { ADMIN_PAGE_TITLE_KEYS } from "../../constants/adminNavigation";
+import { useT } from "../../i18n";
 
 export function DashboardPage() {
+  const t = useT();
+
+  const stats = useMemo(
+    () => [
+      {
+        label: t("common.adminDashStatUsersLabel"),
+        value: "12,480",
+        hint: t("common.adminDashStatUsersHint"),
+      },
+      {
+        label: t("common.adminDashStatSellersLabel"),
+        value: "842",
+        hint: t("common.adminDashStatSellersHint"),
+      },
+      {
+        label: t("common.adminDashStatOrdersLabel"),
+        value: "3,291",
+        hint: t("common.adminDashStatOrdersHint"),
+      },
+    ],
+    [t],
+  );
+
+  const recentActivity = useMemo(
+    () => [
+      {
+        id: "1",
+        title: t("common.adminDashAct1Title"),
+        time: t("common.adminTime2h"),
+      },
+      {
+        id: "2",
+        title: t("common.adminDashAct2Title"),
+        time: t("common.adminTime5h"),
+      },
+      {
+        id: "3",
+        title: t("common.adminDashAct3Title"),
+        time: t("common.adminTimeYesterday"),
+      },
+      {
+        id: "4",
+        title: t("common.adminDashAct4Title"),
+        time: t("common.adminTimeYesterday"),
+      },
+    ],
+    [t],
+  );
+
   return (
     <AdminPageFrame
-      title={ADMIN_PAGE_TITLES.dashboard}
+      title={t(ADMIN_PAGE_TITLE_KEYS.dashboard)}
       addon={
         <p className="text-sm text-slate-500">
-          Overview of users, sellers, and orders
+          {t("common.adminDashAddon")}
         </p>
       }
     >
-      <StatGrid stats={[...DASHBOARD_STATS]} />
+      <StatGrid stats={stats} />
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card title="Recent Activity" description="Latest actions across the platform">
-          <ActivityFeed items={[...RECENT_ACTIVITY]} />
+        <Card
+          title={t("common.adminDashRecentTitle")}
+          description={t("common.adminDashRecentDesc")}
+        >
+          <ActivityFeed items={recentActivity} />
         </Card>
 
-        <Card title="Quick Actions" description="Common moderation tasks">
+        <Card
+          title={t("common.adminDashQuickTitle")}
+          description={t("common.adminDashQuickDesc")}
+        >
           <QuickActions
             actions={[
               {
                 id: "add-product",
-                label: "Add product",
+                label: t("common.adminDashQuickAddProduct"),
                 onClick: () => console.info("admin:quick-add-product"),
               },
               {
                 id: "approve-seller",
-                label: "Approve seller",
+                label: t("common.adminDashQuickApproveSeller"),
                 onClick: () => console.info("admin:quick-approve-seller"),
               },
             ]}

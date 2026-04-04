@@ -1,13 +1,16 @@
+import { useMemo } from "react";
 import { TableCard } from "@repo/ui";
 import type { Member } from "@repo/types";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
 import { DataTablePlaceholder } from "../../components/DataTablePlaceholder";
-import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
+import { ADMIN_PAGE_TITLE_KEYS } from "../../constants/adminNavigation";
 import { useAdminMemberList } from "../../hooks/admin-members";
 import { getAuthToken } from "@repo/api";
 import { getAdminListEmptyMessage } from "../../lib/adminListEmptyMessage";
+import { useT } from "../../i18n";
 
 export function UsersListPage() {
+  const t = useT();
   const signedIn = !!getAuthToken();
   const { data, isPending, isError, error } = useAdminMemberList({
     page: 1,
@@ -22,9 +25,19 @@ export function UsersListPage() {
     isPending,
     isError,
     error,
-    signInHint: "Sign in as admin to load members.",
-    whenEmpty: "No buyers in this result set.",
+    signInHint: t("common.adminEmptySignInMembers"),
+    whenEmpty: t("common.adminEmptyBuyers"),
   });
+
+  const columns = useMemo(
+    () => [
+      t("common.adminColEmail"),
+      t("common.adminColName"),
+      t("common.adminColStatus"),
+      t("common.adminColJoined"),
+    ],
+    [t],
+  );
 
   const rowEls =
     buyers.length > 0 ?
@@ -42,23 +55,19 @@ export function UsersListPage() {
       ))
     : undefined;
 
+  const tableDescription = `${t("common.adminUsersListShowing")} ${buyers.length} ${t("common.adminOf")} ${data?.list.length ?? 0} ${t("common.adminMembersLoadedSuffix")}`;
+
   return (
     <AdminPageFrame
-      title={ADMIN_PAGE_TITLES.users}
+      title={t(ADMIN_PAGE_TITLE_KEYS.users)}
       addon={
         <p className="text-sm text-slate-500">
-          Buyers (role USER) from admin member list.
+          {t("common.adminUsersListAddon")}
         </p>
       }
     >
-      <TableCard
-        title="All buyers"
-        description={`Showing ${buyers.length} of ${data?.list.length ?? 0} loaded members.`}
-      >
-        <DataTablePlaceholder
-          columns={["Email", "Name", "Status", "Joined"]}
-          emptyMessage={emptyMessage}
-        >
+      <TableCard title={t("common.adminUsersListTitle")} description={tableDescription}>
+        <DataTablePlaceholder columns={columns} emptyMessage={emptyMessage}>
           {rowEls}
         </DataTablePlaceholder>
       </TableCard>

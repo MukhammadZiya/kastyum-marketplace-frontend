@@ -1,6 +1,6 @@
-import type { SidebarSubItem } from "@repo/ui";
+import type { AdminSubNavSpec } from "../users/usersNav";
 
-export const ORDERS_SUBNAV: SidebarSubItem[] = [
-  { to: "/orders", label: "Overview", end: true },
-  { to: "/orders/list", label: "All orders" },
+export const ORDERS_SUBNAV_SPECS: readonly AdminSubNavSpec[] = [
+  { to: "/orders", labelKey: "common.adminOrdersSubOverview", end: true },
+  { to: "/orders/list", labelKey: "common.adminOrdersSubAll" },
 ];

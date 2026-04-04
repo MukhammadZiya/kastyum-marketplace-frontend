@@ -2,10 +2,12 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { Button, Card } from "@repo/ui";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
-import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
+import { ADMIN_PAGE_TITLE_KEYS } from "../../constants/adminNavigation";
 import { adminInputClass } from "../../lib/formFieldStyles";
+import { useT } from "../../i18n";
 
 export function UserCreatePage() {
+  const t = useT();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
 
@@ -16,18 +18,21 @@ export function UserCreatePage() {
 
   return (
     <AdminPageFrame
-      title={ADMIN_PAGE_TITLES.users}
+      title={t(ADMIN_PAGE_TITLE_KEYS.users)}
       addon={
         <p className="text-sm text-slate-500">
-          Create or invite a buyer — replace with API mutation when ready.
+          {t("common.adminUserCreateAddon")}
         </p>
       }
     >
-      <Card title="Add user" description="Minimal fields; extend as your schema requires.">
+      <Card
+        title={t("common.adminUserCreateCardTitle")}
+        description={t("common.adminUserCreateCardDesc")}
+      >
         <form onSubmit={handleSubmit} className="max-w-lg space-y-4">
           <div>
             <label htmlFor="user-email" className="text-sm font-medium text-slate-700">
-              Email
+              {t("common.adminColEmail")}
             </label>
             <input
               id="user-email"
@@ -37,12 +42,12 @@ export function UserCreatePage() {
               value={email}
               onChange={(ev) => setEmail(ev.target.value)}
               className={adminInputClass}
-              placeholder="buyer@example.com"
+              placeholder={t("common.adminPhEmailBuyer")}
             />
           </div>
           <div>
             <label htmlFor="user-name" className="text-sm font-medium text-slate-700">
-              Full name
+              {t("common.adminLabelFullName")}
             </label>
             <input
               id="user-name"
@@ -51,11 +56,11 @@ export function UserCreatePage() {
               value={name}
               onChange={(ev) => setName(ev.target.value)}
               className={adminInputClass}
-              placeholder="Jane Buyer"
+              placeholder={t("common.adminPhFullName")}
             />
           </div>
           <Button type="submit" variant="accent" size="md">
-            Save user
+            {t("common.adminSaveUser")}
           </Button>
         </form>
       </Card>

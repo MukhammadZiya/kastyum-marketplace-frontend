@@ -1,13 +1,16 @@
+import { useMemo } from "react";
 import { TableCard } from "@repo/ui";
 import type { OrderListRow } from "@repo/types";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
 import { DataTablePlaceholder } from "../../components/DataTablePlaceholder";
-import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
+import { ADMIN_PAGE_TITLE_KEYS } from "../../constants/adminNavigation";
 import { useAdminOrderList } from "../../hooks/admin-orders";
 import { getAuthToken } from "@repo/api";
 import { getAdminListEmptyMessage } from "../../lib/adminListEmptyMessage";
+import { useT } from "../../i18n";
 
 export function OrdersListPage() {
+  const t = useT();
   const signedIn = !!getAuthToken();
   const { data, isPending, isError, error } = useAdminOrderList({
     page: 1,
@@ -19,9 +22,20 @@ export function OrdersListPage() {
     isPending,
     isError,
     error,
-    signInHint: "Sign in as admin to load orders.",
-    whenEmpty: "No orders.",
+    signInHint: t("common.adminEmptySignInOrders"),
+    whenEmpty: t("common.adminEmptyOrders"),
   });
+
+  const columns = useMemo(
+    () => [
+      t("common.adminColOrder"),
+      t("common.adminColBuyer"),
+      t("common.adminColTotal"),
+      t("common.adminColStatus"),
+      t("common.adminColPlaced"),
+    ],
+    [t],
+  );
 
   const rowEls =
     data?.list.length ?
@@ -42,23 +56,19 @@ export function OrdersListPage() {
       ))
     : undefined;
 
+  const tableDescription = `${t("common.adminTotal")} ${data?.total ?? 0} ${t("common.adminOrdersTotalSuffix")} (${t("common.adminThisPage")} ${data?.list.length ?? 0}).`;
+
   return (
     <AdminPageFrame
-      title={ADMIN_PAGE_TITLES.orders}
+      title={t(ADMIN_PAGE_TITLE_KEYS.orders)}
       addon={
         <p className="text-sm text-slate-500">
-          All marketplace orders (admin list).
+          {t("common.adminOrdersListAddon")}
         </p>
       }
     >
-      <TableCard
-        title="All orders"
-        description={`Total ${data?.total ?? 0} orders (this page ${data?.list.length ?? 0}).`}
-      >
-        <DataTablePlaceholder
-          columns={["Order", "Buyer", "Total", "Status", "Placed"]}
-          emptyMessage={emptyMessage}
-        >
+      <TableCard title={t("common.adminOrdersListTitle")} description={tableDescription}>
+        <DataTablePlaceholder columns={columns} emptyMessage={emptyMessage}>
           {rowEls}
         </DataTablePlaceholder>
       </TableCard>

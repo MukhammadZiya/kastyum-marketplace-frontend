@@ -1,16 +1,19 @@
+import { useMemo } from "react";
 import { TableCard } from "@repo/ui";
 import type { ProductAdminListItem } from "@repo/types";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
 import { DataTablePlaceholder } from "../../components/DataTablePlaceholder";
-import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
+import { ADMIN_PAGE_TITLE_KEYS } from "../../constants/adminNavigation";
 import {
   useAdminProductDelete,
   useAdminProductList,
 } from "../../hooks/admin-products";
 import { getAuthToken } from "@repo/api";
 import { getAdminListEmptyMessage } from "../../lib/adminListEmptyMessage";
+import { useT } from "../../i18n";
 
 export function ProductsListPage() {
+  const t = useT();
   const signedIn = !!getAuthToken();
   const { data, isPending, isError, error } = useAdminProductList({
     page: 1,
@@ -23,9 +26,21 @@ export function ProductsListPage() {
     isPending,
     isError,
     error,
-    signInHint: "Sign in as admin to load products.",
-    whenEmpty: "No products.",
+    signInHint: t("common.adminEmptySignInProducts"),
+    whenEmpty: t("common.adminEmptyProducts"),
   });
+
+  const columns = useMemo(
+    () => [
+      t("common.adminColTitle"),
+      t("common.adminColSku"),
+      t("common.adminColSeller"),
+      t("common.adminColStatus"),
+      t("common.adminColUpdated"),
+      t("common.adminColEmpty"),
+    ],
+    [t],
+  );
 
   const rowEls =
     data?.list.length ?
@@ -48,37 +63,33 @@ export function ProductsListPage() {
               onClick={() => {
                 if (
                   typeof window !== "undefined" &&
-                  !window.confirm("Delete or soft-delete this product?")
+                  !window.confirm(t("common.adminProductsDeleteConfirm"))
                 ) {
                   return;
                 }
                 deleteProduct.mutate(p._id);
               }}
             >
-              Remove
+              {t("common.adminRemove")}
             </button>
           </td>
         </tr>
       ))
     : undefined;
 
+  const tableDescription = `${t("common.adminTotal")} ${data?.total ?? 0} ${t("common.adminInCatalog")} (${t("common.adminThisPage")} ${data?.list.length ?? 0}).`;
+
   return (
     <AdminPageFrame
-      title={ADMIN_PAGE_TITLES.products}
+      title={t(ADMIN_PAGE_TITLE_KEYS.products)}
       addon={
         <p className="text-sm text-slate-500">
-          Catalog moderation — remove runs admin delete endpoint.
+          {t("common.adminProductsListAddon")}
         </p>
       }
     >
-      <TableCard
-        title="All products"
-        description={`Total ${data?.total ?? 0} in catalog (this page ${data?.list.length ?? 0}).`}
-      >
-        <DataTablePlaceholder
-          columns={["Title", "SKU", "Seller", "Status", "Updated", ""]}
-          emptyMessage={emptyMessage}
-        >
+      <TableCard title={t("common.adminProductsListTitle")} description={tableDescription}>
+        <DataTablePlaceholder columns={columns} emptyMessage={emptyMessage}>
           {rowEls}
         </DataTablePlaceholder>
       </TableCard>

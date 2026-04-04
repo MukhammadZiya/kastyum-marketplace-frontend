@@ -1,73 +1,97 @@
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@repo/ui";
 import { ActivityFeed } from "../../components/ActivityFeed";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
 import { QuickActions } from "../../components/QuickActions";
 import { StatGrid } from "../../components/StatGrid";
-import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
-
-const ORDER_STATS = [
-  { label: "Needs attention", value: "37", hint: "SLA or risk" },
-  { label: "Shipped today", value: "89", hint: "Out for delivery" },
-  { label: "Refunds (7d)", value: "12", hint: "Completed" },
-] as const;
-
-const ORDER_EVENTS = [
-  {
-    id: "o1",
-    title: "Order #48291 — refund approved (buyer dispute)",
-    time: "25m ago",
-  },
-  {
-    id: "o2",
-    title: "Carrier exception: #91002 delayed at hub",
-    time: "1h ago",
-  },
-  {
-    id: "o3",
-    title: "Manual capture released for high-value order #48001",
-    time: "3h ago",
-  },
-  {
-    id: "o4",
-    title: "Chargeback notice received — order #47712",
-    time: "Yesterday",
-  },
-] as const;
+import { ADMIN_PAGE_TITLE_KEYS } from "../../constants/adminNavigation";
+import { useT } from "../../i18n";
 
 export function OrdersPage() {
   const navigate = useNavigate();
+  const t = useT();
+
+  const stats = useMemo(
+    () => [
+      {
+        label: t("common.adminOrdersStatAttentionLabel"),
+        value: "37",
+        hint: t("common.adminOrdersStatAttentionHint"),
+      },
+      {
+        label: t("common.adminOrdersStatShippedLabel"),
+        value: "89",
+        hint: t("common.adminOrdersStatShippedHint"),
+      },
+      {
+        label: t("common.adminOrdersStatRefundsLabel"),
+        value: "12",
+        hint: t("common.adminOrdersStatRefundsHint"),
+      },
+    ],
+    [t],
+  );
+
+  const events = useMemo(
+    () => [
+      {
+        id: "o1",
+        title: t("common.adminOrdersAct1Title"),
+        time: t("common.adminTime25m"),
+      },
+      {
+        id: "o2",
+        title: t("common.adminOrdersAct2Title"),
+        time: t("common.adminTime1h"),
+      },
+      {
+        id: "o3",
+        title: t("common.adminOrdersAct3Title"),
+        time: t("common.adminTime3h"),
+      },
+      {
+        id: "o4",
+        title: t("common.adminOrdersAct4Title"),
+        time: t("common.adminTimeYesterday"),
+      },
+    ],
+    [t],
+  );
 
   return (
     <AdminPageFrame
-      title={ADMIN_PAGE_TITLES.orders}
+      title={t(ADMIN_PAGE_TITLE_KEYS.orders)}
       addon={
         <p className="text-sm text-slate-500">
-          Fulfillment, payments, and exceptions
+          {t("common.adminOrdersAddon")}
         </p>
       }
     >
-      <StatGrid stats={[...ORDER_STATS]} />
+      <StatGrid stats={stats} />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card
-          title="Recent order events"
-          description="Refunds, shipping, and risk"
+          title={t("common.adminOrdersEventsTitle")}
+          description={t("common.adminOrdersEventsDesc")}
         >
-          <ActivityFeed items={[...ORDER_EVENTS]} />
+          <ActivityFeed items={events} />
         </Card>
 
-        <Card title="Quick actions" description="Common order operations">
+        <Card
+          title={t("common.adminOrdersQuickTitle")}
+          description={t("common.adminOrdersQuickDesc")}
+        >
           <QuickActions
             actions={[
               {
                 id: "see-orders",
-                label: "See all orders",
+                label: t("common.adminOrdersQuickSeeAll"),
                 onClick: () => navigate("/orders/list"),
               },
               {
                 id: "export-orders",
-                label: "Export CSV",
+                label: t("common.adminOrdersQuickExport"),
                 onClick: () => console.info("admin:orders-export"),
               },
             ]}
