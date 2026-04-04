@@ -10,46 +10,52 @@ export type CategoryItem = {
 
 export const categoryData: CategoryItem[] = [
   {
-    title: "Televisions",
+    title: "Men's suits",
     id: 1,
     img: primaryImageForGroup(1),
-    shopSearchQuery: "iMac",
+    shopSearchQuery: "Navy",
   },
   {
-    title: "Laptop & PC",
+    title: "Formal & evening",
     id: 2,
     img: primaryImageForGroup(2),
-    shopSearchQuery: "MacBook",
+    shopSearchQuery: "Tuxedo",
   },
   {
-    title: "Mobile & Tablets",
+    title: "Business tailoring",
     id: 3,
     img: primaryImageForGroup(3),
-    shopSearchQuery: "iPhone",
+    shopSearchQuery: "Charcoal",
   },
   {
-    title: "Games & Videos",
+    title: "Smart casual",
     id: 4,
     img: primaryImageForGroup(4),
-    shopSearchQuery: "Gamepad",
+    shopSearchQuery: "Beige",
   },
   {
-    title: "Home Appliances",
+    title: "Statement suits",
     id: 5,
     img: primaryImageForGroup(5),
-    shopSearchQuery: "Router",
+    shopSearchQuery: "Emerald",
   },
   {
-    title: "Health & Sports",
+    title: "Seasonal edit",
     id: 6,
     img: primaryImageForGroup(6),
-    shopSearchQuery: "Watch",
+    shopSearchQuery: "Ivory",
   },
   {
-    title: "Televisions",
+    title: "Classic three-piece",
+    id: 7,
+    img: primaryImageForGroup(7),
+    shopSearchQuery: "Brown",
+  },
+  {
+    title: "Evening suits",
     id: 8,
-    img: primaryImageForGroup(4),
-    shopSearchQuery: "iMac",
+    img: primaryImageForGroup(8),
+    shopSearchQuery: "Midnight",
   },
 ];
 

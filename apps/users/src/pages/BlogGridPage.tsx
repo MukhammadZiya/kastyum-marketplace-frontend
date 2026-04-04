@@ -5,7 +5,7 @@ import { blogData } from "../data/blogData";
 export function BlogGridPage() {
   return (
     <>
-      <Breadcrumb title="Blog Grid" pages={["blogs", "blog grid"]} />
+      <Breadcrumb title="Style journal" pages={["journal", "stories"]} />
       <section className="py-10 bg-neutral-100">
         <div className="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0 grid md:grid-cols-2 gap-6">
           {blogData.map((post) => (

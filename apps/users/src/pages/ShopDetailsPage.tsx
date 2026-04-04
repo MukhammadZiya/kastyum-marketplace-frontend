@@ -57,7 +57,7 @@ export function ShopDetailsPage() {
   if (mongoId && isPending) {
     return (
       <>
-        <Breadcrumb title="Shop Details" pages={["shop", "shop details"]} />
+        <Breadcrumb title="Product" pages={["shop", "details"]} />
         <section className="py-10 px-4">
           <p className="mx-auto max-w-[1170px] text-neutral-600">Loading…</p>
         </section>
@@ -68,7 +68,7 @@ export function ShopDetailsPage() {
   if (mongoId && isError) {
     return (
       <>
-        <Breadcrumb title="Shop Details" pages={["shop", "shop details"]} />
+        <Breadcrumb title="Product" pages={["shop", "details"]} />
         <section className="py-10 px-4">
           <p className="mx-auto max-w-[1170px] text-red-600" role="alert">
             {error instanceof Error ? error.message : "Could not load product."}
@@ -83,11 +83,11 @@ export function ShopDetailsPage() {
   const description =
     mongoId && apiProduct
       ? apiProduct.description
-      : "Lorem Ipsum is simply dummy text of the printing and typesetting industry.";
+      : "Tailored wool blend with a structured shoulder, half-canvas construction, and trousers left with extra length for hemming. Dry clean only.";
 
   return (
     <>
-      <Breadcrumb title="Shop Details" pages={["shop", "shop details"]} />
+      <Breadcrumb title="Product" pages={["shop", "details"]} />
       <section className="py-10">
         <div className="mx-auto max-w-[1170px] px-4 sm:px-8 xl:px-0">
           <div className="grid gap-10 lg:grid-cols-[570px_1fr]">

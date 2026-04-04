@@ -1,11 +1,12 @@
-/** Header search dropdown — shared by `Header` / `ShopWithSidebarPage` / dummy `storeTypes` on products. */
+/** Header search dropdown — shared by `Header` / `ShopWithSidebarPage` / `storeTypes` on products. */
 export const HEADER_CATALOG_OPTIONS = [
-  { label: "All Categories", value: "all" },
-  { label: "Desktop", value: "desktop" },
-  { label: "Laptop", value: "laptop" },
-  { label: "Monitor", value: "monitor" },
-  { label: "Phone", value: "phone" },
-  { label: "Watch", value: "watch" },
-  { label: "Mouse", value: "mouse" },
-  { label: "Tablet", value: "tablet" },
+  { label: "All categories", value: "all" },
+  { label: "Men", value: "men" },
+  { label: "Women", value: "women" },
+  { label: "Suits & tailoring", value: "suits" },
+  { label: "Dresses", value: "dresses" },
+  { label: "Outerwear", value: "outerwear" },
+  { label: "Shirts & tops", value: "shirts" },
+  { label: "Shoes", value: "shoes" },
+  { label: "Accessories", value: "accessories" },
 ] as const;

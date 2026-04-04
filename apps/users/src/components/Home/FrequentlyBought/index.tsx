@@ -21,7 +21,7 @@ export default function FrequentlyBought() {
               Customer favorites
             </span>
             <h2 className="text-xl font-semibold text-neutral-900 xl:text-[28px]">
-              Frequently bought
+              Most-loved pieces
             </h2>
           </div>
 

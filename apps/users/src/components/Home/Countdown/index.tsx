@@ -30,14 +30,14 @@ export default function Countdown() {
         <div className="relative overflow-hidden z-[1] rounded-lg bg-[#D0E9F3] p-4 sm:p-[30px] lg:p-10 xl:p-[60px]">
           <div className="max-w-[422px] w-full">
             <span className="block font-medium text-[20px] text-blue-600 mb-[10px]">
-              Don’t Miss!!
+              Limited time
             </span>
 
             <h2 className="font-bold text-neutral-900 text-xl lg:text-[32px] xl:text-[44px] mb-3">
-              Enhance Your Music Experience
+              Winter tailoring event
             </h2>
 
-            <p>The Havit H206d is a wired PC headphone.</p>
+            <p>Extra 15% off wool suits and outerwear layers—ends when the timer hits zero.</p>
 
             <div className="flex flex-wrap gap-6 mt-6">
               {[
@@ -61,7 +61,7 @@ export default function Countdown() {
               href="#"
               className="inline-flex font-medium text-[14px] text-white bg-blue-600 py-3 px-[38px] rounded-md ease-out duration-200 hover:bg-blue-700 mt-[30px]"
             >
-              Check it Out!
+              Shop the event
             </a>
           </div>
 

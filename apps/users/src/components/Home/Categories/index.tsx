@@ -40,7 +40,7 @@ export default function Categories() {
                 Categories
               </span>
               <h2 className="font-semibold text-xl xl:text-[28px] text-neutral-900">
-                Browse by Category
+                Shop by category
               </h2>
             </div>
 

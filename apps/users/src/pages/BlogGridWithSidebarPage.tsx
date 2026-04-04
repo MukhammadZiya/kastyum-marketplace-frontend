@@ -4,7 +4,7 @@ import { blogData } from "../data/blogData";
 export function BlogGridWithSidebarPage() {
   return (
     <>
-      <Breadcrumb title="Blog Grid With Sidebar" pages={["blogs", "blog grid with sidebar"]} />
+      <Breadcrumb title="Style journal" pages={["journal", "stories"]} />
       <section className="py-10 bg-neutral-100">
         <div className="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0 grid lg:grid-cols-[1fr_320px] gap-8">
           <div className="grid md:grid-cols-2 gap-6">

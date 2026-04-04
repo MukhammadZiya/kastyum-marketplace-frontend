@@ -259,11 +259,11 @@ export function ShopWithSidebarPage() {
 
   return (
     <>
-      <Breadcrumb title="Explore All Products" pages={["shop", "shop with sidebar"]} />
+      <Breadcrumb title="Shop collection" pages={["shop", "all pieces"]} />
       {hasHeaderSearch ? (
         <div className="mx-auto max-w-[1170px] px-4 sm:px-8 xl:px-0">
           <div className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border border-blue-100 bg-blue-50/90 px-4 py-3 text-sm text-neutral-700">
-            <span className="font-medium text-neutral-900">Header search</span>
+            <span className="font-medium text-neutral-900">Search filters</span>
             {device && device !== "all" ? (
               <span className="rounded-md bg-white px-2 py-0.5 text-neutral-800 ring-1 ring-neutral-200/80">
                 {deviceLabel}
@@ -279,7 +279,7 @@ export function ShopWithSidebarPage() {
               onClick={clearHeaderParams}
               className="ml-auto text-sm font-medium text-blue-600 hover:text-blue-800"
             >
-              Clear header search
+              Clear search filters
             </button>
           </div>
         </div>
@@ -336,7 +336,7 @@ export function ShopWithSidebarPage() {
               <div className="rounded-lg border border-dashed border-neutral-300 bg-white p-12 text-center text-neutral-600">
                 <p className="font-medium text-neutral-900">No products match these filters</p>
                 <p className="mt-2 text-sm">
-                  Adjust the sidebar, or clear the header category / search text.
+                  Try different filters, or clear your search to see more pieces.
                 </p>
                 <div className="mt-4 flex flex-wrap justify-center gap-2">
                   {hasHeaderSearch ? (
@@ -345,7 +345,7 @@ export function ShopWithSidebarPage() {
                       onClick={clearHeaderParams}
                       className="rounded-md border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-800 hover:bg-blue-100"
                     >
-                      Clear header search
+                      Clear search filters
                     </button>
                   ) : null}
                   <button

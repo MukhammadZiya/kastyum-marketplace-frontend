@@ -17,10 +17,10 @@ export default function Newsletter() {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 px-4 sm:px-[30px] xl:pl-[50px] xl:pr-14 py-11">
             <div className="max-w-[491px] w-full">
               <h2 className="max-w-[399px] text-white font-bold text-lg sm:text-xl xl:text-[34px] mb-3">
-                Don&apos;t Miss Out Latest Trends & Offers
+                New drops, restocks & private sales
               </h2>
               <p className="text-white">
-                Register to receive news about the latest offers & discount codes
+                Get edits for suits, seasonal layers, and member-only tailoring offers in your inbox.
               </p>
             </div>
 

@@ -52,7 +52,7 @@ export default function Testimonials() {
                 Testimonials
               </span>
               <h2 className="font-semibold text-xl xl:text-[28px] text-neutral-900">
-                User Feedbacks
+                What our shoppers say
               </h2>
             </div>
 

@@ -73,7 +73,7 @@ const Header = () => {
                       type="search"
                       name="search"
                       id="search"
-                      placeholder="I am shopping for..."
+                      placeholder="Search suits, blazers, sizes…"
                       autoComplete="off"
                       className="w-full rounded-r-[5px] bg-neutral-50 border border-neutral-200 border-l-0 py-2.5 pl-4 pr-10 outline-none ease-in duration-200"
                     />

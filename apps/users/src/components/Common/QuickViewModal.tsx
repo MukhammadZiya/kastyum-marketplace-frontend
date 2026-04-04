@@ -116,8 +116,8 @@ export default function QuickViewModal() {
               </div>
 
               <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has.
+                Premium fabric, clean tailoring, and a fit meant to be finished by your
+                local alterations team. Check the size chart and care label before first wear.
               </p>
 
               <div className="flex flex-wrap justify-between gap-5 mt-6 mb-[30px]">

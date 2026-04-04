@@ -13,43 +13,42 @@ export type BlogPost = {
 export const blogData: BlogPost[] = [
   {
     id: 1,
-    title: "Top 10 Smart Gadgets You Should Buy in 2026",
+    title: "How to Build a Capsule Wardrobe for Work in 2026",
     excerpt:
-      "Discover the newest gadgets that improve productivity and daily life with smart automation.",
+      "Fewer pieces, more outfits: the suits, shirts, and shoes worth investing in for a polished office rotation.",
     image: primaryImageForGroup(1),
     date: "March 12, 2026",
-    author: "Admin",
-    category: "Technology",
+    author: "Editorial",
+    category: "Style guide",
   },
   {
     id: 2,
-    title: "How to Choose a Perfect Laptop for Development",
+    title: "Suit Fit 101: Shoulders, Break, and When to Tailor",
     excerpt:
-      "A practical checklist for selecting CPU, RAM, battery and display for modern coding workloads.",
+      "A practical guide to reading jacket drape, trouser length, and alterations that are worth the cost.",
     image: primaryImageForGroup(2),
     date: "March 15, 2026",
-    author: "Admin",
-    category: "Guides",
+    author: "Editorial",
+    category: "Tailoring",
   },
   {
     id: 3,
-    title: "E-commerce Trends That Will Shape Online Stores",
+    title: "What Shoppers Expect from Online Fashion Retail Today",
     excerpt:
-      "From AI recommendations to fast checkout, these trends can boost conversion and customer trust.",
+      "From accurate size charts to easy returns, these habits help clothing stores earn trust and repeat orders.",
     image: primaryImageForGroup(3),
     date: "March 18, 2026",
-    author: "Admin",
-    category: "Business",
+    author: "Editorial",
+    category: "Retail",
   },
   {
     id: 4,
-    title: "Best Accessories to Upgrade Your Workspace",
+    title: "Accessorizing Formal Looks: Ties, Pocket Squares & Shoes",
     excerpt:
-      "Build a more comfortable and efficient desk setup with these must-have accessories.",
+      "Small details that elevate a suit—without overpowering it—for weddings, galas, and client dinners.",
     image: primaryImageForGroup(4),
     date: "March 21, 2026",
-    author: "Admin",
-    category: "Lifestyle",
+    author: "Editorial",
+    category: "Accessories",
   },
 ];
-

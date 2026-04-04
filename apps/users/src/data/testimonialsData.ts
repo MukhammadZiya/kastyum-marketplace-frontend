@@ -14,7 +14,7 @@ export const testimonialsData: Testimonial[] = [
     name: "Esther Howard",
     designation: "Customer",
     content:
-      "Great quality and fast delivery. The product looked even better in person than online.",
+      "The suit arrived beautifully pressed and true to size. The fabric feels substantial—better in person than on screen.",
     img: primaryImageForGroup(5),
   },
   {
@@ -22,7 +22,7 @@ export const testimonialsData: Testimonial[] = [
     name: "Jacob Jones",
     designation: "Customer",
     content:
-      "Smooth checkout, nice packaging, and excellent support. Definitely shopping again.",
+      "Smooth checkout and fast shipping. Customer care helped me swap sizes without any fuss.",
     img: primaryImageForGroup(6),
   },
   {
@@ -30,7 +30,7 @@ export const testimonialsData: Testimonial[] = [
     name: "Courtney Henry",
     designation: "Customer",
     content:
-      "Really impressed with the design and comfort. The deals are genuinely worth it.",
+      "Finally a store where the photos match the product. The cut is modern and the tailoring notes on the site were spot on.",
     img: primaryImageForGroup(7),
   },
   {
@@ -38,8 +38,7 @@ export const testimonialsData: Testimonial[] = [
     name: "Kristin Watson",
     designation: "Customer",
     content:
-      "The site is clean and easy to use. Shipping was quick and the product is top-notch.",
+      "Clean site, easy to browse fits, and the return window gave me confidence to try a bolder color.",
     img: primaryImageForGroup(1),
   },
 ];
-

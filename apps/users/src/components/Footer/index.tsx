@@ -126,8 +126,8 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a className="ease-out duration-200 hover:text-blue-600" href="#">
-                  Shop
+                <a className="ease-out duration-200 hover:text-blue-600" href="/shop-with-sidebar">
+                  Shop collection
                 </a>
               </li>
             </ul>
@@ -172,7 +172,7 @@ export default function Footer() {
             </h2>
 
             <p className="lg:text-right text-[14px] mb-4">
-              Save $3 With App &amp; New User only
+              Extra 10% off your first in-app order
             </p>
 
             <ul className="flex flex-col lg:items-end gap-3">
@@ -236,7 +236,7 @@ export default function Footer() {
         <div className="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0">
           <div className="flex gap-5 flex-wrap items-center justify-between">
             <p className="text-neutral-900 font-medium">
-              &copy; {year}. All rights reserved by PimjoLabs.
+              &copy; {year} Kastyum. All rights reserved.
             </p>
 
             <div className="flex flex-wrap items-center gap-4">

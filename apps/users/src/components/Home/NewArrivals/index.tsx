@@ -41,10 +41,10 @@ export default function NewArrivals() {
                   strokeLinecap="round"
                 />
               </svg>
-              This Week’s
+              Just in
             </span>
             <h2 className="font-semibold text-xl xl:text-[28px] text-neutral-900">
-              New Arrivals
+              New arrivals
             </h2>
           </div>
 

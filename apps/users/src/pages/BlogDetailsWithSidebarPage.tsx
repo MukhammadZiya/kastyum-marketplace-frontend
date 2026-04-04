@@ -6,7 +6,7 @@ export function BlogDetailsWithSidebarPage() {
 
   return (
     <>
-      <Breadcrumb title="Blog Details With Sidebar" pages={["blogs", "blog details with sidebar"]} />
+      <Breadcrumb title="Journal" pages={["journal", "article"]} />
       <section className="py-10 bg-neutral-100">
         <div className="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0 grid lg:grid-cols-[1fr_320px] gap-8">
           <article className="bg-white border border-neutral-200 rounded-xl overflow-hidden">
@@ -15,17 +15,19 @@ export function BlogDetailsWithSidebarPage() {
               <p className="text-sm text-neutral-500 mb-2">{post.date} - {post.author}</p>
               <h1 className="text-3xl font-semibold text-neutral-900 mb-5">{post.title}</h1>
               <p className="text-neutral-700 mb-4">
-                This page follows the details layout with sidebar content, keeping the same visual structure.
+                Shoulder pitch, jacket length, and trouser break change how a suit reads on your frame.
+                Use a tailor’s tape or visit a shop for chest and sleeve numbers before you buy online.
               </p>
               <p className="text-neutral-700">
-                You can later plug API-based blog content and dynamic slugs without changing the UI structure.
+                When in doubt, size for the shoulders and let an alterations specialist adjust the waist
+                and hem—small tweaks make off-the-rack tailoring look bespoke.
               </p>
             </div>
           </article>
           <aside className="space-y-5">
             <div className="bg-white border border-neutral-200 rounded-xl p-5">
               <h3 className="font-semibold text-neutral-900 mb-3">Search</h3>
-              <input className="w-full rounded-md border border-neutral-200 bg-neutral-50 py-2.5 px-4" placeholder="Search post..." />
+              <input className="w-full rounded-md border border-neutral-200 bg-neutral-50 py-2.5 px-4" placeholder="Search articles…" />
             </div>
             <div className="bg-white border border-neutral-200 rounded-xl p-5">
               <h3 className="font-semibold text-neutral-900 mb-3">Latest Posts</h3>
