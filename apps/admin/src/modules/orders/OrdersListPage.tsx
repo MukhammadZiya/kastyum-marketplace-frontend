@@ -5,6 +5,7 @@ import { DataTablePlaceholder } from "../../components/DataTablePlaceholder";
 import { ADMIN_PAGE_TITLES } from "../../constants/adminNavigation";
 import { useAdminOrderList } from "../../hooks/admin-orders";
 import { getAuthToken } from "@repo/api";
+import { getAdminListEmptyMessage } from "../../lib/adminListEmptyMessage";
 
 export function OrdersListPage() {
   const signedIn = !!getAuthToken();
@@ -13,15 +14,14 @@ export function OrdersListPage() {
     limit: 50,
   });
 
-  const emptyMessage = !signedIn
-    ? "Sign in as admin to load orders."
-    : isPending
-      ? "Loading…"
-      : isError
-        ? error instanceof Error
-          ? error.message
-          : "Request failed."
-        : "No orders.";
+  const emptyMessage = getAdminListEmptyMessage({
+    signedIn,
+    isPending,
+    isError,
+    error,
+    signInHint: "Sign in as admin to load orders.",
+    whenEmpty: "No orders.",
+  });
 
   const rowEls =
     data?.list.length ?
