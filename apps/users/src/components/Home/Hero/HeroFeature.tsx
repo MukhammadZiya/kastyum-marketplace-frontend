@@ -71,16 +71,25 @@ export default function HeroFeature() {
   const t = useT();
 
   return (
-    <div className="max-w-[1060px] w-full mx-auto px-4 sm:px-8 xl:px-0">
-      <div className="flex flex-wrap items-center gap-[30px] xl:gap-[50px] mt-10">
+    <div className="mx-auto w-full max-w-[1060px] px-4 sm:px-8 xl:px-0">
+      <div className="mt-10 flex w-full flex-nowrap items-stretch gap-2 sm:gap-4 lg:gap-6 xl:gap-8">
         {FEATURE_IDS.map((id) => {
           const copy = FEATURE_COPY[id];
           return (
-            <div className="flex items-center gap-4" key={id}>
-              <FeatureIcon id={id} />
-              <div>
-                <h3 className="font-medium text-lg text-neutral-900">{t(copy.titleKey)}</h3>
-                <p className="text-sm text-neutral-600">{t(copy.descKey)}</p>
+            <div
+              className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3 lg:gap-4"
+              key={id}
+            >
+              <span className="shrink-0 [&_svg]:h-9 [&_svg]:w-9 sm:[&_svg]:h-10 sm:[&_svg]:w-10">
+                <FeatureIcon id={id} />
+              </span>
+              <div className="min-w-0">
+                <h3 className="text-sm font-medium leading-snug text-neutral-900 sm:text-base lg:text-lg">
+                  {t(copy.titleKey)}
+                </h3>
+                <p className="mt-0.5 text-xs leading-snug text-neutral-600 sm:text-sm">
+                  {t(copy.descKey)}
+                </p>
               </div>
             </div>
           );

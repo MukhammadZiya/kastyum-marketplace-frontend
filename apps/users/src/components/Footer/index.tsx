@@ -5,7 +5,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="overflow-hidden">
+    <footer className="mt-16 overflow-hidden border-t border-neutral-200 bg-neutral-100 sm:mt-20 xl:mt-24">
       <div className="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0">
         <div className="flex flex-wrap xl:flex-nowrap gap-10 xl:gap-[76px] xl:justify-between pt-[70px] xl:pt-[90px] pb-10 xl:pb-[60px]">
           <div className="max-w-[330px] w-full">
@@ -123,11 +123,12 @@ export default function Footer() {
                   {t("footerLinkCart")}
                 </a>
               </li>
-              <li>
+              {/* Wishlist link hidden for now — restore when ready */}
+              {/* <li>
                 <a className="ease-out duration-200 hover:text-blue-600" href="#">
                   {t("footerLinkWishlist")}
                 </a>
-              </li>
+              </li> */}
               <li>
                 <a className="ease-out duration-200 hover:text-blue-600" href="/shop-with-sidebar">
                   {t("footerLinkShopCollection")}
@@ -235,7 +236,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="py-5 xl:py-[30px] bg-neutral-50">
+      <div className="py-5 xl:py-[30px]">
         <div className="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0">
           <div className="flex gap-5 flex-wrap items-center justify-between">
             <p className="text-neutral-900 font-medium">

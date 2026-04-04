@@ -256,7 +256,8 @@ const Header = () => {
               </nav>
             </div>
 
-            <div className="hidden xl:block">
+            {/* Wishlist link hidden for now — restore when ready */}
+            {/* <div className="hidden xl:block">
               <ul className="flex items-center gap-[22px]">
                 <li className="py-4">
                   <Link
@@ -267,7 +268,7 @@ const Header = () => {
                   </Link>
                 </li>
               </ul>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
