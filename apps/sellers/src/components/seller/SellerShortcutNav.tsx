@@ -1,18 +1,27 @@
 import { clsx } from "clsx";
 import { NavLink } from "react-router-dom";
+import { useT } from "../../i18n";
 
-type LinkSpec = { to: string; label: string; end?: boolean };
+export type SellerShortcutLinkSpec = {
+  to: string;
+  labelKey: string;
+  end?: boolean;
+};
 
 type Props = {
-  links: readonly LinkSpec[];
+  links: readonly SellerShortcutLinkSpec[];
 };
 
 export function SellerShortcutNav({ links }: Props) {
+  const t = useT();
   return (
-    <nav className="flex flex-wrap gap-2" aria-label="Section shortcuts">
+    <nav
+      className="flex flex-wrap gap-2"
+      aria-label={t("common.sellerAriaSectionShortcuts")}
+    >
       {links.map((l) => (
         <NavLink
-          key={l.to}
+          key={`${l.to}-${l.labelKey}`}
           to={l.to}
           end={l.end}
           className={({ isActive }) =>
@@ -24,7 +33,7 @@ export function SellerShortcutNav({ links }: Props) {
             )
           }
         >
-          {l.label}
+          {t(l.labelKey)}
         </NavLink>
       ))}
     </nav>

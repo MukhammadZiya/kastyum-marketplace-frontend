@@ -1,6 +1,7 @@
 import {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type MouseEventHandler,
@@ -20,7 +21,8 @@ import {
 } from "../components/seller/SellerSidebar";
 import { SellerTopbar } from "../components/seller/SellerTopbar";
 import { SellerMobileNavContext } from "../contexts/SellerMobileNavContext";
-import { isSellerSubActive, SELLER_SIDEBAR_ITEMS } from "./sellerSidebarNav";
+import { useT } from "../i18n";
+import { buildSellerSidebarItems, isSellerSubActive } from "./sellerSidebarNav";
 
 function isParentRouteActive(pathname: string, item: SidebarNavItem) {
   if (item.to === "/") return pathname === "/";
@@ -29,6 +31,8 @@ function isParentRouteActive(pathname: string, item: SidebarNavItem) {
 
 export function SellerAppShell() {
   const { pathname } = useLocation();
+  const t = useT();
+  const sidebarItems = useMemo(() => buildSellerSidebarItems(t), [t]);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [sectionOverride, setSectionOverride] = useState<
     Record<string, boolean | undefined>
@@ -41,7 +45,7 @@ export function SellerAppShell() {
 
   const isSectionExpanded = useCallback(
     (id: string) => {
-      const item = SELLER_SIDEBAR_ITEMS.find((i) => i.id === id);
+      const item = sidebarItems.find((i) => i.id === id);
       if (!item?.subItems?.length) return false;
       const auto = isParentRouteActive(pathname, item);
       const o = sectionOverride[id];
@@ -49,13 +53,13 @@ export function SellerAppShell() {
       if (o === false) return false;
       return auto;
     },
-    [pathname, sectionOverride],
+    [pathname, sectionOverride, sidebarItems],
   );
 
   const toggleSection = useCallback(
     (id: string) => {
       setSectionOverride((prev) => {
-        const item = SELLER_SIDEBAR_ITEMS.find((i) => i.id === id);
+        const item = sidebarItems.find((i) => i.id === id);
         const auto =
           item && item.subItems?.length
             ? isParentRouteActive(pathname, item)
@@ -65,7 +69,7 @@ export function SellerAppShell() {
         return { ...prev, [id]: !effective };
       });
     },
-    [pathname],
+    [pathname, sidebarItems],
   );
 
   const prevPathnameRef = useRef(pathname);
@@ -75,7 +79,7 @@ export function SellerAppShell() {
     setSectionOverride((prevMap) => {
       const next = { ...prevMap };
       let changed = false;
-      for (const item of SELLER_SIDEBAR_ITEMS) {
+      for (const item of sidebarItems) {
         if (!item.subItems?.length) continue;
         const inNow = isParentRouteActive(pathname, item);
         const wasIn = isParentRouteActive(prevPath, item);
@@ -86,7 +90,7 @@ export function SellerAppShell() {
       }
       return changed ? next : prevMap;
     });
-  }, [pathname]);
+  }, [pathname, sidebarItems]);
 
   const openMobileNav = useCallback(() => setMobileNavOpen(true), []);
 
@@ -126,7 +130,7 @@ export function SellerAppShell() {
 
   const sidebarShared = {
     brand: <SellerSidebarHeader />,
-    items: SELLER_SIDEBAR_ITEMS,
+    items: sidebarItems,
     isItemActive,
     isSubItemActive: (sub: SidebarSubItem) => isSellerSubActive(pathname, sub),
     isSectionExpanded,

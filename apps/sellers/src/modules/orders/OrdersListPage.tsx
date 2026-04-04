@@ -1,25 +1,18 @@
+import { useMemo } from "react";
 import { Card, StatCard } from "@repo/ui";
 import type { OrderListRow, OrderStatus } from "@repo/types";
 import { SellerPageFrame } from "../../components/seller/SellerPageFrame";
 import { SellerShortcutNav } from "../../components/seller/SellerShortcutNav";
 import { SellerTableScaffold } from "../../components/seller/SellerTableScaffold";
-import { SELLER_PAGE_COPY } from "../../constants/sellerNavigation";
+import { SELLER_PAGE_COPY_KEYS } from "../../constants/sellerNavigation";
 import {
   useSellerOrders,
   useUpdateOrderStatus,
 } from "../../hooks/seller-orders";
 import { getAuthToken } from "@repo/api";
+import { useT } from "../../i18n";
 
-const c = SELLER_PAGE_COPY.ordersList;
-
-const COLUMNS = [
-  "Order",
-  "Buyer",
-  "Items",
-  "Total",
-  "Status",
-  "Placed",
-] as const;
+const copy = SELLER_PAGE_COPY_KEYS.ordersList;
 
 const STATUS_OPTIONS: OrderStatus[] = [
   "PENDING",
@@ -56,6 +49,7 @@ function OrderStatusSelect({
 }
 
 export function OrdersListPage() {
+  const t = useT();
   const signedIn = !!getAuthToken();
   const { data, isPending, isError, error } = useSellerOrders({
     page: 1,
@@ -67,21 +61,51 @@ export function OrdersListPage() {
     data?.list.filter((o: OrderListRow) => o.status === "PENDING").length ??
     0;
 
-  const stats = [
-    { label: "Open", value: String(data?.total ?? 0), hint: "Listed" },
-    { label: "Pending", value: String(pendingCount), hint: "Awaiting action" },
-    { label: "SLA risk", value: "—", hint: "Placeholder" },
-  ] as const;
+  const stats = useMemo(
+    () => [
+      {
+        id: "open",
+        label: t("common.sellerOrdersListStatOpen"),
+        value: String(data?.total ?? 0),
+        hint: t("common.sellerOrdersListStatOpenHint"),
+      },
+      {
+        id: "pend",
+        label: t("common.sellerOrdersListStatPending"),
+        value: String(pendingCount),
+        hint: t("common.sellerOrdersListStatPendingHint"),
+      },
+      {
+        id: "sla",
+        label: t("common.sellerOrdersListStatSla"),
+        value: t("common.sellerEmDash"),
+        hint: t("common.sellerOrdersListStatSlaHint"),
+      },
+    ],
+    [t, data?.total, pendingCount],
+  );
+
+  const columns = useMemo(
+    () => [
+      t("common.sellerColOrder"),
+      t("common.sellerColBuyer"),
+      t("common.sellerColItems"),
+      t("common.sellerColTotal"),
+      t("common.sellerColStatus"),
+      t("common.sellerColPlaced"),
+    ],
+    [t],
+  );
 
   const emptyLabel = !signedIn
-    ? "Sign in as a seller to load orders."
+    ? t("common.sellerEmptySignInOrders")
     : isPending
-      ? "Loading…"
+      ? t("common.sellerLoading")
       : isError
         ? error instanceof Error
           ? error.message
-          : "Could not load orders."
-        : "No orders yet.";
+          : t("common.sellerErrorLoadOrders")
+        : t("common.sellerEmptyNoOrders");
 
   const rowEls =
     data?.list.length ?
@@ -106,7 +130,7 @@ export function OrdersListPage() {
           <td className="px-4 py-3 text-slate-600">
             {o.createdAt
               ? new Date(o.createdAt).toLocaleString()
-              : "—"}
+              : t("common.sellerEmDash")}
           </td>
         </tr>
       ))
@@ -114,30 +138,37 @@ export function OrdersListPage() {
 
   return (
     <SellerPageFrame
-      title={c.title}
-      addon={<p className="text-sm text-slate-500">{c.description}</p>}
+      title={t(copy.titleKey)}
+      addon={<p className="text-sm text-slate-500">{t(copy.descriptionKey)}</p>}
     >
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {stats.map((s) => (
-          <StatCard key={s.label} {...s} />
+          <StatCard key={s.id} label={s.label} value={s.value} hint={s.hint} />
         ))}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_minmax(0,280px)]">
         <Card
-          title="Orders"
-          description="Filters, export, and row actions attach here"
+          title={t("common.sellerOrdersListCardTitle")}
+          description={t("common.sellerOrdersListCardDesc")}
         >
-          <SellerTableScaffold columns={COLUMNS} emptyLabel={emptyLabel}>
+          <SellerTableScaffold columns={columns} emptyLabel={emptyLabel}>
             {rowEls}
           </SellerTableScaffold>
         </Card>
 
-        <Card title="Shortcuts" description="Related pages">
+        <Card
+          title={t("common.sellerOrdersListShortcutsTitle")}
+          description={t("common.sellerOrdersListShortcutsDesc")}
+        >
           <SellerShortcutNav
             links={[
-              { to: "/orders", label: "Orders overview", end: true },
-              { to: "/", label: "Dashboard" },
+              {
+                to: "/orders",
+                labelKey: "common.sellerLinkOrdersOverview",
+                end: true,
+              },
+              { to: "/", labelKey: "common.sellerLinkDashboard" },
             ]}
           />
         </Card>

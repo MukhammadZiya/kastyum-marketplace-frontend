@@ -1,59 +1,84 @@
+import { useMemo } from "react";
 import { Card, StatCard } from "@repo/ui";
 import { SellerPageFrame } from "../../components/seller/SellerPageFrame";
 import { SellerShortcutNav } from "../../components/seller/SellerShortcutNav";
-import { SELLER_PAGE_COPY } from "../../constants/sellerNavigation";
+import { SELLER_PAGE_COPY_KEYS } from "../../constants/sellerNavigation";
+import { useT } from "../../i18n";
 
-const c = SELLER_PAGE_COPY.dashboard;
-
-const STATS = [
-  { label: "Active listings", value: "24", hint: "Published" },
-  { label: "Open orders", value: "7", hint: "Awaiting fulfillment" },
-  { label: "Revenue (30d)", value: "€4.2k", hint: "Estimated" },
-] as const;
+const copy = SELLER_PAGE_COPY_KEYS.dashboard;
 
 export function SellerDashboardPage() {
+  const t = useT();
+
+  const stats = useMemo(
+    () => [
+      {
+        id: "listings",
+        label: t("common.sellerDashStatActiveListings"),
+        value: "24",
+        hint: t("common.sellerDashStatActiveListingsHint"),
+      },
+      {
+        id: "orders",
+        label: t("common.sellerDashStatOpenOrders"),
+        value: "7",
+        hint: t("common.sellerDashStatOpenOrdersHint"),
+      },
+      {
+        id: "revenue",
+        label: t("common.sellerDashStatRevenue"),
+        value: "€4.2k",
+        hint: t("common.sellerDashStatRevenueHint"),
+      },
+    ],
+    [t],
+  );
+
   return (
     <SellerPageFrame
-      title={c.title}
-      addon={<p className="text-sm text-slate-500">{c.description}</p>}
+      title={t(copy.titleKey)}
+      addon={<p className="text-sm text-slate-500">{t(copy.descriptionKey)}</p>}
     >
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {STATS.map((s) => (
-          <StatCard key={s.label} {...s} />
+        {stats.map((s) => (
+          <StatCard key={s.id} label={s.label} value={s.value} hint={s.hint} />
         ))}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card
-          title="Today"
-          description="Orders and messages that need attention"
+          title={t("common.sellerDashTodayTitle")}
+          description={t("common.sellerDashTodayDesc")}
         >
           <ul className="space-y-3 text-sm text-slate-600">
             <li className="flex justify-between gap-4 border-b border-slate-100 pb-3">
-              <span>New orders</span>
+              <span>{t("common.sellerDashTodayNewOrders")}</span>
               <span className="font-medium text-slate-900">3</span>
             </li>
             <li className="flex justify-between gap-4 border-b border-slate-100 pb-3">
-              <span>Low stock SKUs</span>
+              <span>{t("common.sellerDashTodayLowStock")}</span>
               <span className="font-medium text-amber-700">2</span>
             </li>
             <li className="flex justify-between gap-4">
-              <span>Buyer messages</span>
+              <span>{t("common.sellerDashTodayMessages")}</span>
               <span className="font-medium text-slate-900">0</span>
             </li>
           </ul>
         </Card>
 
-        <Card title="Shortcuts" description="Jump to common tasks">
+        <Card
+          title={t("common.sellerDashShortcutsTitle")}
+          description={t("common.sellerDashShortcutsDesc")}
+        >
           <SellerShortcutNav
             links={[
-              { to: "/products/new", label: "Add product" },
-              { to: "/orders/list", label: "View orders" },
-              { to: "/store/edit", label: "Edit store" },
+              { to: "/products/new", labelKey: "common.sellerLinkAddProduct" },
+              { to: "/orders/list", labelKey: "common.sellerLinkViewOrders" },
+              { to: "/store/edit", labelKey: "common.sellerLinkEditStore" },
             ]}
           />
           <p className="mt-4 text-xs text-slate-400">
-            Same navigation pattern as Products, Orders, and Store sections.
+            {t("common.sellerDashShortcutsFootnote")}
           </p>
         </Card>
       </div>

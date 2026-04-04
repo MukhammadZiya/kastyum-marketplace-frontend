@@ -1,58 +1,89 @@
+import { useMemo } from "react";
 import { Card, StatCard } from "@repo/ui";
+import { SellerFormPlaceholder } from "../../components/seller/SellerFormPlaceholder";
 import { SellerPageFrame } from "../../components/seller/SellerPageFrame";
 import { SellerShortcutNav } from "../../components/seller/SellerShortcutNav";
-import { SELLER_PAGE_COPY } from "../../constants/sellerNavigation";
+import { SELLER_PAGE_COPY_KEYS } from "../../constants/sellerNavigation";
+import { useT } from "../../i18n";
 
-const c = SELLER_PAGE_COPY.productsNew;
-
-const STATS = [
-  { label: "Drafts saved", value: "0", hint: "Auto-save when wired" },
-  { label: "Images (max)", value: "12", hint: "Policy placeholder" },
-  { label: "Variants", value: "—", hint: "Optional SKUs" },
-] as const;
-
-function FormScaffold({ label }: { label: string }) {
-  return (
-    <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/80 p-5 text-sm text-slate-500">
-      {label} — fields and validation connect here.
-    </div>
-  );
-}
+const copy = SELLER_PAGE_COPY_KEYS.productsNew;
 
 export function ProductCreatePage() {
+  const t = useT();
+
+  const stats = useMemo(
+    () => [
+      {
+        id: "drafts",
+        label: t("common.sellerProductsNewStatDrafts"),
+        value: "0",
+        hint: t("common.sellerProductsNewStatDraftsHint"),
+      },
+      {
+        id: "img",
+        label: t("common.sellerProductsNewStatImages"),
+        value: "12",
+        hint: t("common.sellerProductsNewStatImagesHint"),
+      },
+      {
+        id: "var",
+        label: t("common.sellerProductsNewStatVariants"),
+        value: t("common.sellerEmDash"),
+        hint: t("common.sellerProductsNewStatVariantsHint"),
+      },
+    ],
+    [t],
+  );
+
   return (
     <SellerPageFrame
-      title={c.title}
-      addon={<p className="text-sm text-slate-500">{c.description}</p>}
+      title={t(copy.titleKey)}
+      addon={<p className="text-sm text-slate-500">{t(copy.descriptionKey)}</p>}
     >
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {STATS.map((s) => (
-          <StatCard key={s.label} {...s} />
+        {stats.map((s) => (
+          <StatCard key={s.id} label={s.label} value={s.value} hint={s.hint} />
         ))}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card
-          title="Basics"
-          description="Title, description, category, pricing"
+          title={t("common.sellerProductsNewBasicsTitle")}
+          description={t("common.sellerProductsNewBasicsDesc")}
         >
-          <FormScaffold label="Core product fields" />
+          <SellerFormPlaceholder
+            labelKey="common.sellerProductsNewScaffoldCore"
+            suffixKey="common.sellerProductsNewScaffoldSuffix"
+          />
         </Card>
 
-        <Card title="Media & variants" description="Gallery, options, inventory">
-          <FormScaffold label="Uploads and variant matrix" />
+        <Card
+          title={t("common.sellerProductsNewMediaTitle")}
+          description={t("common.sellerProductsNewMediaDesc")}
+        >
+          <SellerFormPlaceholder
+            labelKey="common.sellerProductsNewScaffoldUploads"
+            suffixKey="common.sellerProductsNewScaffoldSuffix"
+          />
         </Card>
       </div>
 
-      <Card title="Publish" description="Visibility and scheduling">
+      <Card
+        title={t("common.sellerProductsNewPublishTitle")}
+        description={t("common.sellerProductsNewPublishDesc")}
+      >
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-slate-500">
-            Primary action bar (save draft, publish) lives here.
+            {t("common.sellerProductsNewPublishHint")}
           </p>
           <SellerShortcutNav
             links={[
-              { to: "/products/list", label: "Back to list" },
-              { to: "/products", label: "Overview", end: true },
+              { to: "/products/list", labelKey: "common.sellerLinkBackToList" },
+              {
+                to: "/products",
+                labelKey: "common.sellerSubOverview",
+                end: true,
+              },
             ]}
           />
         </div>

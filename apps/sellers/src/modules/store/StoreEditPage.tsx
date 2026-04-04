@@ -1,58 +1,89 @@
+import { useMemo } from "react";
 import { Card, StatCard } from "@repo/ui";
+import { SellerFormPlaceholder } from "../../components/seller/SellerFormPlaceholder";
 import { SellerPageFrame } from "../../components/seller/SellerPageFrame";
 import { SellerShortcutNav } from "../../components/seller/SellerShortcutNav";
-import { SELLER_PAGE_COPY } from "../../constants/sellerNavigation";
+import { SELLER_PAGE_COPY_KEYS } from "../../constants/sellerNavigation";
+import { useT } from "../../i18n";
 
-const c = SELLER_PAGE_COPY.storeEdit;
-
-const STATS = [
-  { label: "Last saved", value: "—", hint: "When autosave exists" },
-  { label: "Required fields", value: "4/5", hint: "Validation stub" },
-  { label: "Preview", value: "Live", hint: "Buyer-facing" },
-] as const;
-
-function FormScaffold({ label }: { label: string }) {
-  return (
-    <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/80 p-5 text-sm text-slate-500">
-      {label} — inputs and file pickers connect here.
-    </div>
-  );
-}
+const copy = SELLER_PAGE_COPY_KEYS.storeEdit;
 
 export function StoreEditPage() {
+  const t = useT();
+
+  const stats = useMemo(
+    () => [
+      {
+        id: "saved",
+        label: t("common.sellerStoreEditStatLastSaved"),
+        value: t("common.sellerEmDash"),
+        hint: t("common.sellerStoreEditStatLastSavedHint"),
+      },
+      {
+        id: "req",
+        label: t("common.sellerStoreEditStatRequired"),
+        value: "4/5",
+        hint: t("common.sellerStoreEditStatRequiredHint"),
+      },
+      {
+        id: "prev",
+        label: t("common.sellerStoreEditStatPreview"),
+        value: t("common.sellerStoreEditStatPreviewValue"),
+        hint: t("common.sellerStoreEditStatPreviewHint"),
+      },
+    ],
+    [t],
+  );
+
   return (
     <SellerPageFrame
-      title={c.title}
-      addon={<p className="text-sm text-slate-500">{c.description}</p>}
+      title={t(copy.titleKey)}
+      addon={<p className="text-sm text-slate-500">{t(copy.descriptionKey)}</p>}
     >
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {STATS.map((s) => (
-          <StatCard key={s.label} {...s} />
+        {stats.map((s) => (
+          <StatCard key={s.id} label={s.label} value={s.value} hint={s.hint} />
         ))}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card
-          title="Branding"
-          description="Logo, banner, accent colors"
+          title={t("common.sellerStoreEditBrandingTitle")}
+          description={t("common.sellerStoreEditBrandingDesc")}
         >
-          <FormScaffold label="Media and visual identity" />
+          <SellerFormPlaceholder
+            labelKey="common.sellerStoreEditScaffoldMedia"
+            suffixKey="common.sellerStoreEditScaffoldSuffix"
+          />
         </Card>
 
-        <Card title="Contact & policies" description="Email, phone, shipping & returns">
-          <FormScaffold label="Structured policy blocks" />
+        <Card
+          title={t("common.sellerStoreEditContactTitle")}
+          description={t("common.sellerStoreEditContactDesc")}
+        >
+          <SellerFormPlaceholder
+            labelKey="common.sellerStoreEditScaffoldPolicies"
+            suffixKey="common.sellerStoreEditScaffoldSuffix"
+          />
         </Card>
       </div>
 
-      <Card title="Save changes" description="Review and publish updates">
+      <Card
+        title={t("common.sellerStoreEditSaveTitle")}
+        description={t("common.sellerStoreEditSaveDesc")}
+      >
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-slate-500">
-            Primary actions: discard, save draft, publish to storefront.
+            {t("common.sellerStoreEditSaveHint")}
           </p>
           <SellerShortcutNav
             links={[
-              { to: "/store", label: "Back to profile", end: true },
-              { to: "/", label: "Dashboard" },
+              {
+                to: "/store",
+                labelKey: "common.sellerLinkBackToProfile",
+                end: true,
+              },
+              { to: "/", labelKey: "common.sellerLinkDashboard" },
             ]}
           />
         </div>
