@@ -3,6 +3,8 @@ import type { Product } from "../../../types/product";
 import { useCart } from "../../../context/cart";
 import { useQuickViewModal } from "../../../context/quickViewModal";
 import { useWishlist } from "../../../context/wishlist";
+import { useT } from "../../../i18n";
+import { productDisplayTitle } from "../../../lib/productDisplayTitle";
 
 function productDetailPath(item: Product) {
   if (item.mongoId) {
@@ -12,10 +14,13 @@ function productDetailPath(item: Product) {
 }
 
 export default function ProductItem({ item }: { item: Product }) {
+  const t = useT();
   const { addItem } = useCart();
   const { open } = useQuickViewModal();
   const { addItem: addWishlistItem } = useWishlist();
   const detailTo = productDetailPath(item);
+  const displayTitle = productDisplayTitle(item, t);
+  const ariaDetails = t("productAriaViewDetails").replace("{title}", displayTitle);
 
   return (
     <div className="group rounded-xl p-1 transition duration-200 ease-out hover:-translate-y-1 hover:shadow-[0_14px_40px_-14px_rgba(15,23,42,0.12)] hover:ring-1 hover:ring-neutral-200/70">
@@ -24,7 +29,7 @@ export default function ProductItem({ item }: { item: Product }) {
         <Link
           to={detailTo}
           className="absolute inset-0 z-[1]"
-          aria-label={`View details: ${item.title}`}
+          aria-label={ariaDetails}
         />
         <div className="absolute inset-x-0 top-0 bottom-[5.25rem] z-0 flex items-center justify-center p-3 sm:p-4">
           <img
@@ -132,7 +137,7 @@ export default function ProductItem({ item }: { item: Product }) {
         </div>
 
         <h3 className="mb-[6px] font-medium text-neutral-900 duration-200 ease-out group-hover:text-blue-600">
-          {item.title}
+          {displayTitle}
         </h3>
 
         <span className="flex items-center gap-2 text-lg font-medium">

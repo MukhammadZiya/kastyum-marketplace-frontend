@@ -105,6 +105,7 @@ export function shopFilterOptionLists(products: readonly ShopProduct[]) {
 export const shopData: ShopProduct[] = [
   {
     title: "Navy Double-Breasted Wool Suit",
+    titleKey: "demoProdTitle1",
     reviews: 15,
     price: 599.0,
     discountedPrice: 429.0,
@@ -117,6 +118,7 @@ export const shopData: ShopProduct[] = [
   },
   {
     title: "Charcoal Slim Fit Two-Piece Suit",
+    titleKey: "demoProdTitle2",
     reviews: 12,
     price: 549.0,
     discountedPrice: 389.0,
@@ -129,6 +131,7 @@ export const shopData: ShopProduct[] = [
   },
   {
     title: "Beige Classic Fit Two-Piece Suit",
+    titleKey: "demoProdTitle3",
     reviews: 9,
     price: 519.0,
     discountedPrice: 359.0,
@@ -141,6 +144,7 @@ export const shopData: ShopProduct[] = [
   },
   {
     title: "Black Peak Lapel Tuxedo",
+    titleKey: "demoProdTitle4",
     reviews: 11,
     price: 689.0,
     discountedPrice: 499.0,
@@ -153,6 +157,7 @@ export const shopData: ShopProduct[] = [
   },
   {
     title: "Emerald Textured Wool Suit",
+    titleKey: "demoProdTitle5",
     reviews: 8,
     price: 579.0,
     discountedPrice: 419.0,
@@ -165,6 +170,7 @@ export const shopData: ShopProduct[] = [
   },
   {
     title: "Ivory Tailored Blazer & Trousers",
+    titleKey: "demoProdTitle6",
     reviews: 14,
     price: 499.0,
     discountedPrice: 339.0,
@@ -177,6 +183,7 @@ export const shopData: ShopProduct[] = [
   },
   {
     title: "Brown Three-Piece Suit",
+    titleKey: "demoProdTitle7",
     reviews: 10,
     price: 629.0,
     discountedPrice: 449.0,
@@ -189,6 +196,7 @@ export const shopData: ShopProduct[] = [
   },
   {
     title: "Midnight Blue Evening Suit",
+    titleKey: "demoProdTitle8",
     reviews: 13,
     price: 649.0,
     discountedPrice: 469.0,

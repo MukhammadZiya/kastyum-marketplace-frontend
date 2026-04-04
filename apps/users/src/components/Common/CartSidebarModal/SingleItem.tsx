@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import type { CartItem } from "../../../context/cart";
+import { useT } from "../../../i18n";
+import { productDisplayTitle } from "../../../lib/productDisplayTitle";
 
 export default function CartSidebarItem({
   item,
@@ -8,13 +10,17 @@ export default function CartSidebarItem({
   item: CartItem;
   onRemove: (id: number) => void;
 }) {
+  const t = useT();
+  const displayTitle = productDisplayTitle(item, t);
+  const ariaView = t("productAriaView").replace("{title}", displayTitle);
+
   return (
     <div className="flex items-center justify-between gap-5 rounded-lg border border-transparent px-1 py-1 transition duration-200 ease-out hover:border-neutral-100 hover:bg-neutral-50/80">
       <div className="flex w-full items-center gap-6">
         <Link
           to={`/shop-details?id=${item.id}`}
           className="flex h-[90px] w-full max-w-[90px] items-center justify-center rounded-[10px] bg-neutral-100"
-          aria-label={`View ${item.title}`}
+          aria-label={ariaView}
         >
           <img
             src={item.imgs?.thumbnails[0]}
@@ -29,16 +35,18 @@ export default function CartSidebarItem({
               to={`/shop-details?id=${item.id}`}
               className="ease-out duration-200 hover:text-blue-600"
             >
-              {item.title}
+              {displayTitle}
             </Link>
           </h3>
-          <p className="text-[14px] text-neutral-600">Price: ${item.discountedPrice}</p>
+          <p className="text-[14px] text-neutral-600">
+            {t("common.price")}: ${item.discountedPrice}
+          </p>
         </div>
       </div>
 
       <button
         onClick={() => onRemove(item.id)}
-        aria-label="remove product from cart"
+        aria-label={t("ariaRemoveProductFromCart")}
         className="flex items-center justify-center rounded-lg max-w-[38px] w-full h-[38px] bg-neutral-100 border border-neutral-200 text-neutral-900 ease-out duration-200 hover:bg-red-50 hover:border-red-200 hover:text-red-600"
         type="button"
       >
@@ -63,4 +71,3 @@ export default function CartSidebarItem({
     </div>
   );
 }
-

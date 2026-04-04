@@ -1,165 +1,171 @@
 import type { ProductReview } from "../types/review";
 
+const LOCALE_TO_BCP47: Record<string, string> = {
+  en: "en-US",
+  ru: "ru-RU",
+  uz: "uz-UZ",
+};
+
 /** Dummy reviews per product — replace with API response when backend exists. */
 export const reviewsByProductId: Record<number, ProductReview[]> = {
   1: [
     {
       id: "1a",
-      author: "Marcus T.",
+      authorKey: "demoRev1aAuthor",
+      titleKey: "demoRev1aTitle",
+      bodyKey: "demoRev1aBody",
       rating: 5,
       date: "2026-02-14",
-      title: "Sharp navy suit",
-      body: "Shoulders sit perfectly and the wool has a nice drape. Wore it to a client dinner and got compliments.",
       verifiedPurchase: true,
     },
     {
       id: "1b",
-      author: "Alex R.",
+      authorKey: "demoRev1bAuthor",
+      bodyKey: "demoRev1bBody",
       rating: 4,
       date: "2026-01-22",
-      body: "Great value. Needed a quick hem on the trousers—otherwise ready to wear.",
       verifiedPurchase: true,
     },
   ],
   2: [
     {
       id: "2a",
-      author: "Sam K.",
+      authorKey: "demoRev2aAuthor",
+      titleKey: "demoRev2aTitle",
+      bodyKey: "demoRev2aBody",
       rating: 5,
       date: "2026-03-01",
-      title: "Slim but not tight",
-      body: "Charcoal reads well in photos and in person. Fabric breathes on warmer days.",
       verifiedPurchase: true,
     },
     {
       id: "2b",
-      author: "Jordan P.",
+      authorKey: "demoRev2bAuthor",
+      bodyKey: "demoRev2bBody",
       rating: 4,
       date: "2026-02-18",
-      body: "Happy with the fit. Jacket sleeves were spot-on for my arm length.",
       verifiedPurchase: true,
     },
     {
       id: "2c",
-      author: "Riley M.",
+      authorKey: "demoRev2cAuthor",
+      titleKey: "demoRev2cTitle",
+      bodyKey: "demoRev2cBody",
       rating: 5,
       date: "2026-01-05",
-      title: "Office staple",
-      body: "Looks expensive without feeling stiff. Wears well with brown or black shoes.",
       verifiedPurchase: false,
     },
   ],
   3: [
     {
       id: "3a",
-      author: "Casey D.",
+      authorKey: "demoRev3aAuthor",
+      titleKey: "demoRev3aTitle",
+      bodyKey: "demoRev3aBody",
       rating: 5,
       date: "2025-12-10",
-      title: "Versatile beige",
-      body: "Works for daytime events and dressed-down with a knit. Color is true to the site.",
       verifiedPurchase: true,
     },
     {
       id: "3b",
-      author: "Taylor B.",
+      authorKey: "demoRev3bAuthor",
+      bodyKey: "demoRev3bBody",
       rating: 4,
       date: "2025-11-28",
-      body: "Classic cut. I’d size up if you prefer a roomier jacket.",
       verifiedPurchase: true,
     },
   ],
   4: [
     {
       id: "4a",
-      author: "Morgan L.",
+      authorKey: "demoRev4aAuthor",
+      titleKey: "demoRev4aTitle",
+      bodyKey: "demoRev4aBody",
       rating: 5,
       date: "2026-02-02",
-      title: "Wedding-ready",
-      body: "Peak lapels and satin trim look formal without feeling costume-y. Packed well for travel.",
       verifiedPurchase: true,
     },
     {
       id: "4b",
-      author: "Jamie C.",
+      authorKey: "demoRev4bAuthor",
+      bodyKey: "demoRev4bBody",
       rating: 5,
       date: "2026-01-12",
-      body: "Black is deep and even under indoor lighting. Waist suppression is flattering.",
       verifiedPurchase: true,
     },
   ],
   5: [
     {
       id: "5a",
-      author: "Chris W.",
+      authorKey: "demoRev5aAuthor",
+      titleKey: "demoRev5aTitle",
+      bodyKey: "demoRev5aBody",
       rating: 4,
       date: "2026-03-08",
-      title: "Bold but wearable",
-      body: "Texture hides wrinkles better than plain cloth. Turned heads at a spring gala.",
       verifiedPurchase: true,
     },
     {
       id: "5b",
-      author: "Pat N.",
+      authorKey: "demoRev5bAuthor",
+      bodyKey: "demoRev5bBody",
       rating: 5,
       date: "2026-02-20",
-      body: "Emerald is richer than my monitor showed—in a good way. Lining feels smooth.",
       verifiedPurchase: true,
     },
   ],
   6: [
     {
       id: "6a",
-      author: "Drew H.",
+      authorKey: "demoRev6aAuthor",
+      titleKey: "demoRev6aTitle",
+      bodyKey: "demoRev6aBody",
       rating: 5,
       date: "2026-01-30",
-      title: "Summer events solved",
-      body: "Ivory reads elegant, not stark. Lightweight enough for outdoor photos.",
       verifiedPurchase: true,
     },
     {
       id: "6b",
-      author: "Quinn F.",
+      authorKey: "demoRev6bAuthor",
+      bodyKey: "demoRev6bBody",
       rating: 4,
       date: "2025-12-15",
-      body: "Blazer and trousers match perfectly. Dry clean only as expected.",
       verifiedPurchase: true,
     },
   ],
   7: [
     {
       id: "7a",
-      author: "Avery S.",
+      authorKey: "demoRev7aAuthor",
+      titleKey: "demoRev7aTitle",
+      bodyKey: "demoRev7aBody",
       rating: 5,
       date: "2026-02-25",
-      title: "Three-piece done right",
-      body: "Waistcoat adds structure. Brown tone pairs with burgundy tie and oxfords.",
       verifiedPurchase: true,
     },
     {
       id: "7b",
-      author: "Reese G.",
+      authorKey: "demoRev7bAuthor",
+      bodyKey: "demoRev7bBody",
       rating: 4,
       date: "2026-01-08",
-      body: "Solid construction. Vest buttons align cleanly with the jacket.",
       verifiedPurchase: false,
     },
   ],
   8: [
     {
       id: "8a",
-      author: "Blake O.",
+      authorKey: "demoRev8aAuthor",
+      titleKey: "demoRev8aTitle",
+      bodyKey: "demoRev8aBody",
       rating: 4,
       date: "2026-02-11",
-      title: "Evening blue",
-      body: "Midnight reads almost black in dim light—perfect for cocktail dress codes.",
       verifiedPurchase: true,
     },
     {
       id: "8b",
-      author: "Skyler V.",
+      authorKey: "demoRev8bAuthor",
+      bodyKey: "demoRev8bBody",
       rating: 5,
       date: "2025-11-02",
-      body: "Silhouette is trim but I could still move comfortably on the dance floor.",
       verifiedPurchase: true,
     },
   ],
@@ -195,9 +201,10 @@ export function getReviewStats(productId: number): ReviewStats {
   return { average, count, distribution };
 }
 
-export function formatReviewDate(iso: string): string {
+export function formatReviewDate(iso: string, locale: string): string {
+  const tag = LOCALE_TO_BCP47[locale] ?? "en-US";
   try {
-    return new Intl.DateTimeFormat("en", {
+    return new Intl.DateTimeFormat(tag, {
       dateStyle: "medium",
     }).format(new Date(iso));
   } catch {

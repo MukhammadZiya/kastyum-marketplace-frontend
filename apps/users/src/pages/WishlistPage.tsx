@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
 import { useWishlist } from "../context/wishlist";
 import Breadcrumb from "../components/Common/Breadcrumb";
+import { useT } from "../i18n";
+import { productDisplayTitle } from "../lib/productDisplayTitle";
 
 export function WishlistPage() {
+  const t = useT();
   const { items, removeItem, clear } = useWishlist();
 
   return (
@@ -35,7 +38,9 @@ export function WishlistPage() {
                       className="h-20 w-20 shrink-0 rounded-md bg-neutral-50 object-contain"
                     />
                     <div className="min-w-0 text-left">
-                      <p className="font-medium text-neutral-900 hover:text-blue-600">{item.title}</p>
+                      <p className="font-medium text-neutral-900 hover:text-blue-600">
+                        {productDisplayTitle(item, t)}
+                      </p>
                       <p className="text-sm text-neutral-600">${item.discountedPrice}</p>
                     </div>
                   </Link>

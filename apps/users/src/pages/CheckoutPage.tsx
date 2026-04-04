@@ -4,8 +4,11 @@ import Breadcrumb from "../components/Common/Breadcrumb";
 import { useCart } from "../context/cart";
 import { useCreateOrder } from "../hooks/orders";
 import { getAuthToken } from "@repo/api";
+import { useT } from "../i18n";
+import { productDisplayTitle } from "../lib/productDisplayTitle";
 
 export function CheckoutPage() {
+  const t = useT();
   const navigate = useNavigate();
   const { items, totalPrice, clear } = useCart();
   const createOrder = useCreateOrder();
@@ -87,7 +90,7 @@ export function CheckoutPage() {
                         }
                         className="min-w-0 text-left text-neutral-700 hover:text-blue-600"
                       >
-                        {item.title}
+                        {productDisplayTitle(item, t)}
                       </Link>
                       <span className="font-medium text-neutral-900">
                         ${(item.discountedPrice * item.quantity).toFixed(2)}
