@@ -11,3 +11,9 @@ export type Member = {
   createdAt?: string;
   updatedAt?: string;
 };
+
+/**
+ * Shape of `member` in login/signup/profile-update responses from
+ * `AuthService.generateToken` (password and `image` are not included).
+ */
+export type MemberAuthPayload = Omit<Member, "image">;

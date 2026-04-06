@@ -1,8 +1,8 @@
 import type { MemberType } from "../enums";
-import type { Member } from "../entities/member";
+import type { MemberAuthPayload } from "../entities/member";
 
 export type MemberAuthResponse = {
-  member: Member;
+  member: MemberAuthPayload;
   accessToken: string;
 };
 

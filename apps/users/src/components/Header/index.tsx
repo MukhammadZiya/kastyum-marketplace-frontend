@@ -1,15 +1,27 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
+import { getAuthToken, setAuthToken } from "@repo/api";
 import CustomSelect from "./CustomSelect";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { getNavMenuItems } from "./menuData";
 import { useCart } from "../../context/cart";
 import { useCartModal } from "../../context/cartSidebarModal";
 import { headerCatalogOptions } from "../../data/headerCatalogOptions";
+import { memberKeys, useMemberMe } from "../../hooks/members";
 import { useT } from "../../i18n";
 
 const Header = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const hasToken = !!getAuthToken();
+  const { data: me, isPending, isError } = useMemberMe();
+
+  const handleLogout = useCallback(() => {
+    setAuthToken(null);
+    queryClient.removeQueries({ queryKey: memberKeys.all });
+  }, [queryClient]);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [searchCatalog, setSearchCatalog] = useState("all");
   const [navigationOpen, setNavigationOpen] = useState(false);
@@ -113,37 +125,92 @@ const Header = () => {
               <div className="flex items-center gap-4 sm:gap-5">
                 <LanguageSwitcher />
 
-                <Link to="/signin" className="flex items-center gap-[10px]">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M12 1.25C9.37666 1.25 7.25001 3.37665 7.25001 6C7.25001 8.62335 9.37666 10.75 12 10.75C14.6234 10.75 16.75 8.62335 16.75 6C16.75 3.37665 14.6234 1.25 12 1.25Z"
-                      fill="#3C50E0"
-                    />
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M12 12.25C9.68646 12.25 7.55494 12.7759 5.97546 13.6643C4.4195 14.5396 3.25001 15.8661 3.25001 17.5L3.24995 17.602C3.24882 18.7638 3.2474 20.222 4.52642 21.2635C5.15589 21.7761 6.03649 22.1406 7.22622 22.3815C8.41927 22.6229 9.97424 22.75 12 22.75C14.0258 22.75 15.5808 22.6229 16.7738 22.3815C17.9635 22.1406 18.8441 21.7761 19.4736 21.2635C20.7526 20.222 20.7512 18.7638 20.7501 17.602L20.75 17.5C20.75 15.8661 19.5805 14.5396 18.0246 13.6643C16.4451 12.7759 14.3136 12.25 12 12.25Z"
-                      fill="#3C50E0"
-                    />
-                  </svg>
-
-                  <div>
-                    <span className="block text-[10px] text-neutral-500 uppercase">
+                {hasToken && me ? (
+                  <div className="flex items-center gap-2 sm:gap-[10px]">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden
+                    >
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M12 1.25C9.37666 1.25 7.25001 3.37665 7.25001 6C7.25001 8.62335 9.37666 10.75 12 10.75C14.6234 10.75 16.75 8.62335 16.75 6C16.75 3.37665 14.6234 1.25 12 1.25Z"
+                        fill="#3C50E0"
+                      />
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M12 12.25C9.68646 12.25 7.55494 12.7759 5.97546 13.6643C4.4195 14.5396 3.25001 15.8661 3.25001 17.5L3.24995 17.602C3.24882 18.7638 3.2474 20.222 4.52642 21.2635C5.15589 21.7761 6.03649 22.1406 7.22622 22.3815C8.41927 22.6229 9.97424 22.75 12 22.75C14.0258 22.75 15.5808 22.6229 16.7738 22.3815C17.9635 22.1406 18.8441 21.7761 19.4736 21.2635C20.7526 20.222 20.7512 18.7638 20.7501 17.602L20.75 17.5C20.75 15.8661 19.5805 14.5396 18.0246 13.6643C16.4451 12.7759 14.3136 12.25 12 12.25Z"
+                        fill="#3C50E0"
+                      />
+                    </svg>
+                    <div className="min-w-0 text-left">
+                      <span className="block text-[10px] text-neutral-500 uppercase">
+                        {t("common.signedIn")}
+                      </span>
+                      <Link
+                        to="/my-account"
+                        title={t("common.myAccount")}
+                        className="block max-w-[100px] truncate sm:max-w-[160px] font-medium text-[14px] text-neutral-900 hover:text-blue-600"
+                      >
+                        {me.nick?.trim() || me.email}
+                      </Link>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="shrink-0 text-left text-[12px] font-medium text-blue-600 hover:text-blue-700 hover:underline"
+                    >
+                      {t("common.logOut")}
+                    </button>
+                  </div>
+                ) : hasToken && !isError && isPending ? (
+                  <div className="flex items-center gap-[10px]">
+                    <span className="text-[10px] text-neutral-500 uppercase">
                       {t("common.account")}
                     </span>
-                    <p className="font-medium text-[14px] text-neutral-900">
-                      {t("common.signIn")}
+                    <p className="font-medium text-[14px] text-neutral-600">
+                      {t("common.loading")}
                     </p>
                   </div>
-                </Link>
+                ) : (
+                  <Link to="/signin" className="flex items-center gap-[10px]">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden
+                    >
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M12 1.25C9.37666 1.25 7.25001 3.37665 7.25001 6C7.25001 8.62335 9.37666 10.75 12 10.75C14.6234 10.75 16.75 8.62335 16.75 6C16.75 3.37665 14.6234 1.25 12 1.25Z"
+                        fill="#3C50E0"
+                      />
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M12 12.25C9.68646 12.25 7.55494 12.7759 5.97546 13.6643C4.4195 14.5396 3.25001 15.8661 3.25001 17.5L3.24995 17.602C3.24882 18.7638 3.2474 20.222 4.52642 21.2635C5.15589 21.7761 6.03649 22.1406 7.22622 22.3815C8.41927 22.6229 9.97424 22.75 12 22.75C14.0258 22.75 15.5808 22.6229 16.7738 22.3815C17.9635 22.1406 18.8441 21.7761 19.4736 21.2635C20.7526 20.222 20.7512 18.7638 20.7501 17.602L20.75 17.5C20.75 15.8661 19.5805 14.5396 18.0246 13.6643C16.4451 12.7759 14.3136 12.25 12 12.25Z"
+                        fill="#3C50E0"
+                      />
+                    </svg>
+
+                    <div>
+                      <span className="block text-[10px] text-neutral-500 uppercase">
+                        {t("common.account")}
+                      </span>
+                      <p className="font-medium text-[14px] text-neutral-900">
+                        {t("common.signIn")}
+                      </p>
+                    </div>
+                  </Link>
+                )}
 
                 <button
                   onClick={openCartModal}

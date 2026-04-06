@@ -19,17 +19,18 @@ export type {
   Style,
 } from "./entities/attributes";
 
-export type { Member } from "./entities/member";
+export type { Member, MemberAuthPayload } from "./entities/member";
 
 export type {
   ProductAdminListItem,
   ProductDocument,
+  ProductSellerListItem,
   ProductWithRelations,
 } from "./entities/product";
 
 export type { Order, OrderItem, OrderListRow } from "./entities/order";
 
-export type { Notification } from "./entities/notification";
+export type { Notification, NotificationAdminListItem } from "./entities/notification";
 
 export type {
   CreateAttributeBody,
@@ -41,6 +42,7 @@ export type {
   MemberLoginBody,
   MemberSignupBody,
   MemberUpdateBody,
+  NotificationListQuery,
   OrderListQuery,
   ProductsQueryParams,
   UpdateOrderStatusBody,

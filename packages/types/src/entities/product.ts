@@ -37,6 +37,20 @@ export type ProductWithRelations = Omit<
   style?: Style;
 };
 
+
+export type ProductSellerListItem = Omit<
+  ProductDocument,
+  "sellerId" | "colors" | "sizes" | "brand" | "material" | "fit" | "style"
+> & {
+  sellerId: string;
+  colors: Color[];
+  sizes: Size[];
+  brand?: Brand;
+  material?: Material;
+  fit?: Fit;
+  style?: Style;
+};
+
 export type ProductAdminListItem = Omit<
   ProductDocument,
   "sellerId" | "colors" | "sizes" | "brand" | "material" | "fit" | "style"

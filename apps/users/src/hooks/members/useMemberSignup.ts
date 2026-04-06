@@ -9,6 +9,7 @@ export function useMemberSignup() {
     mutationFn: postMemberSignup,
     onSuccess: (data) => {
       setAuthToken(data.accessToken);
+      queryClient.setQueryData(memberKeys.me(), data.member);
       queryClient.invalidateQueries({ queryKey: memberKeys.all });
     },
   });

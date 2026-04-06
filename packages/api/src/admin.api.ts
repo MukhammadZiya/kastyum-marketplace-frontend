@@ -6,10 +6,13 @@ import type {
   Member,
   MemberAdminUpdateBody,
   MemberListQuery,
+  NotificationAdminListItem,
+  NotificationListQuery,
   OrderListQuery,
   OrderListRow,
   PaginatedResult,
   ProductAdminListItem,
+  ProductDocument,
   ProductWithRelations,
   ProductsQueryParams,
 } from "@repo/types";
@@ -63,8 +66,8 @@ export async function getAdminProductDetail(
 export async function postAdminProductUpdate(
   id: string,
   body: Partial<CreateProductBody>,
-): Promise<ProductWithRelations> {
-  const { data } = await apiClient.post<ProductWithRelations>(
+): Promise<ProductDocument> {
+  const { data } = await apiClient.post<ProductDocument>(
     `/admin/product/update/${id}`,
     body,
   );
@@ -82,6 +85,15 @@ export async function getAdminOrderList(
     "/admin/order/list",
     { params },
   );
+  return data;
+}
+
+export async function getAdminNotificationList(
+  params?: NotificationListQuery,
+): Promise<PaginatedResult<NotificationAdminListItem>> {
+  const { data } = await apiClient.get<
+    PaginatedResult<NotificationAdminListItem>
+  >("/admin/notification/list", { params });
   return data;
 }
 

@@ -3,8 +3,12 @@ import { apiErrorMessage, parseApiError, type HttpError } from "./errors";
 
 const AUTH_TOKEN_KEY = "kastyum_auth_token";
 
+const apiBaseURL =
+  import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") ||
+  "http://localhost:3000";
+
 export const apiClient = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: apiBaseURL,
   headers: {
     "Content-Type": "application/json",
   },
