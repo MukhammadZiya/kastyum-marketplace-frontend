@@ -9,4 +9,8 @@ const appDir = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   envDir: path.resolve(appDir, "../.."),
   plugins: [react(), tailwindcss()],
+  server: {
+    port: 5173,
+    strictPort: true,
+  },
 });
