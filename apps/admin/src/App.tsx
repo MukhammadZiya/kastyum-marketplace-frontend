@@ -1,5 +1,7 @@
 import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { AdminAppShell } from "./layouts/AdminAppShell";
+import { RequireAdminAuth } from "./layouts/RequireAdminAuth";
+import { AdminLoginPage } from "./modules/auth/AdminLoginPage";
 import { DashboardPage } from "./modules/dashboard/DashboardPage";
 import { OrdersListPage } from "./modules/orders/OrdersListPage";
 import { OrdersPage } from "./modules/orders/OrdersPage";
@@ -17,28 +19,31 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<AdminAppShell />}>
-          <Route index element={<DashboardPage />} />
-          <Route path="users" element={<Outlet />}>
-            <Route index element={<UsersPage />} />
-            <Route path="list" element={<UsersListPage />} />
-            <Route path="new" element={<UserCreatePage />} />
+        <Route path="/login" element={<AdminLoginPage />} />
+        <Route element={<RequireAdminAuth />}>
+          <Route path="/" element={<AdminAppShell />}>
+            <Route index element={<DashboardPage />} />
+            <Route path="users" element={<Outlet />}>
+              <Route index element={<UsersPage />} />
+              <Route path="list" element={<UsersListPage />} />
+              <Route path="new" element={<UserCreatePage />} />
+            </Route>
+            <Route path="sellers" element={<Outlet />}>
+              <Route index element={<SellersPage />} />
+              <Route path="list" element={<SellersListPage />} />
+              <Route path="new" element={<SellerCreatePage />} />
+            </Route>
+            <Route path="products" element={<Outlet />}>
+              <Route index element={<ProductsPage />} />
+              <Route path="list" element={<ProductsListPage />} />
+              <Route path="new" element={<ProductCreatePage />} />
+            </Route>
+            <Route path="orders" element={<Outlet />}>
+              <Route index element={<OrdersPage />} />
+              <Route path="list" element={<OrdersListPage />} />
+            </Route>
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
-          <Route path="sellers" element={<Outlet />}>
-            <Route index element={<SellersPage />} />
-            <Route path="list" element={<SellersListPage />} />
-            <Route path="new" element={<SellerCreatePage />} />
-          </Route>
-          <Route path="products" element={<Outlet />}>
-            <Route index element={<ProductsPage />} />
-            <Route path="list" element={<ProductsListPage />} />
-            <Route path="new" element={<ProductCreatePage />} />
-          </Route>
-          <Route path="orders" element={<Outlet />}>
-            <Route index element={<OrdersPage />} />
-            <Route path="list" element={<OrdersListPage />} />
-          </Route>
-          <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
     </BrowserRouter>
