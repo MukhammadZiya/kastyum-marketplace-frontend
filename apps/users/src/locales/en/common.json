@@ -11,6 +11,7 @@
     "signIn": "Sign in",
     "signedIn": "Signed in",
     "logOut": "Log out",
+    "sessionCouldNotLoad": "Can't load account — you can still sign out.",
     "myAccount": "My account",
     "cart": "cart",
     "account": "account",

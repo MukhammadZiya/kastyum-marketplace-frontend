@@ -11,6 +11,7 @@
     "signIn": "Kirish",
     "signedIn": "Tizimda",
     "logOut": "Chiqish",
+    "sessionCouldNotLoad": "Hisob yuklanmadi — chiqishingiz mumkin.",
     "myAccount": "Mening hisobim",
     "cart": "Savat",
     "account": "Hisob",
