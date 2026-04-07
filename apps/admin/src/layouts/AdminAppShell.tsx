@@ -8,7 +8,8 @@ import {
   type ReactNode,
 } from "react";
 import { LogOut } from "lucide-react";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Button,
   Drawer,
@@ -80,6 +81,8 @@ function isParentRouteActive(pathname: string, item: SidebarNavItem) {
 
 export function AdminAppShell() {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const t = useT();
   const sidebarItems = useMemo(() => buildAdminSidebarItems(t), [t]);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -142,7 +145,8 @@ export function AdminAppShell() {
   }, [pathname, sidebarItems]);
 
   const handleLogout = () => {
-    logoutAdmin();
+    logoutAdmin(queryClient);
+    navigate("/login", { replace: true });
   };
 
   const openMobileNav = useCallback(() => setMobileNavOpen(true), []);

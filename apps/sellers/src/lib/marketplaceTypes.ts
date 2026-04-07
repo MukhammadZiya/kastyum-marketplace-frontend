@@ -1,12 +1,5 @@
-import type {
-  Member,
-  Order,
-  PaginatedResult,
-  ProductWithRelations,
+export type {
+  MemberAuthResponse,
+  MemberLoginBody,
+  MemberSignupBody,
 } from "@repo/types";
-
-export type SellerProductListResponse = PaginatedResult<ProductWithRelations>;
-
-export type SellerOrderListResponse = PaginatedResult<Order>;
-
-export type { Member, Order, ProductWithRelations };

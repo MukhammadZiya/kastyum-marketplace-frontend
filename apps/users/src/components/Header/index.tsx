@@ -1,15 +1,32 @@
-import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { getAuthToken } from "@repo/api";
 import CustomSelect from "./CustomSelect";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { getNavMenuItems } from "./menuData";
 import { useCart } from "../../context/cart";
 import { useCartModal } from "../../context/cartSidebarModal";
 import { headerCatalogOptions } from "../../data/headerCatalogOptions";
+import { useMemberMe } from "../../hooks/members";
 import { useT } from "../../i18n";
+import { clearMarketplaceSession } from "../../user-auth";
 
 const Header = () => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const queryClient = useQueryClient();
+
+  /** Category strip is for shopping; keep sign-in / sign-up focused. */
+  const showCategoryNav = pathname !== "/signin" && pathname !== "/signup";
+  const tokenPresent = Boolean(getAuthToken());
+  const { data: me, isPending } = useMemberMe();
+
+  const handleLogout = useCallback(() => {
+    clearMarketplaceSession(queryClient);
+    navigate("/", { replace: true });
+  }, [queryClient, navigate]);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [searchCatalog, setSearchCatalog] = useState("all");
   const [navigationOpen, setNavigationOpen] = useState(false);
@@ -113,37 +130,96 @@ const Header = () => {
               <div className="flex items-center gap-4 sm:gap-5">
                 <LanguageSwitcher />
 
-                <Link to="/signin" className="flex items-center gap-[10px]">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M12 1.25C9.37666 1.25 7.25001 3.37665 7.25001 6C7.25001 8.62335 9.37666 10.75 12 10.75C14.6234 10.75 16.75 8.62335 16.75 6C16.75 3.37665 14.6234 1.25 12 1.25Z"
-                      fill="#3C50E0"
-                    />
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M12 12.25C9.68646 12.25 7.55494 12.7759 5.97546 13.6643C4.4195 14.5396 3.25001 15.8661 3.25001 17.5L3.24995 17.602C3.24882 18.7638 3.2474 20.222 4.52642 21.2635C5.15589 21.7761 6.03649 22.1406 7.22622 22.3815C8.41927 22.6229 9.97424 22.75 12 22.75C14.0258 22.75 15.5808 22.6229 16.7738 22.3815C17.9635 22.1406 18.8441 21.7761 19.4736 21.2635C20.7526 20.222 20.7512 18.7638 20.7501 17.602L20.75 17.5C20.75 15.8661 19.5805 14.5396 18.0246 13.6643C16.4451 12.7759 14.3136 12.25 12 12.25Z"
-                      fill="#3C50E0"
-                    />
-                  </svg>
-
-                  <div>
-                    <span className="block text-[10px] text-neutral-500 uppercase">
-                      {t("common.account")}
-                    </span>
-                    <p className="font-medium text-[14px] text-neutral-900">
-                      {t("common.signIn")}
-                    </p>
+                {tokenPresent ? (
+                  <div className="relative z-10 flex items-center gap-2 sm:gap-[10px]">
+                    {me ? (
+                      <>
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          aria-hidden
+                        >
+                          <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M12 1.25C9.37666 1.25 7.25001 3.37665 7.25001 6C7.25001 8.62335 9.37666 10.75 12 10.75C14.6234 10.75 16.75 8.62335 16.75 6C16.75 3.37665 14.6234 1.25 12 1.25Z"
+                            fill="#3C50E0"
+                          />
+                          <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M12 12.25C9.68646 12.25 7.55494 12.7759 5.97546 13.6643C4.4195 14.5396 3.25001 15.8661 3.25001 17.5L3.24995 17.602C3.24882 18.7638 3.2474 20.222 4.52642 21.2635C5.15589 21.7761 6.03649 22.1406 7.22622 22.3815C8.41927 22.6229 9.97424 22.75 12 22.75C14.0258 22.75 15.5808 22.6229 16.7738 22.3815C17.9635 22.1406 18.8441 21.7761 19.4736 21.2635C20.7526 20.222 20.7512 18.7638 20.7501 17.602L20.75 17.5C20.75 15.8661 19.5805 14.5396 18.0246 13.6643C16.4451 12.7759 14.3136 12.25 12 12.25Z"
+                            fill="#3C50E0"
+                          />
+                        </svg>
+                        <div className="min-w-0 text-left">
+                          <span className="block text-[10px] text-neutral-500 uppercase">
+                            {t("common.signedIn")}
+                          </span>
+                          <Link
+                            to="/my-account"
+                            title={t("common.myAccount")}
+                            className="block max-w-[100px] truncate sm:max-w-[160px] font-medium text-[14px] text-neutral-900 hover:text-blue-600"
+                          >
+                            {me.nick?.trim() || me.email}
+                          </Link>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="min-w-0 text-left">
+                        <span className="block text-[10px] text-neutral-500 uppercase">
+                          {t("common.account")}
+                        </span>
+                        <p className="max-w-[120px] truncate text-[14px] font-medium text-neutral-600 sm:max-w-[200px]">
+                          {isPending ? t("common.loading") : t("common.sessionCouldNotLoad")}
+                        </p>
+                      </div>
+                    )}
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="relative z-20 shrink-0 cursor-pointer text-left text-[12px] font-medium text-blue-600 hover:text-blue-700 hover:underline"
+                    >
+                      {t("common.logOut")}
+                    </button>
                   </div>
-                </Link>
+                ) : (
+                  <Link to="/signin" className="flex items-center gap-[10px]">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden
+                    >
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M12 1.25C9.37666 1.25 7.25001 3.37665 7.25001 6C7.25001 8.62335 9.37666 10.75 12 10.75C14.6234 10.75 16.75 8.62335 16.75 6C16.75 3.37665 14.6234 1.25 12 1.25Z"
+                        fill="#3C50E0"
+                      />
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M12 12.25C9.68646 12.25 7.55494 12.7759 5.97546 13.6643C4.4195 14.5396 3.25001 15.8661 3.25001 17.5L3.24995 17.602C3.24882 18.7638 3.2474 20.222 4.52642 21.2635C5.15589 21.7761 6.03649 22.1406 7.22622 22.3815C8.41927 22.6229 9.97424 22.75 12 22.75C14.0258 22.75 15.5808 22.6229 16.7738 22.3815C17.9635 22.1406 18.8441 21.7761 19.4736 21.2635C20.7526 20.222 20.7512 18.7638 20.7501 17.602L20.75 17.5C20.75 15.8661 19.5805 14.5396 18.0246 13.6643C16.4451 12.7759 14.3136 12.25 12 12.25Z"
+                        fill="#3C50E0"
+                      />
+                    </svg>
+
+                    <div>
+                      <span className="block text-[10px] text-neutral-500 uppercase">
+                        {t("common.account")}
+                      </span>
+                      <p className="font-medium text-[14px] text-neutral-900">
+                        {t("common.signIn")}
+                      </p>
+                    </div>
+                  </Link>
+                )}
 
                 <button
                   onClick={openCartModal}
@@ -182,96 +258,87 @@ const Header = () => {
                 </button>
               </div>
 
-              <button
-                id="Toggle"
-                aria-label={t("common.ariaToggler")}
-                className="xl:hidden block"
-                onClick={() => setNavigationOpen(!navigationOpen)}
-              >
-                <span className="block relative cursor-pointer w-[22px] h-[22px]">
-                  <span className="block absolute right-0 w-full h-full">
-                    <span
-                      className={`block relative top-0 left-0 bg-neutral-900 rounded-sm w-0 h-0.5 my-1 ease-in-out duration-200 delay-[0] ${
-                        !navigationOpen ? "!w-full delay-300" : ""
-                      }`}
-                    />
-                    <span
-                      className={`block relative top-0 left-0 bg-neutral-900 rounded-sm w-0 h-0.5 my-1 ease-in-out duration-200 delay-150 ${
-                        !navigationOpen ? "!w-full delay-400" : ""
-                      }`}
-                    />
-                    <span
-                      className={`block relative top-0 left-0 bg-neutral-900 rounded-sm w-0 h-0.5 my-1 ease-in-out duration-200 delay-200 ${
-                        !navigationOpen ? "!w-full delay-500" : ""
-                      }`}
-                    />
-                  </span>
-
-                  <span className="block absolute right-0 w-full h-full rotate-45">
-                    <span
-                      className={`block bg-neutral-900 rounded-sm ease-in-out duration-200 delay-300 absolute left-2.5 top-0 w-0.5 h-full ${
-                        !navigationOpen ? "!h-0 delay-[0]" : ""
-                      }`}
-                    />
-                    <span
-                      className={`block bg-neutral-900 rounded-sm ease-in-out duration-200 delay-400 absolute left-0 top-2.5 w-full h-0.5 ${
-                        !navigationOpen ? "!h-0 delay-200" : ""
-                      }`}
-                    />
-                  </span>
-                </span>
-              </button>
-          </div>
-        </div>
-      </div>
-
-      <div className="relative z-20 border-t border-neutral-200">
-        <div className="max-w-[1170px] mx-auto px-4 sm:px-[30px] xl:px-0">
-          <div className="flex items-center justify-between">
-            <div
-              className={`w-[288px] absolute right-4 top-full xl:static xl:w-auto h-0 xl:h-auto invisible xl:visible xl:flex items-center justify-between ${
-                navigationOpen
-                  ? "!visible bg-white shadow-lg border border-neutral-200 !h-auto max-h-[400px] overflow-y-scroll rounded-md p-5"
-                  : ""
-              }`}
-            >
-              <nav className="min-w-0 xl:max-w-[calc(100vw-12rem)] xl:overflow-x-auto xl:pb-1">
-                <ul className="flex flex-col gap-5 xl:flex-row xl:flex-nowrap xl:items-center xl:gap-5">
-                  {menuItems.map((menuItem) => (
-                    <li
-                      key={menuItem.id}
-                      className="group relative before:absolute before:left-0 before:top-0 before:h-[3px] before:w-0 before:rounded-b-[3px] before:bg-blue-600 before:duration-200 before:ease-out hover:before:w-full"
-                    >
-                      <Link
-                        to={menuItem.path}
-                        className={`flex text-[14px] font-medium text-neutral-900 hover:text-blue-600 ${
-                          stickyMenu ? "xl:py-4" : "xl:py-6"
+              {showCategoryNav ? (
+                <button
+                  id="Toggle"
+                  type="button"
+                  aria-label={t("common.ariaToggler")}
+                  className="block xl:hidden"
+                  onClick={() => setNavigationOpen(!navigationOpen)}
+                >
+                  <span className="relative block h-[22px] w-[22px] cursor-pointer">
+                    <span className="absolute right-0 block h-full w-full">
+                      <span
+                        className={`relative top-0 left-0 my-1 block h-0.5 w-0 rounded-sm bg-neutral-900 ease-in-out duration-200 delay-[0] ${
+                          !navigationOpen ? "delay-300 !w-full" : ""
                         }`}
-                      >
-                        {menuItem.title}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            </div>
+                      />
+                      <span
+                        className={`relative top-0 left-0 my-1 block h-0.5 w-0 rounded-sm bg-neutral-900 ease-in-out duration-200 delay-150 ${
+                          !navigationOpen ? "delay-400 !w-full" : ""
+                        }`}
+                      />
+                      <span
+                        className={`relative top-0 left-0 my-1 block h-0.5 w-0 rounded-sm bg-neutral-900 ease-in-out duration-200 delay-200 ${
+                          !navigationOpen ? "delay-500 !w-full" : ""
+                        }`}
+                      />
+                    </span>
 
-            {/* Wishlist link hidden for now — restore when ready */}
-            {/* <div className="hidden xl:block">
-              <ul className="flex items-center gap-[22px]">
-                <li className="py-4">
-                  <Link
-                    to="/wishlist"
-                    className="flex items-center gap-[6px] font-medium text-[14px] text-neutral-900 hover:text-blue-600"
-                  >
-                    {t("common.wishlist")}
-                  </Link>
-                </li>
-              </ul>
-            </div> */}
+                    <span className="absolute right-0 block h-full w-full rotate-45">
+                      <span
+                        className={`absolute left-2.5 top-0 h-full w-0.5 bg-neutral-900 ease-in-out duration-200 delay-300 ${
+                          !navigationOpen ? "delay-[0] !h-0" : ""
+                        }`}
+                      />
+                      <span
+                        className={`absolute left-0 top-2.5 h-0.5 w-full bg-neutral-900 ease-in-out duration-200 delay-400 ${
+                          !navigationOpen ? "delay-200 !h-0" : ""
+                        }`}
+                      />
+                    </span>
+                  </span>
+                </button>
+              ) : null}
           </div>
         </div>
       </div>
+
+      {showCategoryNav ? (
+        <div className="relative z-20 border-t border-neutral-200">
+          <div className="mx-auto max-w-[1170px] px-4 sm:px-[30px] xl:px-0">
+            <div className="flex items-center justify-between">
+              <div
+                className={`absolute right-4 top-full h-0 w-[288px] items-center justify-between invisible xl:static xl:flex xl:h-auto xl:w-auto xl:visible ${
+                  navigationOpen
+                    ? "!visible max-h-[400px] !h-auto overflow-y-scroll rounded-md border border-neutral-200 bg-white p-5 shadow-lg"
+                    : ""
+                }`}
+              >
+                <nav className="min-w-0 xl:max-w-[calc(100vw-12rem)] xl:overflow-x-auto xl:pb-1">
+                  <ul className="flex flex-col gap-5 xl:flex-row xl:flex-nowrap xl:items-center xl:gap-5">
+                    {menuItems.map((menuItem) => (
+                      <li
+                        key={menuItem.id}
+                        className="group relative before:absolute before:left-0 before:top-0 before:h-[3px] before:w-0 before:rounded-b-[3px] before:bg-blue-600 before:duration-200 before:ease-out hover:before:w-full"
+                      >
+                        <Link
+                          to={menuItem.path}
+                          className={`flex text-[14px] font-medium text-neutral-900 hover:text-blue-600 ${
+                            stickyMenu ? "xl:py-4" : "xl:py-6"
+                          }`}
+                        >
+                          {menuItem.title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </header>
   );
 };

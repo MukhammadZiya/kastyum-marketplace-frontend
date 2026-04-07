@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Card, StatCard } from "@repo/ui";
-import type { ProductWithRelations } from "@repo/types";
+import type { ProductSellerListItem } from "@repo/types";
 import { SellerPageFrame } from "../../components/seller/SellerPageFrame";
 import { SellerShortcutNav } from "../../components/seller/SellerShortcutNav";
 import { SellerTableScaffold } from "../../components/seller/SellerTableScaffold";
@@ -21,7 +21,7 @@ export function ProductsListPage() {
 
   const total = data?.total ?? 0;
   const activeCount =
-    data?.list.filter((p: ProductWithRelations) => p.status === "ACTIVE")
+    data?.list.filter((p: ProductSellerListItem) => p.status === "ACTIVE")
       .length ?? 0;
 
   const stats = useMemo(
@@ -42,7 +42,7 @@ export function ProductsListPage() {
         id: "arch",
         label: t("common.sellerProductsListStatArchived"),
         value: String(
-          data?.list.filter((p: ProductWithRelations) => p.status === "DELETE")
+          data?.list.filter((p: ProductSellerListItem) => p.status === "DELETE")
             .length ?? 0,
         ),
         hint: t("common.sellerProductsListStatArchivedHint"),
@@ -75,7 +75,7 @@ export function ProductsListPage() {
 
   const rowEls =
     data?.list.length ?
-      data.list.map((p: ProductWithRelations) => (
+      data.list.map((p: ProductSellerListItem) => (
         <tr key={p._id} className="border-t border-slate-100">
           <td className="px-4 py-3 font-medium text-slate-900">{p.title}</td>
           <td className="px-4 py-3 text-slate-600">{p.modelNumber}</td>

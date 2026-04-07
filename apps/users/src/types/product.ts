@@ -1,6 +1,7 @@
 import type {
   ProductAdminListItem,
   ProductDocument,
+  ProductSellerListItem,
   ProductWithRelations,
 } from "@repo/types";
 
@@ -26,5 +27,6 @@ export type Product = StorefrontProduct;
 export type {
   ProductAdminListItem,
   ProductDocument,
+  ProductSellerListItem,
   ProductWithRelations,
 };

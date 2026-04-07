@@ -1,4 +1,6 @@
 import { LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@repo/ui";
 import { useT } from "../../i18n";
 import { logoutSeller } from "../../lib/logoutSeller";
@@ -24,6 +26,9 @@ export function SellerSidebarHeader() {
 
 export function SellerSidebarFooter() {
   const t = useT();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   return (
     <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/80 p-3">
       <div
@@ -45,7 +50,10 @@ export function SellerSidebarFooter() {
         variant="ghost"
         size="sm"
         className="!h-9 !w-9 shrink-0 !p-0 text-slate-500 hover:text-slate-900"
-        onClick={logoutSeller}
+        onClick={() => {
+          logoutSeller(queryClient);
+          navigate("/signin", { replace: true });
+        }}
         aria-label={t("common.sellerAriaLogOut")}
       >
         <LogOut className="h-4 w-4" strokeWidth={2} />

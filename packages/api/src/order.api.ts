@@ -36,6 +36,10 @@ export async function getSellerOrders(
 export async function postOrderUpdateStatus(
   orderId: string,
   body: UpdateOrderStatusBody,
-): Promise<void> {
-  await apiClient.post(`/order/update-status/${orderId}`, body);
+): Promise<Order> {
+  const { data } = await apiClient.post<Order>(
+    `/order/update-status/${orderId}`,
+    body,
+  );
+  return data;
 }

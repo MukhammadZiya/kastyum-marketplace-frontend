@@ -6,10 +6,11 @@ import type {
   TargetAudience,
 } from "../enums";
 
+/** Mirrors `MemberInput` (signup). */
 export type MemberSignupBody = {
   nick: string;
   email: string;
-  password: string;
+  password?: string;
   phone?: string;
   image?: string;
   type?: MemberType;
@@ -99,4 +100,12 @@ export type OrderListQuery = {
   status?: OrderStatus;
   memberId?: string;
   sellerId?: string;
+};
+
+/** Matches `NotificationInquiryDto` (used for user and admin notification list). */
+export type NotificationListQuery = {
+  page?: number;
+  limit?: number;
+  isRead?: "true" | "false";
+  receiverId?: string;
 };

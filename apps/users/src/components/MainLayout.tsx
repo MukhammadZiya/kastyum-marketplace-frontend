@@ -9,6 +9,10 @@ import ScrollToTop from "./Common/ScrollToTop";
 export function MainLayout() {
   const { pathname, search } = useLocation();
 
+  const isAuthPage = pathname === "/signin" || pathname === "/signup";
+  /** Full header includes category bar (~165px). Auth pages use a shorter header only. */
+  const mainTopPadding = isAuthPage ? "pt-[118px]" : "pt-[165px]";
+
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, [pathname, search]);
@@ -16,7 +20,7 @@ export function MainLayout() {
   return (
     <div className="min-h-screen bg-white text-slate-900">
       <Header />
-      <main className="pt-[165px]">
+      <main className={mainTopPadding}>
         <Outlet />
       </main>
       <Footer />

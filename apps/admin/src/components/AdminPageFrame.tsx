@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import { Menu } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { Topbar } from "@repo/ui";
 import { useAdminMobileNav } from "../contexts/AdminMobileNavContext";
 import { useT } from "../i18n";
@@ -15,7 +17,14 @@ type Props = {
 
 export function AdminPageFrame({ title, addon, children }: Props) {
   const mobileNav = useAdminMobileNav();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const t = useT();
+
+  const handleLogout = () => {
+    logoutAdmin(queryClient);
+    navigate("/login", { replace: true });
+  };
 
   return (
     <>
@@ -37,7 +46,7 @@ export function AdminPageFrame({ title, addon, children }: Props) {
         rightSlot={
           <div className="flex shrink-0 items-center gap-2">
             <AdminLanguageSwitcher />
-            <AdminTopbarActions onLogout={logoutAdmin} />
+            <AdminTopbarActions onLogout={handleLogout} />
           </div>
         }
       />

@@ -1,5 +1,6 @@
 import type {
   PaginatedResult,
+  ProductSellerListItem,
   ProductWithRelations,
   ProductsQueryParams,
 } from "@repo/types";
@@ -26,8 +27,8 @@ export async function getProductDetail(
 
 export async function getSellerProductList(
   params?: ProductsQueryParams,
-): Promise<PaginatedResult<ProductWithRelations>> {
-  const { data } = await apiClient.get<PaginatedResult<ProductWithRelations>>(
+): Promise<PaginatedResult<ProductSellerListItem>> {
+  const { data } = await apiClient.get<PaginatedResult<ProductSellerListItem>>(
     "/product/seller-list",
     { params },
   );

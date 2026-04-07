@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Breadcrumb from "../components/Common/Breadcrumb";
 import { useMemberLogin } from "../hooks/members";
 import type { MemberLoginBody } from "../lib/marketplaceTypes";
+import { getSellerSignInUrl } from "../lib/sellerAppUrl";
 
 export function SignInPage() {
   const navigate = useNavigate();
@@ -73,6 +74,18 @@ export function SignInPage() {
               >
                 {login.isPending ? "Signing in…" : "Sign in to account"}
               </button>
+              <div className="rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-center text-sm text-neutral-600">
+                <p className="mb-2">Selling on Kastyum?</p>
+                <button
+                  type="button"
+                  className="font-medium text-blue-600 hover:text-blue-700 hover:underline"
+                  onClick={() =>
+                    window.open(getSellerSignInUrl(), "_blank", "noopener,noreferrer")
+                  }
+                >
+                  Open seller sign-in (new tab)
+                </button>
+              </div>
               <p className="text-center text-sm">
                 Don&apos;t have an account?
                 <Link to="/signup" className="text-blue-600 pl-2">
