@@ -1,22 +1,31 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { shopData } from "../../../data/shopData";
-import { useProductList } from "../../../hooks/products";
+import { useProductHomeShowcase, useProductList } from "../../../hooks/products";
 import { apiProductToStorefront } from "../../../lib/apiProductToStorefront";
 import { useT } from "../../../i18n";
 import ProductItem from "./ProductItem";
 
 export default function NewArrivals() {
   const t = useT();
+  const { data: showcase } = useProductHomeShowcase();
   const { data, isPending } = useProductList({ page: 1, limit: 8 });
   const hasListItems = Boolean(data?.list?.length);
+  const hasShowcaseItems = Boolean(showcase?.newArrivals?.length);
 
   const items = useMemo(() => {
+    if (showcase?.newArrivals?.length) {
+      return showcase.newArrivals.map((slot) =>
+        apiProductToStorefront(slot.product, {
+          customPreviewPath: slot.customImage,
+        }),
+      );
+    }
     if (data?.list?.length) {
-      return data.list.map(apiProductToStorefront);
+      return data.list.map((p) => apiProductToStorefront(p));
     }
     return shopData.slice(0, 8);
-  }, [data]);
+  }, [data, showcase]);
 
   return (
     <section className="overflow-hidden pt-[60px]">
@@ -58,7 +67,7 @@ export default function NewArrivals() {
           </Link>
         </div>
 
-        {isPending && !hasListItems ? (
+        {isPending && !hasListItems && !hasShowcaseItems ? (
           <p className="text-sm text-neutral-600 py-8">{t("common.loadingProducts")}</p>
         ) : null}
 

@@ -4,6 +4,7 @@ import { useCart } from "../../context/cart";
 import { useQuickViewModal } from "../../context/quickViewModal";
 import { useT } from "../../i18n";
 import { productDisplayTitle } from "../../lib/productDisplayTitle";
+import { showStrikethroughOriginalPrice } from "../../lib/productPriceDisplay";
 
 function detailQuery(item: Product) {
   return item.mongoId
@@ -39,7 +40,9 @@ export default function SingleListItem({ item }: { item: Product }) {
         </p>
         <div className="mt-3 flex items-center gap-2">
           <span className="font-semibold text-neutral-900">${item.discountedPrice}</span>
-          <span className="line-through text-neutral-500">${item.price}</span>
+          {showStrikethroughOriginalPrice(item) ?
+            <span className="line-through text-neutral-500">${item.price}</span>
+          : null}
         </div>
         <div className="mt-4 flex gap-3">
           <button

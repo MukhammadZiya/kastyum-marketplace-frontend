@@ -1,11 +1,17 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Breadcrumb from "../components/Common/Breadcrumb";
+import { formatRequestFailureMessage } from "@repo/api";
 import { useMemberSignup } from "../hooks/members";
 import type { MemberSignupBody } from "../lib/marketplaceTypes";
 import { getSellerSignupUrl } from "../lib/sellerAppUrl";
 
 type Step = "choose" | "buyer-form";
+
+function looksLikeEmail(value: string): boolean {
+  const v = value.trim();
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+}
 
 export function SignUpPage() {
   const navigate = useNavigate();
@@ -89,7 +95,22 @@ export function SignUpPage() {
                   onSubmit={(e) => {
                     e.preventDefault();
                     setFormError("");
-                    if (values.password !== confirmPassword) {
+                    if (!values.nick.trim()) {
+                      setFormError("Please enter a nickname.");
+                      return;
+                    }
+                    if (!looksLikeEmail(values.email)) {
+                      setFormError(
+                        "Please enter a real email address (example: you@mail.com). The server rejects invalid emails.",
+                      );
+                      return;
+                    }
+                    const pwd = values.password ?? "";
+                    if (pwd.length < 6) {
+                      setFormError("Password must be at least 6 characters (API rule).");
+                      return;
+                    }
+                    if (pwd !== confirmPassword) {
                       setFormError("Passwords do not match.");
                       return;
                     }
@@ -98,9 +119,7 @@ export function SignUpPage() {
                       {
                         onSuccess: () => navigate("/"),
                         onError: (err) => {
-                          setFormError(
-                            err instanceof Error ? err.message : "Request failed",
-                          );
+                          setFormError(formatRequestFailureMessage(err));
                         },
                       },
                     );
@@ -120,8 +139,10 @@ export function SignUpPage() {
                     }
                   />
                   <input
+                    type="email"
+                    autoComplete="email"
                     className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 px-5"
-                    placeholder="Enter your email"
+                    placeholder="you@example.com"
                     value={values.email}
                     onChange={(e) =>
                       setValues((v) => ({ ...v, email: e.target.value }))

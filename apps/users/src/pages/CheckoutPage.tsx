@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Breadcrumb from "../components/Common/Breadcrumb";
-import { useCart } from "../context/cart";
+import { cartLineKey, useCart } from "../context/cart";
 import { useCreateOrder } from "../hooks/orders";
 import { getAuthToken } from "@repo/api";
 import { useT } from "../i18n";
@@ -20,6 +20,10 @@ export function CheckoutPage() {
     .map((i) => ({
       productId: i.mongoId as string,
       quantity: i.quantity,
+      ...(i.selectedSizeName ? { size: i.selectedSizeName } : {}),
+      ...(i.selectedColorName ? { color: i.selectedColorName } : {}),
+      ...(i.selectedSizeId ? { sizeId: i.selectedSizeId } : {}),
+      ...(i.selectedColorId ? { colorId: i.selectedColorId } : {}),
     }));
 
   const hasOnlyApiItems = items.length > 0 && lineItems.length === items.length;
@@ -81,7 +85,7 @@ export function CheckoutPage() {
                   <p className="text-neutral-500">No items in cart.</p>
                 ) : (
                   items.map((item) => (
-                    <div key={item.id} className="flex justify-between gap-4">
+                    <div key={cartLineKey(item)} className="flex justify-between gap-4">
                       <Link
                         to={
                           item.mongoId
@@ -90,7 +94,23 @@ export function CheckoutPage() {
                         }
                         className="min-w-0 text-left text-neutral-700 hover:text-blue-600"
                       >
-                        {productDisplayTitle(item, t)}
+                        <span className="block">
+                          {productDisplayTitle(item, t)}
+                        </span>
+                        {item.selectedSizeName || item.selectedColorName ?
+                          <span className="mt-0.5 block text-xs text-neutral-500">
+                            {[
+                              item.selectedSizeName ?
+                                `${t("cartItemSizeLabel")}: ${item.selectedSizeName}`
+                              : null,
+                              item.selectedColorName ?
+                                `${t("cartItemColorLabel")}: ${item.selectedColorName}`
+                              : null,
+                            ]
+                              .filter(Boolean)
+                              .join(" · ")}
+                          </span>
+                        : null}
                       </Link>
                       <span className="font-medium text-neutral-900">
                         ${(item.discountedPrice * item.quantity).toFixed(2)}

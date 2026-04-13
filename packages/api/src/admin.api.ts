@@ -1,8 +1,11 @@
 import type {
+  AdminCreateProductPayload,
   AttributeEntity,
   AttributeKind,
   CreateAttributeBody,
   CreateProductBody,
+  HomeShowcaseAdminConfig,
+  HomeShowcaseUpdateBody,
   Member,
   MemberAdminUpdateBody,
   MemberListQuery,
@@ -78,6 +81,62 @@ export async function postAdminProductDelete(id: string): Promise<void> {
   await apiClient.post(`/admin/product/delete/${id}`);
 }
 
+/**
+ * Admin creates a catalog product for a chosen seller. 1–5 images → `uploads/products/`.
+ */
+export async function postAdminProductCreate(
+  payload: AdminCreateProductPayload,
+  imageFiles: File[],
+): Promise<ProductDocument> {
+  if (imageFiles.length === 0) {
+    throw new Error("At least one image is required.");
+  }
+  if (imageFiles.length > 5) {
+    throw new Error("Maximum 5 images.");
+  }
+  const fd = new FormData();
+  fd.append("sellerId", payload.sellerId);
+  fd.append("title", payload.title);
+  fd.append("description", payload.description);
+  if (payload.modelNumber?.trim()) {
+    fd.append("modelNumber", payload.modelNumber.trim());
+  }
+  fd.append("audience", payload.audience);
+  fd.append("price", String(payload.price));
+  if (payload.listPrice != null && payload.listPrice > 0) {
+    fd.append("listPrice", String(payload.listPrice));
+  }
+  fd.append("stockCount", String(payload.stockCount));
+  if (payload.colorIds?.length) {
+    fd.append("colorIds", JSON.stringify(payload.colorIds));
+  }
+  if (payload.sizeIds?.length) {
+    fd.append("sizeIds", JSON.stringify(payload.sizeIds));
+  }
+  if (payload.brand) fd.append("brand", payload.brand);
+  if (payload.material) fd.append("material", payload.material);
+  if (payload.fit) fd.append("fit", payload.fit);
+  if (payload.style) fd.append("style", payload.style);
+  if (payload.status) fd.append("status", payload.status);
+  if (payload.homeShowcaseNewArrivals) {
+    fd.append("homeShowcaseNewArrivals", "true");
+  }
+  if (payload.homeShowcaseMostPurchased) {
+    fd.append("homeShowcaseMostPurchased", "true");
+  }
+  if (payload.variantStock?.length) {
+    fd.append("variantStock", JSON.stringify(payload.variantStock));
+  }
+  for (const file of imageFiles) {
+    fd.append("images", file, file.name);
+  }
+  const { data } = await apiClient.post<ProductDocument>(
+    "/admin/product/create",
+    fd,
+  );
+  return data;
+}
+
 export async function getAdminOrderList(
   params?: OrderListQuery,
 ): Promise<PaginatedResult<OrderListRow>> {
@@ -113,4 +172,39 @@ export async function postAdminAttributeDelete(
   id: string,
 ): Promise<void> {
   await apiClient.post(`/admin/attribute/delete/${type}/${id}`);
+}
+
+export async function getAdminHomeShowcase(): Promise<HomeShowcaseAdminConfig> {
+  const { data } = await apiClient.get<HomeShowcaseAdminConfig>(
+    "/admin/home-showcase",
+  );
+  return data;
+}
+
+export async function postAdminHomeShowcase(
+  body: HomeShowcaseUpdateBody,
+): Promise<HomeShowcaseAdminConfig> {
+  const { data } = await apiClient.post<HomeShowcaseAdminConfig>(
+    "/admin/home-showcase",
+    body,
+  );
+  return data;
+}
+
+export type HomeShowcaseSection = "newArrivals" | "mostPurchased";
+
+export async function postAdminHomeShowcaseSlotImage(
+  section: HomeShowcaseSection,
+  index: number,
+  imageFile: File,
+): Promise<{ path: string }> {
+  const fd = new FormData();
+  fd.append("section", section);
+  fd.append("index", String(index));
+  fd.append("image", imageFile, imageFile.name);
+  const { data } = await apiClient.post<{ path: string }>(
+    "/admin/home-showcase/upload-image",
+    fd,
+  );
+  return data;
 }

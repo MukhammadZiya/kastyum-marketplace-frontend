@@ -4,6 +4,7 @@ import { useQuickViewModal } from "../../context/quickViewModal";
 import { useCart } from "../../context/cart";
 import { getReviewStats } from "../../data/productReviews";
 import { productDisplayTitle } from "../../lib/productDisplayTitle";
+import { showStrikethroughOriginalPrice } from "../../lib/productPriceDisplay";
 import { useT } from "../../i18n";
 
 export default function QuickViewModal() {
@@ -137,9 +138,11 @@ export default function QuickViewModal() {
                     <span className="font-semibold text-neutral-900 text-xl">
                       ${product.discountedPrice}
                     </span>
-                    <span className="font-medium text-neutral-500 text-lg line-through">
-                      ${product.price}
-                    </span>
+                    {showStrikethroughOriginalPrice(product) ?
+                      <span className="font-medium text-neutral-500 text-lg line-through">
+                        ${product.price}
+                      </span>
+                    : null}
                   </span>
                 </div>
 

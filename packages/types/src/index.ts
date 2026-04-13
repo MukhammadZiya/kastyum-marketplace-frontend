@@ -25,14 +25,24 @@ export type {
   ProductAdminListItem,
   ProductDocument,
   ProductSellerListItem,
+  ProductVariantStockLine,
   ProductWithRelations,
 } from "./entities/product";
+
+export type {
+  HomeShowcaseAdminConfig,
+  HomeShowcasePublicResponse,
+  HomeShowcaseSlotConfig,
+  HomeShowcaseSlotPublic,
+  HomeShowcaseUpdateBody,
+} from "./entities/homeShowcase";
 
 export type { Order, OrderItem, OrderListRow } from "./entities/order";
 
 export type { Notification, NotificationAdminListItem } from "./entities/notification";
 
 export type {
+  AdminCreateProductPayload,
   CreateAttributeBody,
   CreateOrderBody,
   CreateOrderItemBody,

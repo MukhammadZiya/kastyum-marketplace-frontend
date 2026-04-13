@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import type { CartItem } from "../../../context/cart";
+import { cartLineKey, type CartItem } from "../../../context/cart";
 import { useT } from "../../../i18n";
 import { productDisplayTitle } from "../../../lib/productDisplayTitle";
 
@@ -8,7 +8,7 @@ export default function CartSidebarItem({
   onRemove,
 }: {
   item: CartItem;
-  onRemove: (id: number) => void;
+  onRemove: (lineKey: string) => void;
 }) {
   const t = useT();
   const displayTitle = productDisplayTitle(item, t);
@@ -18,7 +18,11 @@ export default function CartSidebarItem({
     <div className="flex items-center justify-between gap-5 rounded-lg border border-transparent px-1 py-1 transition duration-200 ease-out hover:border-neutral-100 hover:bg-neutral-50/80">
       <div className="flex w-full items-center gap-6">
         <Link
-          to={`/shop-details?id=${item.id}`}
+          to={
+            item.mongoId
+              ? `/shop-details?id=${encodeURIComponent(item.mongoId)}`
+              : `/shop-details?id=${item.id}`
+          }
           className="flex h-[90px] w-full max-w-[90px] items-center justify-center rounded-[10px] bg-neutral-100"
           aria-label={ariaView}
         >
@@ -32,12 +36,30 @@ export default function CartSidebarItem({
         <div className="min-w-0">
           <h3 className="mb-1 font-medium text-neutral-900">
             <Link
-              to={`/shop-details?id=${item.id}`}
+              to={
+                item.mongoId
+                  ? `/shop-details?id=${encodeURIComponent(item.mongoId)}`
+                  : `/shop-details?id=${item.id}`
+              }
               className="ease-out duration-200 hover:text-blue-600"
             >
               {displayTitle}
             </Link>
           </h3>
+          {item.selectedSizeName || item.selectedColorName ?
+            <p className="mb-1 text-xs text-neutral-500">
+              {[
+                item.selectedSizeName ?
+                  `${t("cartItemSizeLabel")}: ${item.selectedSizeName}`
+                : null,
+                item.selectedColorName ?
+                  `${t("cartItemColorLabel")}: ${item.selectedColorName}`
+                : null,
+              ]
+                .filter(Boolean)
+                .join(" · ")}
+            </p>
+          : null}
           <p className="text-[14px] text-neutral-600">
             {t("common.price")}: ${item.discountedPrice}
           </p>
@@ -45,7 +67,7 @@ export default function CartSidebarItem({
       </div>
 
       <button
-        onClick={() => onRemove(item.id)}
+        onClick={() => onRemove(cartLineKey(item))}
         aria-label={t("ariaRemoveProductFromCart")}
         className="flex items-center justify-center rounded-lg max-w-[38px] w-full h-[38px] bg-neutral-100 border border-neutral-200 text-neutral-900 ease-out duration-200 hover:bg-red-50 hover:border-red-200 hover:text-red-600"
         type="button"

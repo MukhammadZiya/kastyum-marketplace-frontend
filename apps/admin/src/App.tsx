@@ -13,6 +13,7 @@ import { SellersListPage } from "./modules/sellers/SellersListPage";
 import { SellersPage } from "./modules/sellers/SellersPage";
 import { UserCreatePage } from "./modules/users/UserCreatePage";
 import { UsersListPage } from "./modules/users/UsersListPage";
+import { HomeShowcasePage } from "./modules/home-showcase/HomeShowcasePage";
 import { UsersPage } from "./modules/users/UsersPage";
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
               <Route index element={<OrdersPage />} />
               <Route path="list" element={<OrdersListPage />} />
             </Route>
+            <Route path="home-showcase" element={<HomeShowcasePage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Route>

@@ -5,6 +5,7 @@ import type {
   ProductStatus,
   TargetAudience,
 } from "../enums";
+import type { ProductVariantStockLine } from "../entities/product";
 
 /** Mirrors `MemberInput` (signup). */
 export type MemberSignupBody = {
@@ -40,6 +41,7 @@ export type MemberListQuery = {
   page?: number;
   limit?: number;
   search?: string;
+  type?: MemberType;
 };
 
 export type ProductsQueryParams = {
@@ -60,6 +62,8 @@ export type CreateProductBody = {
   modelNumber: string;
   audience: TargetAudience;
   price: number;
+  /** Optional “was” price; storefront shows as strikethrough when greater than `price`. */
+  listPrice?: number;
   colors?: string[];
   sizes?: string[];
   brand?: string;
@@ -71,11 +75,38 @@ export type CreateProductBody = {
   status?: ProductStatus;
 };
 
+/** Admin multipart create (`POST /admin/product/create`). */
+export type AdminCreateProductPayload = {
+  sellerId: string;
+  title: string;
+  description: string;
+  modelNumber?: string;
+  audience: TargetAudience;
+  price: number;
+  listPrice?: number;
+  stockCount: number;
+  colorIds?: string[];
+  sizeIds?: string[];
+  brand?: string;
+  material?: string;
+  fit?: string;
+  style?: string;
+  status?: ProductStatus;
+  /** Append to storefront home “new arrivals” after create (if room; skips duplicate). */
+  homeShowcaseNewArrivals?: boolean;
+  /** Append to home “most purchased / favorites” block. */
+  homeShowcaseMostPurchased?: boolean;
+  /** Required when `sizeIds` and/or `colorIds` are set: one row per size, or per size×color. */
+  variantStock?: ProductVariantStockLine[];
+};
+
 export type CreateOrderItemBody = {
   productId: string;
   quantity: number;
   size?: string;
   color?: string;
+  sizeId?: string;
+  colorId?: string;
 };
 
 export type CreateOrderBody = {

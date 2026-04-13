@@ -211,6 +211,22 @@
     "sellerStoreEditSaveDesc": "Review and publish updates",
     "sellerStoreEditSaveHint": "Primary actions: discard, save draft, publish to storefront.",
     "sellerLinkBackToProfile": "Back to profile",
+    "sellerProductFormTitle": "Title",
+    "sellerProductFormDescription": "Description",
+    "sellerProductFormSku": "Model / SKU",
+    "sellerProductFormAudience": "Audience",
+    "sellerProductFormPrice": "Price",
+    "sellerProductFormStock": "Stock count",
+    "sellerProductFormImages": "Photos (1–5)",
+    "sellerProductFormImagesHelp": "Images are stored under uploads/products.",
+    "sellerProductFormSubmit": "Create product",
+    "sellerProductFormSubmitting": "Creating…",
+    "sellerProductFormSuccess": "Product created.",
+    "sellerProductFormError": "Could not create product.",
+    "sellerProductFormNeedImages": "Add at least one image.",
+    "sellerAudienceMen": "Men",
+    "sellerAudienceWomen": "Women",
+    "sellerAudienceKids": "Kids",
     "sellerEmDash": "—"
   }
 }
