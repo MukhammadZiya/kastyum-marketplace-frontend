@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import type { ProductsQueryParams } from "@repo/types";
 import Breadcrumb from "../components/Common/Breadcrumb";
 import { headerCatalogLabel } from "../data/headerCatalogOptions";
 import {
   emptyShopFilterState,
-  filterByHeaderCatalog,
-  filterByTitleSearch,
-  filterShopProducts,
   PRICE_FILTER_SPECS,
+  SHOP_DEPARTMENT_CATEGORY_LABELS,
   shopData,
   shopFilterOptionLists,
   type PriceFilterId,
@@ -16,8 +15,11 @@ import {
 import SingleGridItem from "../components/Shop/SingleGridItem";
 import SingleListItem from "../components/Shop/SingleListItem";
 import { useAllAttributes } from "../hooks/attributes";
+import { useProductList } from "../hooks/products";
 import { useT } from "../i18n";
 import type { TranslateFn } from "../i18n/types";
+import { apiProductToStorefront } from "../lib/apiProductToStorefront";
+import type { Product } from "../types/product";
 
 function toggleSetKey<K extends keyof ShopFilterState>(
   key: K,
@@ -209,10 +211,58 @@ export function ShopWithSidebarPage() {
 
   const { data: attrBundle } = useAllAttributes();
 
-  const { categories, colors: fallbackColors, sizes: fallbackSizes } = useMemo(
+  const categories = useMemo(
+    () => [...SHOP_DEPARTMENT_CATEGORY_LABELS],
+    [],
+  );
+
+  const { colors: fallbackColors, sizes: fallbackSizes } = useMemo(
     () => shopFilterOptionLists(shopData),
     [],
   );
+
+  const listParams = useMemo((): ProductsQueryParams => {
+    const p: ProductsQueryParams = { page: 1, limit: 48 };
+    const qt = q.trim();
+    if (qt) p.q = qt;
+    if (device && device !== "all") p.device = device;
+    const deptFromFilters = [...filters.categories];
+    if (deptFromFilters.length > 0) {
+      p.departmentCategories = deptFromFilters.join(",");
+    } else if (
+      catParam?.trim() &&
+      (SHOP_DEPARTMENT_CATEGORY_LABELS as readonly string[]).includes(catParam.trim())
+    ) {
+      p.departmentCategories = catParam.trim();
+    }
+    if (filters.priceBuckets.size > 0) {
+      p.priceBuckets = [...filters.priceBuckets].join(",");
+    }
+    if (attrBundle?.color?.length && filters.colors.size > 0) {
+      const ids = [...filters.colors]
+        .map((name) => attrBundle.color!.find((c) => c.name === name)?._id)
+        .filter((x): x is string => Boolean(x));
+      if (ids.length === 1) p.color = ids[0];
+      else if (ids.length > 1) p.colors = ids.join(",");
+    }
+    if (attrBundle?.size?.length && filters.sizes.size > 0) {
+      const ids = [...filters.sizes]
+        .map((name) => attrBundle.size!.find((s) => s.name === name)?._id)
+        .filter((x): x is string => Boolean(x));
+      if (ids.length === 1) p.size = ids[0];
+      else if (ids.length > 1) p.sizes = ids.join(",");
+    }
+    return p;
+  }, [q, device, filters, catParam, attrBundle]);
+
+  const { data, isPending, isError } = useProductList(listParams);
+
+  const products: Product[] = useMemo(() => {
+    if (!data?.list?.length) return [];
+    return data.list.map((row) => apiProductToStorefront(row));
+  }, [data]);
+
+  const resultTotal = data?.total ?? 0;
 
   const colors = useMemo(() => {
     if (attrBundle?.color?.length) {
@@ -236,13 +286,6 @@ export function ShopWithSidebarPage() {
       categories: new Set([catParam]),
     }));
   }, [catParam, categories]);
-
-  const products = useMemo(() => {
-    let list = filterShopProducts(shopData, filters);
-    list = filterByHeaderCatalog(list, device);
-    list = filterByTitleSearch(list, q);
-    return list;
-  }, [filters, device, q]);
 
   const activeFilterCount = useMemo(() => {
     return (
@@ -338,10 +381,11 @@ export function ShopWithSidebarPage() {
             <div className="mb-6 flex items-center justify-between rounded-lg border border-neutral-200 bg-white p-3">
               <p className="text-sm text-neutral-600" aria-live="polite">
                 {t("common.showing")}{" "}
-                <span className="font-medium text-neutral-900">{products.length}</span>{" "}
-                {products.length === 1
-                  ? t("common.productSingular")
-                  : t("common.productPlural")}
+                <span className="font-medium text-neutral-900">{resultTotal}</span>{" "}
+                {resultTotal === 1 ? t("common.productSingular") : t("common.productPlural")}
+                {isPending ? (
+                  <span className="text-neutral-500"> · {t("common.loading")}</span>
+                ) : null}
                 {activeFilterCount > 0 || hasHeaderSearch ? (
                   <span className="text-neutral-500"> {t("common.filtered")}</span>
                 ) : null}
@@ -364,7 +408,11 @@ export function ShopWithSidebarPage() {
               </div>
             </div>
 
-            {products.length === 0 ? (
+            {isError ? (
+              <div className="rounded-lg border border-dashed border-red-200 bg-white p-12 text-center text-red-800">
+                <p className="font-medium">{t("shopProductListError")}</p>
+              </div>
+            ) : products.length === 0 && !isPending ? (
               <div className="rounded-lg border border-dashed border-neutral-300 bg-white p-12 text-center text-neutral-600">
                 <p className="font-medium text-neutral-900">{t("shopNoProductsMatch")}</p>
                 <p className="mt-2 text-sm">{t("shopAdjustFiltersHint")}</p>
@@ -387,6 +435,10 @@ export function ShopWithSidebarPage() {
                   </button>
                 </div>
               </div>
+            ) : isPending && products.length === 0 ? (
+              <div className="rounded-lg border border-neutral-200 bg-white p-12 text-center text-neutral-600">
+                {t("common.loading")}
+              </div>
             ) : (
               <div
                 className={
@@ -397,9 +449,15 @@ export function ShopWithSidebarPage() {
               >
                 {products.map((item) =>
                   view === "grid" ? (
-                    <SingleGridItem key={item.id} item={item} />
+                    <SingleGridItem
+                      key={item.mongoId ?? String(item.id)}
+                      item={item}
+                    />
                   ) : (
-                    <SingleListItem key={item.id} item={item} />
+                    <SingleListItem
+                      key={item.mongoId ?? String(item.id)}
+                      item={item}
+                    />
                   ),
                 )}
               </div>

@@ -6,6 +6,7 @@ import type { Locale } from "../../i18n/types";
 const LOCALES: { value: Locale; labelKey: string }[] = [
   { value: "uz", labelKey: "common.localeNameUz" },
   { value: "ru", labelKey: "common.localeNameRu" },
+  { value: "kk", labelKey: "common.localeNameKk" },
   { value: "en", labelKey: "common.localeNameEn" },
 ];
 

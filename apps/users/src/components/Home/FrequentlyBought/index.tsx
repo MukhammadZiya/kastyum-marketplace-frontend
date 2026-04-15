@@ -1,6 +1,9 @@
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { TrendingUp } from "lucide-react";
 import { shopData } from "../../../data/shopData";
+import { useProductHomeShowcase } from "../../../hooks/products";
+import { apiProductToStorefront } from "../../../lib/apiProductToStorefront";
 import { useT } from "../../../i18n";
 import ProductItem from "../NewArrivals/ProductItem";
 
@@ -9,9 +12,20 @@ const FREQUENTLY_BOUGHT_ORDER = [6, 7, 4, 1, 3, 8, 2, 5] as const;
 
 export default function FrequentlyBought() {
   const t = useT();
-  const items = FREQUENTLY_BOUGHT_ORDER.map((id) =>
-    shopData.find((p) => p.id === id),
-  ).filter((p): p is NonNullable<typeof p> => p != null);
+  const { data: showcase } = useProductHomeShowcase();
+
+  const items = useMemo(() => {
+    if (showcase?.mostPurchased?.length) {
+      return showcase.mostPurchased.map((slot) =>
+        apiProductToStorefront(slot.product, {
+          customPreviewPath: slot.customImage,
+        }),
+      );
+    }
+    return FREQUENTLY_BOUGHT_ORDER.map((id) =>
+      shopData.find((p) => p.id === id),
+    ).filter((p): p is NonNullable<typeof p> => p != null);
+  }, [showcase]);
 
   return (
     <section className="overflow-hidden pt-[60px]">
@@ -37,7 +51,10 @@ export default function FrequentlyBought() {
 
         <div className="grid grid-cols-1 gap-x-[30px] gap-y-9 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {items.map((item) => (
-            <ProductItem item={item} key={`frequent-${item.id}`} />
+            <ProductItem
+              item={item}
+              key={`frequent-${item.mongoId ?? String(item.id)}`}
+            />
           ))}
         </div>
       </div>

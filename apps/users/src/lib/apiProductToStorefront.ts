@@ -18,18 +18,31 @@ function numericIdFromMongoId(mongoId: string): number {
   return x === 0 ? 1 : x;
 }
 
-export function apiProductToStorefront(p: ProductWithRelations): Product {
+export function apiProductToStorefront(
+  p: ProductWithRelations,
+  opts?: { customPreviewPath?: string | null },
+): Product {
   const raw = p.images?.length ? p.images : [""];
   const previews = raw.map((path) => mediaUrl(path));
   const thumbnails = previews.length ? previews : [mediaUrl("")];
-  const price = p.price;
+  const salePrice = p.price;
+  const listPrice =
+    p.listPrice != null && p.listPrice > salePrice ? p.listPrice : salePrice;
+  const custom =
+    opts?.customPreviewPath ?
+      mediaUrl(opts.customPreviewPath)
+    : null;
+  const imgs =
+    custom ?
+      { thumbnails: [custom, ...thumbnails], previews: [custom, ...previews] }
+    : { thumbnails, previews };
   return {
     id: numericIdFromMongoId(p._id),
     mongoId: p._id,
     title: p.title,
     reviews: 0,
-    price,
-    discountedPrice: price,
-    imgs: { thumbnails, previews },
+    price: listPrice,
+    discountedPrice: salePrice,
+    imgs,
   };
 }

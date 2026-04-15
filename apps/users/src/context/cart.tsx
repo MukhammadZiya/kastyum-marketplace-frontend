@@ -1,7 +1,22 @@
 import React, { createContext, useContext, useMemo, useReducer } from "react";
 import type { Product } from "../types/product";
 
-export type CartItem = Product & { quantity: number };
+/** Chosen catalog options for API products; merged into cart line identity. */
+export type CartItemVariantSelection = {
+  selectedSizeId?: string;
+  selectedSizeName?: string;
+  selectedColorId?: string;
+  selectedColorName?: string;
+};
+
+export type CartItem = Product & { quantity: number } & CartItemVariantSelection;
+
+export function cartLineKey(
+  item: Pick<CartItem, "mongoId" | "id" | "selectedSizeId" | "selectedColorId">,
+): string {
+  const base = item.mongoId ?? `n:${item.id}`;
+  return `${base}|${item.selectedSizeId ?? ""}|${item.selectedColorId ?? ""}`;
+}
 
 type CartState = {
   items: CartItem[];
@@ -9,7 +24,7 @@ type CartState = {
 
 type CartAction =
   | { type: "cart/add"; item: CartItem }
-  | { type: "cart/remove"; id: number }
+  | { type: "cart/remove"; lineKey: string }
   | { type: "cart/clear" };
 
 const CartContext = createContext<
@@ -17,7 +32,7 @@ const CartContext = createContext<
       items: CartItem[];
       totalPrice: number;
       addItem: (item: CartItem) => void;
-      removeItem: (id: number) => void;
+      removeItem: (lineKey: string) => void;
       clear: () => void;
     }
   | undefined
@@ -26,18 +41,21 @@ const CartContext = createContext<
 function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case "cart/add": {
-      const existing = state.items.find((x) => x.id === action.item.id);
+      const key = cartLineKey(action.item);
+      const existing = state.items.find((x) => cartLineKey(x) === key);
       if (!existing) return { items: [...state.items, action.item] };
       return {
         items: state.items.map((x) =>
-          x.id === action.item.id
-            ? { ...x, quantity: x.quantity + action.item.quantity }
-            : x
+          cartLineKey(x) === key ?
+            { ...x, quantity: x.quantity + action.item.quantity }
+          : x,
         ),
       };
     }
     case "cart/remove":
-      return { items: state.items.filter((x) => x.id !== action.id) };
+      return {
+        items: state.items.filter((x) => cartLineKey(x) !== action.lineKey),
+      };
     case "cart/clear":
       return { items: [] };
     default:
@@ -60,7 +78,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       items: state.items,
       totalPrice,
       addItem: (item: CartItem) => dispatch({ type: "cart/add", item }),
-      removeItem: (id: number) => dispatch({ type: "cart/remove", id }),
+      removeItem: (lineKey: string) =>
+        dispatch({ type: "cart/remove", lineKey }),
       clear: () => dispatch({ type: "cart/clear" }),
     }),
     [state.items, totalPrice]

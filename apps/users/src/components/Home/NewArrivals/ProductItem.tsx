@@ -5,6 +5,7 @@ import { useQuickViewModal } from "../../../context/quickViewModal";
 import { useWishlist } from "../../../context/wishlist";
 import { useT } from "../../../i18n";
 import { productDisplayTitle } from "../../../lib/productDisplayTitle";
+import { showStrikethroughOriginalPrice } from "../../../lib/productPriceDisplay";
 
 function productDetailPath(item: Product) {
   if (item.mongoId) {
@@ -142,7 +143,9 @@ export default function ProductItem({ item }: { item: Product }) {
 
         <span className="flex items-center gap-2 text-lg font-medium">
           <span className="text-neutral-900">${item.discountedPrice}</span>
-          <span className="text-neutral-500 line-through">${item.price}</span>
+          {showStrikethroughOriginalPrice(item) ?
+            <span className="text-neutral-500 line-through">${item.price}</span>
+          : null}
         </span>
       </Link>
     </div>

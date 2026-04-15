@@ -32,9 +32,33 @@ export async function getMemberMe(): Promise<Member> {
   return data;
 }
 
+function appendIfDefined(fd: FormData, key: string, value: string | undefined) {
+  if (value !== undefined && value !== "") {
+    fd.append(key, value);
+  }
+}
+
+/**
+ * Update profile. When `profileImage` is set, sends multipart form (field name `image`)
+ * so the API can save under `uploads/members/`.
+ */
 export async function postMemberUpdate(
   body: MemberUpdateBody,
+  options?: { profileImage?: File | null },
 ): Promise<MemberAuthResponse> {
+  if (options?.profileImage) {
+    const fd = new FormData();
+    appendIfDefined(fd, "nick", body.nick);
+    appendIfDefined(fd, "phone", body.phone);
+    appendIfDefined(fd, "password", body.password);
+    fd.append("image", options.profileImage, options.profileImage.name);
+    const { data } = await apiClient.post<MemberAuthResponse>(
+      "/member/update",
+      fd,
+    );
+    return data;
+  }
+
   const { data } = await apiClient.post<MemberAuthResponse>(
     "/member/update",
     body,

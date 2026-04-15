@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card } from "@repo/ui";
 import { ActivityFeed } from "../../components/ActivityFeed";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
@@ -9,6 +10,7 @@ import { useT } from "../../i18n";
 
 export function DashboardPage() {
   const t = useT();
+  const navigate = useNavigate();
 
   const stats = useMemo(
     () => [
@@ -85,12 +87,12 @@ export function DashboardPage() {
               {
                 id: "add-product",
                 label: t("common.adminDashQuickAddProduct"),
-                onClick: () => console.info("admin:quick-add-product"),
+                onClick: () => navigate("/products/new"),
               },
               {
                 id: "approve-seller",
                 label: t("common.adminDashQuickApproveSeller"),
-                onClick: () => console.info("admin:quick-approve-seller"),
+                onClick: () => navigate("/sellers/list"),
               },
             ]}
           />

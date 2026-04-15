@@ -1,3 +1,4 @@
 export { adminProductKeys } from "./adminProduct.keys";
 export { useAdminProductList } from "./useAdminProductList";
 export { useAdminProductDelete } from "./useAdminProductDelete";
+export { useAdminProductCreate } from "./useAdminProductCreate";

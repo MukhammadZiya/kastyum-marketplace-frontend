@@ -1,4 +1,5 @@
 export * from "./client";
+export * from "./uploadUrls";
 export * from "./errors";
 export * from "./member.api";
 export * from "./product.api";

@@ -7,11 +7,21 @@ const apiBaseURL =
   import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") ||
   "http://localhost:3000";
 
+/** Public API origin (no trailing slash). Use with `resolveUploadUrl` for stored paths like `uploads/members/…`. */
+export const API_BASE_URL = apiBaseURL;
+
 export const apiClient = axios.create({
   baseURL: apiBaseURL,
   headers: {
     "Content-Type": "application/json",
   },
+});
+
+apiClient.interceptors.request.use((config) => {
+  if (config.data instanceof FormData) {
+    config.headers.delete("Content-Type");
+  }
+  return config;
 });
 
 export function getAuthToken(): string | null {

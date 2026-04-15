@@ -13,7 +13,7 @@ export function ShopWithoutSidebarPage() {
 
   const products = useMemo(() => {
     if (data?.list?.length) {
-      return data.list.map(apiProductToStorefront);
+      return data.list.map((p) => apiProductToStorefront(p));
     }
     return shopData;
   }, [data]);

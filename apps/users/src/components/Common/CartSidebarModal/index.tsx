@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useCartModal } from "../../../context/cartSidebarModal";
-import { useCart } from "../../../context/cart";
+import { cartLineKey, useCart } from "../../../context/cart";
 import CartSidebarItem from "./SingleItem";
 import EmptyCart from "./EmptyCart";
 
@@ -55,7 +55,11 @@ export default function CartSidebarModal() {
             <div className="flex flex-col gap-6">
               {items.length > 0 ? (
                 items.map((item) => (
-                  <CartSidebarItem key={item.id} item={item} onRemove={removeItem} />
+                  <CartSidebarItem
+                    key={cartLineKey(item)}
+                    item={item}
+                    onRemove={removeItem}
+                  />
                 ))
               ) : (
                 <EmptyCart />

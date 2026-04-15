@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { MemberSignupBody } from "../../lib/marketplaceTypes";
-import { postMemberSignup } from "@repo/api";
+import { formatRequestFailureMessage, postMemberSignup } from "@repo/api";
 import { Button } from "@repo/ui";
 import { SellerAuthScaffold } from "../../components/seller/SellerAuthScaffold";
 import { useT } from "../../i18n";
@@ -44,7 +44,7 @@ export function SellerSignUpPage() {
       navigate("/", { replace: true });
     },
     onError: (err: unknown) => {
-      setFormError(err instanceof Error ? err.message : t("common.sellerAuthErrorSignup"));
+      setFormError(formatRequestFailureMessage(err));
     },
   });
 
@@ -72,11 +72,25 @@ export function SellerSignUpPage() {
         onSubmit={(e) => {
           e.preventDefault();
           setFormError("");
-          if (fields.password !== confirmPassword) {
+          if (!fields.nick.trim()) {
+            setFormError("Enter a store or display name.");
+            return;
+          }
+          const email = fields.email.trim();
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            setFormError("Enter a valid email (e.g. you@store.com).");
+            return;
+          }
+          const pwd = fields.password ?? "";
+          if (pwd.length < 6) {
+            setFormError("Password must be at least 6 characters.");
+            return;
+          }
+          if (pwd !== confirmPassword) {
             setFormError(t("common.sellerAuthPasswordMismatch"));
             return;
           }
-          signup.mutate(fields);
+          signup.mutate({ ...fields, email });
         }}
       >
         {formError ? (

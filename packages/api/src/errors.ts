@@ -1,3 +1,4 @@
+import { isAxiosError } from "axios";
 import type { ApiErrorBody } from "@repo/types";
 
 export type HttpError = Error & {
@@ -26,4 +27,20 @@ export function apiErrorMessage(body: ApiErrorBody): string {
   return Array.isArray(body.message)
     ? body.message.join(". ")
     : body.message;
+}
+
+export function formatRequestFailureMessage(error: unknown): string {
+  const http = error as HttpError;
+  if (http?.apiError) {
+    return apiErrorMessage(http.apiError);
+  }
+  if (isAxiosError(error)) {
+    if (!error.response && error.message === "Network Error") {
+      return "Cannot reach the API. Start the backend (e.g. pnpm start:dev in the API repo) and set VITE_API_BASE_URL in the frontend .env to that server (default http://localhost:3000).";
+    }
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return "Request failed.";
 }

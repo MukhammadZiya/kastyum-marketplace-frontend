@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import Breadcrumb from "../components/Common/Breadcrumb";
-import { useCart } from "../context/cart";
+import { cartLineKey, useCart } from "../context/cart";
 import { useT } from "../i18n";
 import { productDisplayTitle } from "../lib/productDisplayTitle";
 
@@ -31,9 +31,16 @@ export function CartPage() {
 
               <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
                 {items.map((item) => (
-                  <div key={item.id} className="flex items-center justify-between gap-4 border-b border-neutral-200 p-5 last:border-b-0">
+                  <div
+                    key={cartLineKey(item)}
+                    className="flex items-center justify-between gap-4 border-b border-neutral-200 p-5 last:border-b-0"
+                  >
                     <Link
-                      to={`/shop-details?id=${item.id}`}
+                      to={
+                        item.mongoId
+                          ? `/shop-details?id=${encodeURIComponent(item.mongoId)}`
+                          : `/shop-details?id=${item.id}`
+                      }
                       className="flex min-w-0 flex-1 items-center gap-4 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                     >
                       <img
@@ -45,6 +52,20 @@ export function CartPage() {
                         <p className="font-medium text-neutral-900 hover:text-blue-600">
                           {productDisplayTitle(item, t)}
                         </p>
+                        {item.selectedSizeName || item.selectedColorName ?
+                          <p className="mt-0.5 text-xs text-neutral-500">
+                            {[
+                              item.selectedSizeName ?
+                                `${t("cartItemSizeLabel")}: ${item.selectedSizeName}`
+                              : null,
+                              item.selectedColorName ?
+                                `${t("cartItemColorLabel")}: ${item.selectedColorName}`
+                              : null,
+                            ]
+                              .filter(Boolean)
+                              .join(" · ")}
+                          </p>
+                        : null}
                         <p className="text-sm text-neutral-600">
                           ${item.discountedPrice} x {item.quantity}
                         </p>
@@ -54,7 +75,11 @@ export function CartPage() {
                       <p className="font-medium text-neutral-900">
                         ${(item.discountedPrice * item.quantity).toFixed(2)}
                       </p>
-                      <button onClick={() => removeItem(item.id)} className="text-red-600" type="button">
+                      <button
+                        onClick={() => removeItem(cartLineKey(item))}
+                        className="text-red-600"
+                        type="button"
+                      >
                         Remove
                       </button>
                     </div>

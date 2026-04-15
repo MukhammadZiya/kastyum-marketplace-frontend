@@ -1,4 +1,4 @@
-export type Locale = "en" | "ru" | "uz";
+export type Locale = "en" | "ru" | "uz" | "kk";
 
 export const defaultLocale: Locale = "uz";
 

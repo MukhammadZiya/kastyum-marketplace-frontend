@@ -2,14 +2,26 @@ import type { ProductStatus, TargetAudience } from "../enums";
 import type { Brand, Color, Fit, Material, Size, Style } from "./attributes";
 import type { Member } from "./member";
 
+/** Per size, or per size+color when both are set on the product. */
+export type ProductVariantStockLine = {
+  sizeId?: string;
+  colorId?: string;
+  quantity: number;
+};
+
 export type ProductDocument = {
   _id: string;
   sellerId: string;
   title: string;
   modelNumber: string;
   audience: TargetAudience;
+  /** Catalog slugs for header device filter (men, suits, …). */
+  storeTypes?: string[];
+  /** Sidebar department label (e.g. Formal wear). */
+  departmentCategory?: string;
   description: string;
   price: number;
+  listPrice?: number;
   colors: string[];
   sizes: string[];
   brand?: string;
@@ -18,6 +30,7 @@ export type ProductDocument = {
   fit?: string;
   images: string[];
   stockCount: number;
+  variantStock?: ProductVariantStockLine[];
   inStock: boolean;
   status: ProductStatus;
   createdAt?: string;
