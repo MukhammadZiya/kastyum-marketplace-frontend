@@ -1,10 +1,12 @@
 import type { FlatMessages, Locale } from "./types";
 import { en } from "./messages/en";
+import { kk } from "./messages/kk";
 import { ru } from "./messages/ru";
 import { uz } from "./messages/uz";
 
 export const dictionaries: Record<Locale, FlatMessages> = {
   en,
+  kk,
   ru,
   uz,
 };

@@ -4,6 +4,7 @@ import type { Locale } from "./types";
 export const LOCALE_REGION: Record<Locale, string> = {
   uz: "UZ",
   ru: "RU",
+  kk: "KZ",
   en: "US",
 };
 
