@@ -9,6 +9,13 @@ export type ShopProduct = Product & {
   storeTypes: readonly string[];
 };
 
+/** Sidebar department checkboxes (must match `departmentCategory` on products). */
+export const SHOP_DEPARTMENT_CATEGORY_LABELS = [
+  "Formal wear",
+  "Men's tailoring",
+  "Seasonal",
+] as const;
+
 export function filterByHeaderCatalog(
   products: readonly ShopProduct[],
   device: string | null,

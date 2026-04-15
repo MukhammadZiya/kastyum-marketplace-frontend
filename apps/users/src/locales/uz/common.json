@@ -70,6 +70,7 @@
   "shopSearchFiltersLabel": "Qidiruv filtrlari",
   "shopClearSearchFilters": "Qidiruv filtrlarini tozalash",
   "shopNoProductsMatch": "Bu filtrlarga mos mahsulot yo‘q",
+  "shopProductListError": "Mahsulotlarni yuklab bo‘lmadi. Ulanishni tekshirib, qayta urinib ko‘ring.",
   "shopAdjustFiltersHint": "Boshqa filtrlarni sinab ko‘ring yoki qidiruvni tozalang.",
   "shopClearSidebarFilters": "Yon panel filtrlarini tozalash",
   "shopFilterCategory": "Kategoriya",

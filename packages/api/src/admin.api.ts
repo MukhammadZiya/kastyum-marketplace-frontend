@@ -127,6 +127,12 @@ export async function postAdminProductCreate(
   if (payload.variantStock?.length) {
     fd.append("variantStock", JSON.stringify(payload.variantStock));
   }
+  if (payload.storeTypes?.length) {
+    fd.append("storeTypes", JSON.stringify(payload.storeTypes));
+  }
+  if (payload.departmentCategory?.trim()) {
+    fd.append("departmentCategory", payload.departmentCategory.trim());
+  }
   for (const file of imageFiles) {
     fd.append("images", file, file.name);
   }

@@ -23,6 +23,21 @@ import { useT } from "../../i18n";
 
 const audiences: TargetAudience[] = ["MEN", "WOMEN", "KIDS"];
 
+/** Must match backend `PRODUCT_STORE_TYPE_SLUGS`. */
+const CATALOG_STORE_TYPE_SLUGS = [
+  "men",
+  "women",
+  "kids",
+  "suits",
+  "dresses",
+  "outerwear",
+  "shirts",
+  "shoes",
+  "accessories",
+] as const;
+
+const DEPARTMENT_CATEGORY_OPTIONS = ["Formal wear", "Men's tailoring", "Seasonal"] as const;
+
 function toggleInList(list: string[], id: string): string[] {
   if (list.includes(id)) return list.filter((x) => x !== id);
   return [...list, id];
@@ -66,6 +81,8 @@ export function ProductCreatePage() {
     useState(false);
   /** Per variant row key (`size:color` / `size:` / `:color`) → quantity string */
   const [variantQty, setVariantQty] = useState<Record<string, string>>({});
+  const [storeTypeSlugs, setStoreTypeSlugs] = useState<string[]>([]);
+  const [departmentCategory, setDepartmentCategory] = useState("");
   const [formError, setFormError] = useState("");
   const [attrQuickError, setAttrQuickError] = useState("");
   const [newSizeName, setNewSizeName] = useState("");
@@ -229,6 +246,8 @@ export function ProductCreatePage() {
       title: title.trim(),
       description: description.trim(),
       audience,
+      storeTypes: storeTypeSlugs.length ? storeTypeSlugs : undefined,
+      departmentCategory: departmentCategory.trim() || undefined,
       price: priceNum,
       listPrice:
         listNum !== undefined && !Number.isNaN(listNum) && listNum > 0 ?
@@ -373,6 +392,49 @@ export function ProductCreatePage() {
               {audiences.map((a) => (
                 <option key={a} value={a}>
                   {audienceLabel(a)}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <span className="mb-2 block text-sm font-medium text-slate-700">
+              {t("common.adminProductFieldStoreTypes")}
+            </span>
+            <p className="mb-2 text-xs text-slate-500">{t("common.adminProductHintStoreTypes")}</p>
+            <div className="flex flex-wrap gap-3 rounded-lg border border-slate-200 p-3">
+              {CATALOG_STORE_TYPE_SLUGS.map((slug) => (
+                <label key={slug} className="flex cursor-pointer items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={storeTypeSlugs.includes(slug)}
+                    onChange={() =>
+                      setStoreTypeSlugs((prev) => toggleInList(prev, slug))
+                    }
+                  />
+                  {slug}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label
+              htmlFor="admin-product-department"
+              className="mb-1 block text-sm font-medium text-slate-700"
+            >
+              {t("common.adminProductFieldDepartmentCategory")}
+            </label>
+            <select
+              id="admin-product-department"
+              value={departmentCategory}
+              onChange={(ev) => setDepartmentCategory(ev.target.value)}
+              className={`${selectClass} max-w-md`}
+            >
+              <option value="">{t("common.adminProductDepartmentNone")}</option>
+              {DEPARTMENT_CATEGORY_OPTIONS.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt}
                 </option>
               ))}
             </select>

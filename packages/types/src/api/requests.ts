@@ -54,6 +54,18 @@ export type ProductsQueryParams = {
   size?: string;
   minPrice?: number;
   maxPrice?: number;
+  /** Case-insensitive match on title and description. */
+  q?: string;
+  /** Header catalog scope (all omitted = no filter). */
+  device?: string;
+  /** Comma-separated `departmentCategory` values (OR). */
+  departmentCategories?: string;
+  /** Price bucket ids, comma-separated (OR). Ignored if minPrice/maxPrice set. */
+  priceBuckets?: string;
+  /** Comma-separated color ids (product has any). */
+  colors?: string;
+  /** Comma-separated size ids (product has any). */
+  sizes?: string;
 };
 
 export type CreateProductBody = {
@@ -61,6 +73,8 @@ export type CreateProductBody = {
   description: string;
   modelNumber: string;
   audience: TargetAudience;
+  storeTypes?: string[];
+  departmentCategory?: string;
   price: number;
   /** Optional “was” price; storefront shows as strikethrough when greater than `price`. */
   listPrice?: number;
@@ -98,6 +112,8 @@ export type AdminCreateProductPayload = {
   homeShowcaseMostPurchased?: boolean;
   /** Required when `sizeIds` and/or `colorIds` are set: one row per size, or per size×color. */
   variantStock?: ProductVariantStockLine[];
+  storeTypes?: string[];
+  departmentCategory?: string;
 };
 
 export type CreateOrderItemBody = {

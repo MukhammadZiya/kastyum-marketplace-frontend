@@ -15,6 +15,10 @@ export type ProductDocument = {
   title: string;
   modelNumber: string;
   audience: TargetAudience;
+  /** Catalog slugs for header device filter (men, suits, …). */
+  storeTypes?: string[];
+  /** Sidebar department label (e.g. Formal wear). */
+  departmentCategory?: string;
   description: string;
   price: number;
   listPrice?: number;

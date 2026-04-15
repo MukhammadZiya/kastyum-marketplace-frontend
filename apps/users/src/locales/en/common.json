@@ -80,6 +80,7 @@
   "shopSearchFiltersLabel": "Search filters",
   "shopClearSearchFilters": "Clear search filters",
   "shopNoProductsMatch": "No products match these filters",
+  "shopProductListError": "We could not load products. Check your connection and try again.",
   "shopAdjustFiltersHint": "Try different filters, or clear your search to see more pieces.",
   "shopClearSidebarFilters": "Clear sidebar filters",
   "shopFilterCategory": "Category",

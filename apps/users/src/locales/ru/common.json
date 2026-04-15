@@ -70,6 +70,7 @@
   "shopSearchFiltersLabel": "Фильтры поиска",
   "shopClearSearchFilters": "Сбросить фильтры поиска",
   "shopNoProductsMatch": "По этим фильтрам ничего не найдено",
+  "shopProductListError": "Не удалось загрузить товары. Проверьте подключение и попробуйте снова.",
   "shopAdjustFiltersHint": "Попробуйте другие фильтры или очистите поиск, чтобы увидеть больше моделей.",
   "shopClearSidebarFilters": "Сбросить боковые фильтры",
   "shopFilterCategory": "Категория",
