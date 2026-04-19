@@ -22,7 +22,7 @@ import {
 import { SellerTopbar } from "../components/seller/SellerTopbar";
 import { SellerMobileNavContext } from "../contexts/SellerMobileNavContext";
 import { useT } from "../i18n";
-import { buildSellerSidebarItems, isSellerSubActive } from "./sellerSidebarNav";
+import { buildSellerSidebarItems } from "./sellerSidebarNav";
 
 function isParentRouteActive(pathname: string, item: SidebarNavItem) {
   if (item.to === "/") return pathname === "/";
@@ -42,6 +42,9 @@ export function SellerAppShell() {
     if (item.to === "/") return pathname === "/";
     return pathname === item.to || pathname.startsWith(`${item.to}/`);
   };
+
+  const isSubItemActive = (sub: SidebarSubItem) =>
+    sub.end ? pathname === sub.to : pathname === sub.to || pathname.startsWith(`${sub.to}/`);
 
   const isSectionExpanded = useCallback(
     (id: string) => {
@@ -132,7 +135,7 @@ export function SellerAppShell() {
     brand: <SellerSidebarHeader />,
     items: sidebarItems,
     isItemActive,
-    isSubItemActive: (sub: SidebarSubItem) => isSellerSubActive(pathname, sub),
+    isSubItemActive,
     isSectionExpanded,
     onToggleSection: toggleSection,
     footer: <SellerSidebarFooter />,

@@ -87,6 +87,8 @@ export type CreateProductBody = {
   images?: string[];
   stockCount: number;
   status?: ProductStatus;
+  /** When `colors` and/or `sizes` are set, backend expects matching `variantStock` rows (multipart JSON). */
+  variantStock?: ProductVariantStockLine[];
 };
 
 /** Admin multipart create (`POST /admin/product/create`). */

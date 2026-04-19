@@ -62,6 +62,7 @@ export type ProductSellerListItem = Omit<
   material?: Material;
   fit?: Fit;
   style?: Style;
+  soldCount?: number;
 };
 
 export type ProductAdminListItem = Omit<
