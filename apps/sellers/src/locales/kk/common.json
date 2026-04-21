@@ -46,6 +46,7 @@
     "sellerAriaSectionShortcuts": "Бөлім таңбашалары",
     "sellerNavDashboard": "Бақылау тақтасы",
     "sellerNavProducts": "Өнімдер",
+    "sellerNavInventory": "Түгендеу",
     "sellerNavOrders": "Тапсырыстар",
     "sellerNavStore": "Дүкен профилі",
     "sellerSubOverview": "Шолу",
@@ -180,6 +181,15 @@
     "sellerEmptySignInOrders": "Тапсырыстарды жүктеу үшін сатушы ретінде кіріңіз.",
     "sellerErrorLoadOrders": "Тапсырыстар жүктелмеді.",
     "sellerEmptyNoOrders": "Әлі тапсырыстар жоқ.",
+    "sellerOrdersFilterLabel": "Күй",
+    "sellerOrdersFilterAll": "Барлық күйлер",
+    "sellerOrderStPending": "Күтуде",
+    "sellerOrderStAccepted": "Қабылданды",
+    "sellerOrderStShipped": "Жіберілді",
+    "sellerOrderStCancelled": "Бас тартылды",
+    "sellerOrdersPrev": "Алдыңғы",
+    "sellerOrdersNext": "Келесі",
+    "sellerOrdersPageOf": "{{page}} / {{pages}} бет",
     "sellerStoreOvStatProfile": "Профиль аяқталды",
     "sellerStoreOvStatProfileHint": "Бақылау тізімі",
     "sellerStoreOvStatPolicies": "Файлдағы саясаттар",
@@ -231,7 +241,9 @@
     "sellerProductFormError": "Өнім жасалмады.",
     "sellerProductFormNeedImages": "Кем дегенде бір сурет қосыңыз.",
     "sellerPageProductsManageTitle": "Өнімдерім",
-    "sellerPageProductsManageDesc": "Толық мәліметтермен жаңа өнім қосыңыз және төмендегі тізімді қараңыз.",
+    "sellerPageProductsManageDesc": "Толық мәліметтермен жаңа өнім қосыңыз. Қор мен сатуды Түгендеу бетінде қараңыз.",
+    "sellerPageInventoryTitle": "Түгендеу",
+    "sellerPageInventoryDesc": "Барлық листингтеріңіз бір кестеде — қор, қолжетімділік, сатылған және күй.",
     "sellerProductsManageFormTitle": "Өнім қосу",
     "sellerProductsManageFormDesc": "Сатып алушылар көретін өрістер: баға, медиа, өлшемдер, түстер және сипаттамалар.",
     "sellerProductFieldListPrice": "Салыстырмалы баға (міндетті емес)",
@@ -264,6 +276,6 @@
     "sellerAudienceMen": "Ерлер",
     "sellerAudienceWomen": "Әйелдер",
     "sellerAudienceKids": "Балалар",
-    "sellerEmDash": null
+    "sellerEmDash": "—"
   }
 }

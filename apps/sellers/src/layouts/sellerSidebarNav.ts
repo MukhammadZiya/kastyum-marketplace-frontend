@@ -8,5 +8,15 @@ export function buildSellerSidebarItems(t: TranslateFn): SidebarNavItem[] {
       label: t("common.sellerNavProducts"),
       to: "/",
     },
+    {
+      id: "inventory",
+      label: t("common.sellerNavInventory"),
+      to: "/inventory",
+    },
+    {
+      id: "orders",
+      label: t("common.sellerNavOrders"),
+      to: "/orders",
+    },
   ];
 }
