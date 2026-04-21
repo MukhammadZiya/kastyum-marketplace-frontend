@@ -367,7 +367,7 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
                   }
                   const sizeOpt = sizeOptions.find((s) => s.id === selectedSizeId);
                   const colorOpt = colorOptions.find((c) => c.id === selectedColorId);
-                  const vRows = apiProduct.variantStock;
+                  const vRows = apiProduct?.variantStock;
                   if (vRows && vRows.length > 0) {
                     const hasS = sizeOptions.length > 0;
                     const hasC = colorOptions.length > 0;
