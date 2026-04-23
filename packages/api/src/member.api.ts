@@ -27,6 +27,16 @@ export async function postMemberLogin(
   return data;
 }
 
+export async function postMemberTelegramLogin(
+  body: any, // Using any for now to avoid strict type mismatch if TelegramLoginData is not exported everywhere
+): Promise<MemberAuthResponse> {
+  const { data } = await apiClient.post<MemberAuthResponse>(
+    "/member/telegram-login",
+    body,
+  );
+  return data;
+}
+
 export async function getMemberMe(): Promise<Member> {
   const { data } = await apiClient.get<Member>("/member/me");
   return data;

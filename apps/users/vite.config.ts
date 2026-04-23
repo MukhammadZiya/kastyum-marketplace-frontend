@@ -10,7 +10,8 @@ export default defineConfig({
   envDir: path.resolve(appDir, "../.."),
   plugins: [react(), tailwindcss()],
   server: {
-    port: 5173,
+    port: 80,
     strictPort: true,
+    host: "127.0.0.1",
   },
 });

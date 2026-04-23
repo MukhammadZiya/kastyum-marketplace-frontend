@@ -22,7 +22,7 @@ export function SellerSignInPage() {
 
   const redirectAfterLogin =
     (location.state as { from?: string } | null)?.from &&
-    (location.state as { from?: string }).from !== "/signin"
+      (location.state as { from?: string }).from !== "/signin"
       ? (location.state as { from?: string }).from!
       : "/";
 
