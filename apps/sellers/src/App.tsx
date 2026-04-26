@@ -3,14 +3,9 @@ import { RequireSellerAuth } from "./layouts/RequireSellerAuth";
 import { SellerAppShell } from "./layouts/SellerAppShell";
 import { SellerSignInPage } from "./modules/auth/SellerSignInPage";
 import { SellerSignUpPage } from "./modules/auth/SellerSignUpPage";
-import { SellerDashboardPage } from "./modules/dashboard/SellerDashboardPage";
-import { OrdersListPage } from "./modules/orders/OrdersListPage";
-import { OrdersOverviewPage } from "./modules/orders/OrdersOverviewPage";
-import { ProductCreatePage } from "./modules/products/ProductCreatePage";
-import { ProductsListPage } from "./modules/products/ProductsListPage";
-import { ProductsOverviewPage } from "./modules/products/ProductsOverviewPage";
-import { StoreEditPage } from "./modules/store/StoreEditPage";
-import { StoreOverviewPage } from "./modules/store/StoreOverviewPage";
+import { SellerOrdersPage } from "./modules/orders/SellerOrdersPage";
+import { SellerInventoryPage } from "./modules/products/SellerInventoryPage";
+import { SellerProductsPage } from "./modules/products/SellerProductsPage";
 
 function App() {
   return (
@@ -20,14 +15,9 @@ function App() {
         <Route path="/signup" element={<SellerSignUpPage />} />
         <Route element={<RequireSellerAuth />}>
           <Route path="/" element={<SellerAppShell />}>
-            <Route index element={<SellerDashboardPage />} />
-            <Route path="products" element={<ProductsOverviewPage />} />
-            <Route path="products/list" element={<ProductsListPage />} />
-            <Route path="products/new" element={<ProductCreatePage />} />
-            <Route path="orders" element={<OrdersOverviewPage />} />
-            <Route path="orders/list" element={<OrdersListPage />} />
-            <Route path="store" element={<StoreOverviewPage />} />
-            <Route path="store/edit" element={<StoreEditPage />} />
+            <Route index element={<SellerProductsPage />} />
+            <Route path="inventory" element={<SellerInventoryPage />} />
+            <Route path="orders" element={<SellerOrdersPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Route>

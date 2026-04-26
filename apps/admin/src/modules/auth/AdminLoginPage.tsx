@@ -19,9 +19,9 @@ export function AdminLoginPage() {
   const queryClient = useQueryClient();
   const from =
     (location.state as { from?: string } | null)?.from &&
-    (location.state as { from?: string }).from !== "/login"
+      (location.state as { from?: string }).from !== "/login"
       ? (location.state as { from?: string }).from!
-      : "/";
+      : "/users/list";
 
   const token = getAuthToken();
 

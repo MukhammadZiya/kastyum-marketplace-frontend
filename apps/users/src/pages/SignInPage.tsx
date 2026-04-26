@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Breadcrumb from "../components/Common/Breadcrumb";
-import { useMemberLogin } from "../hooks/members";
+import { useMemberLogin, useMemberTelegramLogin } from "../hooks/members";
 import type { MemberLoginBody } from "../lib/marketplaceTypes";
 import { getSellerSignInUrl } from "../lib/sellerAppUrl";
+import { TelegramLoginButton } from "../components/Auth/TelegramLoginButton";
 
 export function SignInPage() {
   const navigate = useNavigate();
   const login = useMemberLogin();
+  const telegramLogin = useMemberTelegramLogin();
   const [values, setValues] = useState<MemberLoginBody>({
     email: "",
     password: "",
@@ -74,6 +76,31 @@ export function SignInPage() {
               >
                 {login.isPending ? "Signing in…" : "Sign in to account"}
               </button>
+
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-neutral-200"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="bg-white px-2 text-neutral-500">Or continue with</span>
+                </div>
+              </div>
+
+              <TelegramLoginButton
+                botName={import.meta.env.VITE_TELEGRAM_BOT_NAME || "kastyum_bot"}
+                onAuth={(user) => {
+                  setFormError("");
+                  telegramLogin.mutate(user, {
+                    onSuccess: () => navigate("/"),
+                    onError: (err) => {
+                      setFormError(
+                        err instanceof Error ? err.message : "Telegram login failed",
+                      );
+                    },
+                  });
+                }}
+              />
+
               <div className="rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-center text-sm text-neutral-600">
                 <p className="mb-2">Selling on Kastyum?</p>
                 <button

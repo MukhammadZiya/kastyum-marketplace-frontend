@@ -280,12 +280,17 @@ export function ShopWithSidebarPage() {
 
   useEffect(() => {
     if (!catParam) return;
-    if (!categories.includes(catParam)) return;
+    const trimmed = catParam.trim();
+    if (
+      !(SHOP_DEPARTMENT_CATEGORY_LABELS as readonly string[]).includes(trimmed)
+    ) {
+      return;
+    }
     setFilters((prev) => ({
       ...prev,
-      categories: new Set([catParam]),
+      categories: new Set([trimmed]),
     }));
-  }, [catParam, categories]);
+  }, [catParam]);
 
   const activeFilterCount = useMemo(() => {
     return (

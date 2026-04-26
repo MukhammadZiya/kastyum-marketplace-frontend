@@ -22,6 +22,16 @@ export type MemberLoginBody = {
   password: string;
 };
 
+export type TelegramLoginData = {
+  id: number;
+  first_name: string;
+  last_name?: string;
+  username?: string;
+  photo_url?: string;
+  auth_date: number;
+  hash: string;
+};
+
 export type MemberUpdateBody = {
   nick?: string;
   phone?: string;
@@ -87,6 +97,8 @@ export type CreateProductBody = {
   images?: string[];
   stockCount: number;
   status?: ProductStatus;
+  /** When `colors` and/or `sizes` are set, backend expects matching `variantStock` rows (multipart JSON). */
+  variantStock?: ProductVariantStockLine[];
 };
 
 /** Admin multipart create (`POST /admin/product/create`). */

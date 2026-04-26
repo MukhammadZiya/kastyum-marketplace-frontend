@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+import { Link, useNavigate } from "react-router-dom";
 import Breadcrumb from "../components/Common/Breadcrumb";
 import { useMyOrders } from "../hooks/orders";
 import { useMemberMe, useMemberUpdate } from "../hooks/members";
-import { getAuthToken, resolveUploadUrl } from "@repo/api";
+import { getAuthToken } from "@repo/api";
 import { useT } from "../i18n";
+import { clearMarketplaceSession } from "../user-auth";
 
 const tabs = ["Profile", "Address", "Orders", "Security"] as const;
 
@@ -84,8 +86,6 @@ function ProfilePanel() {
   const [nick, setNick] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [photoFile, setPhotoFile] = useState<File | null>(null);
-  const [filePreviewUrl, setFilePreviewUrl] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: "ok" | "err"; text: string } | null>(
     null,
   );
@@ -95,16 +95,6 @@ function ProfilePanel() {
     setNick(me.nick ?? "");
     setPhone(me.phone ?? "");
   }, [me]);
-
-  useEffect(() => {
-    if (!photoFile) {
-      setFilePreviewUrl(null);
-      return;
-    }
-    const url = URL.createObjectURL(photoFile);
-    setFilePreviewUrl(url);
-    return () => URL.revokeObjectURL(url);
-  }, [photoFile]);
 
   if (!getAuthToken()) {
     return (
@@ -125,19 +115,14 @@ function ProfilePanel() {
     return <p className="text-red-600">{t("common.sessionCouldNotLoad")}</p>;
   }
 
-  const savedPhotoUrl = resolveUploadUrl(me.image);
-  const avatarSrc = filePreviewUrl || savedPhotoUrl || undefined;
-
   const hasChanges =
     nick.trim() !== (me.nick ?? "").trim() ||
     phone.trim() !== (me.phone ?? "").trim() ||
-    password.length >= 6 ||
-    photoFile != null;
+    password.length >= 6;
 
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-semibold text-neutral-900">Profile</h2>
-      <p className="text-sm text-neutral-600">{t("common.profileImageHelp")}</p>
 
       <form
         className="max-w-lg space-y-4"
@@ -154,14 +139,10 @@ function ProfilePanel() {
           if (password.length >= 6) body.password = password;
 
           update.mutate(
-            {
-              body,
-              profileImage: photoFile ?? undefined,
-            },
+            { body },
             {
               onSuccess: () => {
                 setPassword("");
-                setPhotoFile(null);
                 setMessage({ type: "ok", text: t("common.profileUpdated") });
               },
               onError: (err) => {
@@ -182,30 +163,6 @@ function ProfilePanel() {
             {message.text}
           </p>
         ) : null}
-
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
-          {avatarSrc ? (
-            <img
-              src={avatarSrc}
-              alt=""
-              className="h-24 w-24 rounded-lg border border-neutral-200 object-cover"
-            />
-          ) : null}
-          <div className="flex-1 space-y-2">
-            <label className="block text-sm font-medium text-neutral-800">
-              {t("common.profilePhotoLabel")}
-            </label>
-            <input
-              type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif"
-              className="text-sm text-neutral-700"
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                setPhotoFile(f ?? null);
-              }}
-            />
-          </div>
-        </div>
 
         <div>
           <label className="mb-1 block text-sm font-medium text-neutral-800">
@@ -266,7 +223,11 @@ function ProfilePanel() {
 }
 
 export function MyAccountPage() {
+  const t = useT();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>("Profile");
+  const memberSessionActive = Boolean(getAuthToken());
 
   return (
     <>
@@ -290,6 +251,20 @@ export function MyAccountPage() {
                 </button>
               ))}
             </div>
+            {memberSessionActive ?
+              <div className="mt-3 border-t border-neutral-200 pt-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    clearMarketplaceSession(queryClient);
+                    navigate("/", { replace: true });
+                  }}
+                  className="w-full rounded-md px-4 py-2.5 text-left text-sm font-medium text-neutral-700 transition hover:bg-neutral-100"
+                >
+                  {t("common.logOut")}
+                </button>
+              </div>
+            : null}
           </aside>
           <div className="rounded-xl border border-neutral-200 bg-white p-6 sm:p-8">
             {activeTab === "Profile" && <ProfilePanel />}

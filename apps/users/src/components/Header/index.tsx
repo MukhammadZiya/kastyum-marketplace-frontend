@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getAuthToken } from "@repo/api";
 import CustomSelect from "./CustomSelect";
@@ -10,22 +9,14 @@ import { useCartModal } from "../../context/cartSidebarModal";
 import { headerCatalogOptions } from "../../data/headerCatalogOptions";
 import { useMemberMe } from "../../hooks/members";
 import { useT } from "../../i18n";
-import { clearMarketplaceSession } from "../../user-auth";
 
 const Header = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const queryClient = useQueryClient();
-
   /** Category strip is for shopping; keep sign-in / sign-up focused. */
   const showCategoryNav = pathname !== "/signin" && pathname !== "/signup";
   const tokenPresent = Boolean(getAuthToken());
   const { data: me, isPending } = useMemberMe();
-
-  const handleLogout = useCallback(() => {
-    clearMarketplaceSession(queryClient);
-    navigate("/", { replace: true });
-  }, [queryClient, navigate]);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [searchCatalog, setSearchCatalog] = useState("all");
@@ -178,13 +169,6 @@ const Header = () => {
                         </p>
                       </div>
                     )}
-                    <button
-                      type="button"
-                      onClick={handleLogout}
-                      className="relative z-20 shrink-0 cursor-pointer text-left text-[12px] font-medium text-blue-600 hover:text-blue-700 hover:underline"
-                    >
-                      {t("common.logOut")}
-                    </button>
                   </div>
                 ) : (
                   <Link to="/signin" className="flex items-center gap-[10px]">
@@ -227,20 +211,7 @@ const Header = () => {
                   className="-mx-1 flex items-center gap-[10px] rounded-xl px-2.5 py-1.5 transition duration-200 ease-out hover:bg-neutral-100/90 hover:shadow-sm active:scale-[0.99]"
                 >
                   <span className="inline-block relative">
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M1.29266 2.7512C1.43005 2.36044 1.8582 2.15503 2.24896 2.29242L2.55036 2.39838C3.16689 2.61511 3.69052 2.79919 4.10261 3.00139C4.54324 3.21759 4.92109 3.48393 5.20527 3.89979C5.48725 4.31243 5.60367 4.76515 5.6574 5.26153Z"
-                        fill="#3C50E0"
-                      />
-                    </svg>
+                
 
                     <span className="flex items-center justify-center font-medium text-[10px] absolute -right-2 -top-2.5 bg-blue-600 w-[18px] h-[18px] rounded-full text-white">
                       {items.length}

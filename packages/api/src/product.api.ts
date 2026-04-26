@@ -61,8 +61,42 @@ export async function postProductCreate(
   fd.append("audience", body.audience);
   fd.append("price", String(body.price));
   fd.append("stockCount", String(body.stockCount));
+  if (body.listPrice != null && body.listPrice > 0) {
+    fd.append("listPrice", String(body.listPrice));
+  }
   if (body.status != null) {
     fd.append("status", body.status);
+  }
+  if (body.brand?.trim()) {
+    fd.append("brand", body.brand.trim());
+  }
+  if (body.material?.trim()) {
+    fd.append("material", body.material.trim());
+  }
+  if (body.fit?.trim()) {
+    fd.append("fit", body.fit.trim());
+  }
+  if (body.style?.trim()) {
+    fd.append("style", body.style.trim());
+  }
+  if (body.colors?.length) {
+    fd.append("colors", JSON.stringify(body.colors));
+  }
+  if (body.sizes?.length) {
+    fd.append("sizes", JSON.stringify(body.sizes));
+  }
+  if (body.variantStock?.length) {
+    const normalized = body.variantStock.map((row) => {
+      const n = Number(row.quantity);
+      const quantity =
+        Number.isFinite(n) ? Math.max(0, Math.floor(n)) : 0;
+      return {
+        ...(row.sizeId ? { sizeId: row.sizeId } : {}),
+        ...(row.colorId ? { colorId: row.colorId } : {}),
+        quantity,
+      };
+    });
+    fd.append("variantStock", JSON.stringify(normalized));
   }
   for (const file of imageFiles) {
     fd.append("images", file, file.name);
