@@ -175,6 +175,7 @@
     "sellerLinkDashboard": "Dashboard",
     "sellerColOrder": "Order",
     "sellerColBuyer": "Buyer",
+    "sellerColShipping": "Ship to",
     "sellerColItems": "Items",
     "sellerColTotal": "Total",
     "sellerColPlaced": "Placed",

@@ -20,6 +20,42 @@ import { useWishlist } from "../context/wishlist";
 import type { ProductWithRelations } from "@repo/types";
 import type { Product } from "../types/product";
 
+function productGallerySources(product: Product): string[] {
+  const fromPreviews = product.imgs.previews
+    .map((s) => (s?.trim() ? s.trim() : ""))
+    .filter((s) => s.length > 0);
+  if (fromPreviews.length > 0) return fromPreviews;
+  return product.imgs.thumbnails
+    .map((s) => (s?.trim() ? s.trim() : ""))
+    .filter((s) => s.length > 0);
+}
+
+function ProductImagePlaceholder({ label }: { label: string }) {
+  return (
+    <div className="flex w-full min-h-[min(320px,50vh)] flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-neutral-200/90 bg-white/50 px-6 text-center text-neutral-500">
+      <svg
+        className="h-14 w-14 shrink-0 text-neutral-300"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        aria-hidden
+      >
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <circle cx="8.5" cy="10" r="1.5" fill="currentColor" stroke="none" />
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M21 15l-4-4-4.5 4.5-3-3L3 18"
+        />
+      </svg>
+      <p className="max-w-xs text-sm font-medium leading-snug text-neutral-600">
+        {label}
+      </p>
+    </div>
+  );
+}
+
 function isMongoObjectId(value: string | null): value is string {
   return !!value && /^[0-9a-fA-F]{24}$/.test(value);
 }
@@ -209,7 +245,12 @@ type InnerProps = {
 
 function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
   const t = useT();
-  const [preview, setPreview] = useState(0);
+  const gallerySources = useMemo(
+    () => productGallerySources(product),
+    [product],
+  );
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [mainImageFailed, setMainImageFailed] = useState(false);
   const [qty, setQty] = useState(1);
   const [selectedSizeId, setSelectedSizeId] = useState<string | null>(null);
   const [selectedColorId, setSelectedColorId] = useState<string | null>(null);
@@ -225,6 +266,11 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
     () => (apiProduct ? variantColorsFromApiProduct(apiProduct) : []),
     [apiProduct],
   );
+
+  useEffect(() => {
+    setActiveImageIndex(0);
+    setMainImageFailed(false);
+  }, [product.mongoId, product.id, gallerySources]);
 
   useEffect(() => {
     if (!apiProduct) {
@@ -259,32 +305,71 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
         String(product.reviews),
       );
 
+  const activeImageSrc =
+    gallerySources.length > 0
+      ? gallerySources[Math.min(activeImageIndex, gallerySources.length - 1)]
+      : "";
+  const showImagePlaceholder = gallerySources.length === 0 || mainImageFailed;
+
   return (
     <section className="py-10">
       <div className="mx-auto max-w-[1170px] px-4 sm:px-8 xl:px-0">
         <div className="grid gap-10 lg:grid-cols-[570px_1fr]">
           <div>
-            <div className="flex min-h-[min(520px,72vh)] items-center justify-center rounded-lg bg-neutral-100 p-6 sm:p-8">
-                <img
-                  src={product.imgs.previews[preview] || ""}
+            <div className="flex min-h-[min(520px,72vh)] items-center justify-center overflow-hidden rounded-lg bg-neutral-100 p-4 sm:p-6 lg:p-8">
+              {showImagePlaceholder ?
+                <div className="w-full max-w-full">
+                  <ProductImagePlaceholder label={t("productImageUnavailable")} />
+                </div>
+              : <img
+                  src={activeImageSrc}
                   alt={displayTitle}
                   className="max-h-[min(560px,68vh)] w-full max-w-full object-contain object-center"
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
+                  onError={() => setMainImageFailed(true)}
+                  onLoad={() => setMainImageFailed(false)}
                 />
+              }
             </div>
-            <div className="mt-5 flex gap-3">
-              {product.imgs.thumbnails.map((img, i) => (
-                <button
-                  key={`${img}-${i}`}
-                  onClick={() => setPreview(i)}
-                  className={`flex h-20 w-20 items-center justify-center rounded-md border bg-neutral-50 ${
-                    i === preview ? "border-blue-600" : "border-neutral-200"
-                  }`}
-                  type="button"
-                >
-                  <img src={img} alt="" className="max-h-14 max-w-14 object-contain" />
-                </button>
-              ))}
-            </div>
+            {gallerySources.length > 1 ?
+              <nav
+                className="mt-5 -mx-1 flex gap-3 overflow-x-auto pb-1 [scrollbar-gutter:stable] sm:mx-0 sm:flex-wrap sm:overflow-visible"
+                aria-label={t("productGalleryThumbnails")}
+              >
+                {gallerySources.map((img, i) => {
+                  const selected = i === activeImageIndex;
+                  const imagePickerLabel = t("productGalleryImageN")
+                    .replace("{n}", String(i + 1))
+                    .replace("{total}", String(gallerySources.length));
+                  return (
+                    <button
+                      key={`g-${i}`}
+                      type="button"
+                      aria-label={imagePickerLabel}
+                      onClick={() => {
+                        setActiveImageIndex(i);
+                        setMainImageFailed(false);
+                      }}
+                      className={`flex h-20 w-20 shrink-0 items-center justify-center rounded-md border bg-neutral-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                        selected
+                          ? "border-blue-600 ring-1 ring-blue-600"
+                          : "border-neutral-200 hover:border-neutral-300"
+                      }`}
+                    >
+                      <img
+                        src={img}
+                        alt=""
+                        className="max-h-14 max-w-14 object-contain"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </button>
+                  );
+                })}
+              </nav>
+            : null}
           </div>
           <div>
               <h1 className="text-3xl font-semibold text-neutral-900">{displayTitle}</h1>
@@ -336,16 +421,20 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
             <div className="mt-6 flex items-center gap-3">
               <button
                 onClick={() => setQty((v) => Math.max(1, v - 1))}
-                className="h-10 w-10 rounded border border-neutral-300"
+                className="h-10 w-10 rounded border border-neutral-300 text-lg leading-none text-neutral-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                 type="button"
+                aria-label={t("productQuantityDecrease")}
               >
                 -
               </button>
-              <span className="w-14 text-center">{qty}</span>
+              <span className="min-w-14 text-center tabular-nums" aria-live="polite">
+                {qty}
+              </span>
               <button
                 onClick={() => setQty((v) => v + 1)}
-                className="h-10 w-10 rounded border border-neutral-300"
+                className="h-10 w-10 rounded border border-neutral-300 text-lg leading-none text-neutral-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                 type="button"
+                aria-label={t("productQuantityIncrease")}
               >
                 +
               </button>
@@ -461,10 +550,28 @@ export function ShopDetailsPage() {
           title={t("productBreadcrumbTitle")}
           pages={[t("productBreadcrumbPathShop"), t("productBreadcrumbPathDetails")]}
         />
-        <section className="py-10 px-4">
-          <p className="mx-auto max-w-[1170px] text-neutral-600">
-            {t("productLoading")}
-          </p>
+        <section
+          className="py-10 px-4"
+          aria-busy="true"
+          aria-label={t("productLoading")}
+        >
+          <div className="mx-auto max-w-[1170px] sm:px-4 xl:px-0">
+            <div className="grid animate-pulse gap-10 md:grid-cols-2">
+              <div
+                className="aspect-[3/4] max-h-[min(520px,72vh)] w-full max-w-lg rounded-lg bg-neutral-200"
+                aria-hidden
+              />
+              <div className="min-w-0 space-y-4">
+                <div className="h-9 w-3/4 rounded-md bg-neutral-200" />
+                <div className="h-4 w-1/2 rounded-md bg-neutral-200" />
+                <div className="h-10 w-40 rounded-md bg-neutral-200" />
+                <div className="h-3 w-full rounded bg-neutral-100" />
+                <div className="h-3 w-5/6 rounded bg-neutral-100" />
+                <div className="h-3 w-4/6 rounded bg-neutral-100" />
+              </div>
+            </div>
+            <p className="sr-only">{t("productLoading")}</p>
+          </div>
         </section>
       </>
     );
@@ -477,10 +584,15 @@ export function ShopDetailsPage() {
           title={t("productBreadcrumbTitle")}
           pages={[t("productBreadcrumbPathShop"), t("productBreadcrumbPathDetails")]}
         />
-        <section className="py-10 px-4">
-          <p className="mx-auto max-w-[1170px] text-red-600" role="alert">
-            {error instanceof Error ? error.message : t("productLoadError")}
-          </p>
+        <section className="py-10 px-4 sm:px-6">
+          <div
+            className="mx-auto max-w-[1170px] rounded-xl border border-red-200 bg-red-50/60 px-4 py-5 sm:px-5"
+            role="alert"
+          >
+            <p className="text-sm text-red-800 sm:text-base">
+              {error instanceof Error ? error.message : t("productLoadError")}
+            </p>
+          </div>
         </section>
       </>
     );

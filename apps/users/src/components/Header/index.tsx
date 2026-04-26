@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getAuthToken } from "@repo/api";
 import CustomSelect from "./CustomSelect";
@@ -10,22 +9,14 @@ import { useCartModal } from "../../context/cartSidebarModal";
 import { headerCatalogOptions } from "../../data/headerCatalogOptions";
 import { useMemberMe } from "../../hooks/members";
 import { useT } from "../../i18n";
-import { clearMarketplaceSession } from "../../user-auth";
 
 const Header = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const queryClient = useQueryClient();
-
   /** Category strip is for shopping; keep sign-in / sign-up focused. */
   const showCategoryNav = pathname !== "/signin" && pathname !== "/signup";
   const tokenPresent = Boolean(getAuthToken());
   const { data: me, isPending } = useMemberMe();
-
-  const handleLogout = useCallback(() => {
-    clearMarketplaceSession(queryClient);
-    navigate("/", { replace: true });
-  }, [queryClient, navigate]);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [searchCatalog, setSearchCatalog] = useState("all");
@@ -178,13 +169,6 @@ const Header = () => {
                         </p>
                       </div>
                     )}
-                    <button
-                      type="button"
-                      onClick={handleLogout}
-                      className="relative z-20 shrink-0 cursor-pointer text-left text-[12px] font-medium text-blue-600 hover:text-blue-700 hover:underline"
-                    >
-                      {t("common.logOut")}
-                    </button>
                   </div>
                 ) : (
                   <Link to="/signin" className="flex items-center gap-[10px]">

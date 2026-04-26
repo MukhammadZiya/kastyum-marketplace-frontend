@@ -91,6 +91,7 @@ export function SellerOrdersPage() {
     () => [
       t("common.sellerColOrder"),
       t("common.sellerColBuyer"),
+      t("common.sellerColShipping"),
       t("common.sellerColItems"),
       t("common.sellerColTotal"),
       t("common.sellerColPlaced"),
@@ -130,11 +131,11 @@ export function SellerOrdersPage() {
               {sub ? (
                 <div className="text-xs text-slate-500">{sub}</div>
               ) : null}
-              {row.shippingAddress ? (
-                <div className="mt-1 line-clamp-2 text-xs text-slate-500">
-                  {row.shippingAddress}
-                </div>
-              ) : null}
+            </td>
+            <td className="max-w-[min(280px,32vw)] px-4 py-3 text-sm text-slate-700">
+              <span className="line-clamp-3 break-words">
+                {row.shippingAddress?.trim() || t("common.sellerEmDash")}
+              </span>
             </td>
             <td className="max-w-[280px] px-4 py-3 text-sm text-slate-700">
               <span className="line-clamp-2">{itemsSummary(row)}</span>

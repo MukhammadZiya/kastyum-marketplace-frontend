@@ -30,6 +30,7 @@ export function OrdersListPage() {
     () => [
       t("common.adminColOrder"),
       t("common.adminColBuyer"),
+      t("common.adminColShipping"),
       t("common.adminColTotal"),
       t("common.adminColStatus"),
       t("common.adminColPlaced"),
@@ -44,7 +45,12 @@ export function OrdersListPage() {
           <td className="px-4 py-3 font-mono text-xs text-slate-600">
             {o._id.slice(-8)}
           </td>
-          <td className="px-4 py-3">{o.memberId.nick}</td>
+          <td className="px-4 py-3">{o.memberId?.nick ?? "—"}</td>
+          <td className="max-w-[min(280px,32vw)] px-4 py-3 text-sm text-slate-700">
+            <span className="line-clamp-3 break-words">
+              {o.shippingAddress?.trim() || "—"}
+            </span>
+          </td>
           <td className="px-4 py-3 font-medium">${o.totalAmount.toFixed(2)}</td>
           <td className="px-4 py-3">{o.status}</td>
           <td className="px-4 py-3 text-slate-600">
