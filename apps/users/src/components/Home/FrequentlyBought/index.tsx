@@ -28,28 +28,28 @@ export default function FrequentlyBought() {
   }, [showcase]);
 
   return (
-    <section className="overflow-hidden pt-[60px]">
+    <section className="overflow-hidden pt-12 sm:pt-16">
       <div className="mx-auto w-full max-w-[1170px] px-4 sm:px-8 xl:px-0">
-        <div className="mb-7 flex items-center justify-between">
+        <div className="mb-6 flex items-end justify-between gap-4">
           <div>
-            <span className="mb-[6px] flex items-center gap-[10px] font-medium text-neutral-900">
-              <TrendingUp className="h-5 w-5 shrink-0 text-[#3C50E0]" strokeWidth={1.75} aria-hidden />
+            <span className="mb-2 flex items-center gap-2 text-[13px] font-black uppercase tracking-[0.16em] text-[#E11D48]">
+              <TrendingUp className="h-5 w-5 shrink-0" strokeWidth={2.1} aria-hidden />
               {t("homeFrequentEyebrow")}
             </span>
-            <h2 className="text-xl font-semibold text-neutral-900 xl:text-[28px]">
+            <h2 className="text-2xl font-black tracking-tight text-neutral-950 sm:text-3xl">
               {t("homeFrequentTitle")}
             </h2>
           </div>
 
           <Link
             to="/shop-with-sidebar"
-            className="inline-flex rounded-md border border-neutral-200 bg-neutral-50 px-7 py-2.5 text-[14px] font-medium text-neutral-900 duration-200 ease-out hover:border-transparent hover:bg-neutral-900 hover:text-white"
+            className="inline-flex rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-[14px] font-bold text-neutral-900 shadow-sm duration-200 ease-out hover:border-transparent hover:bg-neutral-900 hover:text-white sm:px-6"
           >
             {t("common.viewAll")}
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 gap-x-[30px] gap-y-9 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-x-2 gap-y-6 sm:gap-x-4 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-5">
           {items.map((item) => (
             <ProductItem
               item={item}

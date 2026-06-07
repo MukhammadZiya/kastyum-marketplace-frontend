@@ -16,11 +16,7 @@ export default function HeroCarousel() {
   const firstId = slides[0]?.id;
 
   return (
-    <div className="trending-hero-carousel group relative overflow-hidden rounded-2xl bg-[#E8E0D5] shadow-sm ring-1 ring-black/5">
-      <span className="absolute right-3 top-3 z-20 rounded-full bg-white/85 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-neutral-600 shadow-sm backdrop-blur-sm md:right-4 md:top-4">
-        {t("homeHeroBadgeFeatured")}
-      </span>
-
+    <div className="trending-hero-carousel group relative overflow-hidden rounded-[1.35rem] bg-[#111827] shadow-[0_24px_80px_-44px_rgba(17,24,39,0.75)] ring-1 ring-black/5">
       <Swiper
         modules={[Autoplay, Navigation, Pagination]}
         spaceBetween={0}
@@ -36,50 +32,65 @@ export default function HeroCarousel() {
           dynamicBullets: true,
         }}
         navigation={true}
-        className="!pb-12 [&_.swiper-pagination]:bottom-3 [&_.swiper-pagination-bullet]:h-2 [&_.swiper-pagination-bullet]:w-2 [&_.swiper-pagination-bullet]:bg-white/50 [&_.swiper-pagination-bullet]:opacity-100 [&_.swiper-pagination-bullet-active]:w-6 [&_.swiper-pagination-bullet-active]:rounded-full [&_.swiper-pagination-bullet-active]:bg-neutral-800/90"
+        className="!pb-10 [&_.swiper-pagination]:bottom-3 [&_.swiper-pagination-bullet]:h-2 [&_.swiper-pagination-bullet]:w-2 [&_.swiper-pagination-bullet]:bg-white/40 [&_.swiper-pagination-bullet]:opacity-100 [&_.swiper-pagination-bullet-active]:w-6 [&_.swiper-pagination-bullet-active]:rounded-full [&_.swiper-pagination-bullet-active]:bg-white"
       >
         {slides.map((slide) => (
           <SwiperSlide key={slide.id}>
-            <div className="grid min-h-[200px] grid-cols-1 items-center gap-4 px-5 py-6 sm:min-h-[220px] sm:px-8 sm:py-5 md:grid-cols-2 md:gap-8 md:px-10 lg:min-h-[240px] lg:py-4">
-              <div className="order-2 flex flex-col justify-center md:order-1">
-                <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-neutral-600">
+            <div className="relative grid min-h-[430px] grid-cols-1 items-center gap-4 px-5 py-6 sm:min-h-[460px] sm:px-8 md:min-h-[350px] md:grid-cols-[minmax(0,0.95fr)_minmax(320px,1.05fr)] md:gap-8 md:px-10 lg:min-h-[360px] lg:px-12">
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(225,29,72,0.35),transparent_32%),radial-gradient(circle_at_15%_85%,rgba(59,130,246,0.25),transparent_30%)]" />
+              <div className="relative z-10 order-1 flex flex-col justify-center">
+                <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.22em] text-rose-200">
                   {slide.eyebrow}
                 </p>
-                <h2 className="hero-serif-title text-[1.65rem] font-normal leading-[1.15] tracking-tight text-neutral-900 sm:text-3xl md:text-4xl lg:text-[2.35rem]">
+                <h1 className="max-w-[500px] text-[2rem] font-black leading-[0.98] tracking-tight text-white sm:text-[2.75rem] md:text-[3.25rem] lg:text-[3.65rem]">
+                  iBerry
+                  <span className="block text-white/82">fashion marketplace</span>
+                </h1>
+                <h2 className="mt-4 max-w-[440px] text-lg font-semibold leading-snug text-white sm:text-xl">
                   {slide.headline}
                 </h2>
-                <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-neutral-600 sm:text-[15px]">
+                <p className="mt-2 line-clamp-2 max-w-[440px] text-sm leading-6 text-white/72 sm:text-[15px]">
                   {slide.subline}
                 </p>
-                <p className="mt-3 text-sm font-medium text-neutral-800">{slide.priceLabel}</p>
-                <div className="mt-4 flex flex-wrap gap-3">
+                <div className="mt-5 flex flex-wrap items-center gap-3">
+                  <p className="rounded-full bg-white/10 px-3.5 py-2 text-sm font-bold text-white ring-1 ring-white/15">
+                    {slide.priceLabel}
+                  </p>
+                  <p className="text-sm font-medium text-white/70">
+                    Tez yetkazish · Oson qaytarish
+                  </p>
+                </div>
+                <div className="mt-5 flex flex-wrap gap-3">
                   <Link
                     to={`/shop-details?id=${slide.id}`}
-                    className="inline-flex w-fit items-center rounded-lg bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-neutral-800"
+                    className="inline-flex w-fit items-center rounded-xl bg-[#E11D48] px-5 py-3 text-sm font-bold text-white shadow-[0_16px_30px_-18px_rgba(225,29,72,1)] transition hover:-translate-y-0.5 hover:bg-[#BE123C]"
                   >
                     {t("homeHeroCtaViewProduct")}
                   </Link>
                   <Link
                     to="/shop-with-sidebar"
-                    className="inline-flex w-fit items-center rounded-lg border border-neutral-400/60 bg-white/40 px-5 py-2.5 text-sm font-medium text-neutral-800 backdrop-blur-sm transition hover:bg-white/70"
+                    className="inline-flex w-fit items-center rounded-xl border border-white/20 bg-white/10 px-5 py-3 text-sm font-bold text-white backdrop-blur-sm transition hover:-translate-y-0.5 hover:bg-white/16"
                   >
                     {t("homeHeroCtaBrowseShop")}
                   </Link>
                 </div>
               </div>
 
-              <div className="order-1 flex justify-center md:order-2 md:justify-end">
+              <div className="relative z-10 order-2 hidden min-h-[150px] items-center justify-center sm:flex md:min-h-[290px] md:justify-end">
                 <Link
                   to={`/shop-details?id=${slide.id}`}
-                  className="flex items-center justify-center rounded-lg outline-offset-4 transition hover:opacity-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-neutral-800"
+                    className="relative flex w-full max-w-[300px] items-center justify-center rounded-[1.25rem] bg-white/94 p-3 shadow-[0_24px_80px_-36px_rgba(0,0,0,0.8)] outline-offset-4 transition hover:-translate-y-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white md:max-w-[440px] md:p-4"
                   aria-label={`${t("homeHeroCtaViewProduct")}: ${slide.imageAlt}`}
                 >
+                  <span className="absolute right-3 top-3 z-10 rounded-full bg-[#FFF1F2] px-3 py-1.5 text-[11px] font-black uppercase tracking-wide text-[#BE123C]">
+                    {t("homeHeroBadgeFeatured")}
+                  </span>
                   <img
                     src={slide.image}
                     alt={slide.imageAlt}
                     width={320}
                     height={320}
-                    className="h-auto max-h-[140px] w-auto max-w-[min(100%,220px)] object-contain drop-shadow-[0_12px_32px_rgba(0,0,0,0.12)] sm:max-h-[160px] sm:max-w-[260px] md:max-h-[200px] md:max-w-[300px] lg:max-h-[220px]"
+                    className="h-[145px] w-full rounded-2xl object-cover object-center sm:h-[170px] md:h-[285px]"
                     loading={slide.id === firstId ? "eager" : "lazy"}
                   />
                 </Link>

@@ -312,11 +312,11 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
   const showImagePlaceholder = gallerySources.length === 0 || mainImageFailed;
 
   return (
-    <section className="py-10">
+    <section className="bg-[#F7F8FB] py-6 sm:py-10">
       <div className="mx-auto max-w-[1170px] px-4 sm:px-8 xl:px-0">
-        <div className="grid gap-10 lg:grid-cols-[570px_1fr]">
-          <div>
-            <div className="flex min-h-[min(520px,72vh)] items-center justify-center overflow-hidden rounded-lg bg-neutral-100 p-4 sm:p-6 lg:p-8">
+        <div className="grid gap-7 lg:grid-cols-[minmax(0,640px)_minmax(360px,1fr)] lg:gap-10">
+          <div className="min-w-0">
+            <div className="flex min-h-[min(680px,78vh)] items-center justify-center overflow-hidden rounded-[1.35rem] bg-white p-2 shadow-sm ring-1 ring-neutral-200 sm:p-4 lg:p-5">
               {showImagePlaceholder ?
                 <div className="w-full max-w-full">
                   <ProductImagePlaceholder label={t("productImageUnavailable")} />
@@ -324,7 +324,7 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
               : <img
                   src={activeImageSrc}
                   alt={displayTitle}
-                  className="max-h-[min(560px,68vh)] w-full max-w-full object-contain object-center"
+                  className="max-h-[min(660px,74vh)] w-full max-w-full rounded-2xl object-contain object-center"
                   loading="eager"
                   decoding="async"
                   fetchPriority="high"
@@ -335,7 +335,7 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
             </div>
             {gallerySources.length > 1 ?
               <nav
-                className="mt-5 -mx-1 flex gap-3 overflow-x-auto pb-1 [scrollbar-gutter:stable] sm:mx-0 sm:flex-wrap sm:overflow-visible"
+                className="mt-4 -mx-1 flex gap-3 overflow-x-auto pb-2 [scrollbar-gutter:stable] sm:mx-0"
                 aria-label={t("productGalleryThumbnails")}
               >
                 {gallerySources.map((img, i) => {
@@ -352,16 +352,16 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
                         setActiveImageIndex(i);
                         setMainImageFailed(false);
                       }}
-                      className={`flex h-20 w-20 shrink-0 items-center justify-center rounded-md border bg-neutral-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                      className={`flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl border bg-white p-1 shadow-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D48] sm:h-24 sm:w-24 ${
                         selected
-                          ? "border-blue-600 ring-1 ring-blue-600"
+                          ? "border-[#E11D48] ring-2 ring-[#E11D48]/20"
                           : "border-neutral-200 hover:border-neutral-300"
                       }`}
                     >
                       <img
                         src={img}
                         alt=""
-                        className="max-h-14 max-w-14 object-contain"
+                        className="h-full w-full rounded-xl object-cover object-center"
                         loading="lazy"
                         decoding="async"
                       />
@@ -371,8 +371,8 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
               </nav>
             : null}
           </div>
-          <div>
-              <h1 className="text-3xl font-semibold text-neutral-900">{displayTitle}</h1>
+          <div className="min-w-0 rounded-[1.35rem] bg-white p-5 shadow-sm ring-1 ring-neutral-200 sm:p-6 lg:p-7">
+              <h1 className="text-2xl font-black tracking-tight text-neutral-950 sm:text-3xl">{displayTitle}</h1>
             <div className="mt-3 flex flex-wrap items-center gap-3">
               {reviewStats && reviewStats.count > 0 ?
                 <>
@@ -384,14 +384,14 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
               : <span className="text-sm text-neutral-600">{reviewSummaryText}</span>}
             </div>
             <div className="mt-3 flex items-center gap-2">
-              <span className="text-2xl font-semibold text-neutral-900">
+              <span className="text-3xl font-black text-[#E11D48]">
                 ${product.discountedPrice}
               </span>
               {showStrikethroughOriginalPrice(product) ?
                 <span className="text-neutral-500 line-through">${product.price}</span>
               : null}
             </div>
-            <p className="mt-5 text-neutral-600">{description}</p>
+            <p className="mt-5 leading-7 text-neutral-600">{description}</p>
             {mongoId && apiProduct ?
               <ShopDetailsApiSpecs apiProduct={apiProduct} t={t} />
             : null}
@@ -418,10 +418,10 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
               </p>
             : null}
 
-            <div className="mt-6 flex items-center gap-3">
+            <div className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-neutral-200 bg-neutral-50 p-1">
               <button
                 onClick={() => setQty((v) => Math.max(1, v - 1))}
-                className="h-10 w-10 rounded border border-neutral-300 text-lg leading-none text-neutral-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                className="h-10 w-10 rounded-xl bg-white text-lg leading-none text-neutral-800 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D48]"
                 type="button"
                 aria-label={t("productQuantityDecrease")}
               >
@@ -432,7 +432,7 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
               </span>
               <button
                 onClick={() => setQty((v) => v + 1)}
-                className="h-10 w-10 rounded border border-neutral-300 text-lg leading-none text-neutral-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                className="h-10 w-10 rounded-xl bg-white text-lg leading-none text-neutral-800 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D48]"
                 type="button"
                 aria-label={t("productQuantityIncrease")}
               >
@@ -440,7 +440,7 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
               </button>
             </div>
 
-            <div className="mt-7 flex gap-3">
+            <div className="mt-7 grid gap-3 sm:grid-cols-[1fr_auto]">
               <button
                 onClick={() => {
                   setVariantError(null);
@@ -492,14 +492,14 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
                     selectedColorName: colorOpt?.label,
                   });
                 }}
-                className="rounded-md bg-blue-600 px-7 py-3 text-white shadow-sm transition duration-200 ease-out hover:-translate-y-px hover:bg-blue-700 hover:shadow-md active:translate-y-0 active:shadow-sm"
+                className="rounded-2xl bg-[#E11D48] px-7 py-3.5 font-bold text-white shadow-[0_18px_40px_-24px_rgba(225,29,72,1)] transition duration-200 ease-out hover:-translate-y-px hover:bg-[#BE123C] hover:shadow-md active:translate-y-0 active:shadow-sm"
                 type="button"
               >
                 {t("productPurchaseNow")}
               </button>
               <button
                 onClick={() => addWishlistItem(product)}
-                className="rounded-md border border-neutral-300 px-5 py-3 hover:bg-neutral-50"
+                className="rounded-2xl border border-neutral-300 px-5 py-3.5 font-bold hover:bg-neutral-50"
                 type="button"
               >
                 {t("productDetailAddWishlist")}
