@@ -30,6 +30,7 @@
     "sellerAuthPasswordMismatch": "Пароли не совпадают.",
     "sellerAuthSigningIn": "Вход…",
     "sellerAuthSignInSubmit": "Войти",
+    "sellerAuthContinueWith": "Или продолжить через",
     "sellerAuthCreatingAccount": "Создание аккаунта…",
     "sellerAuthSignUpSubmit": "Создать аккаунт продавца",
     "sellerAuthNoAccount": "Нет аккаунта продавца?",

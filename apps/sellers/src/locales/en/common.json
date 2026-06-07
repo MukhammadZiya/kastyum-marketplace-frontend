@@ -31,6 +31,7 @@
     "sellerAuthPasswordMismatch": "Passwords do not match.",
     "sellerAuthSigningIn": "Signing in…",
     "sellerAuthSignInSubmit": "Sign in",
+    "sellerAuthContinueWith": "Or continue with",
     "sellerAuthCreatingAccount": "Creating account…",
     "sellerAuthSignUpSubmit": "Create seller account",
     "sellerAuthNoAccount": "New to seller portal?",
