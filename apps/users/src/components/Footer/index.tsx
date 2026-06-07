@@ -1,381 +1,135 @@
+import { Link } from "react-router-dom";
+import { HeartHandshake, Mail, MapPin, Phone, RotateCcw, ShieldCheck, Truck } from "lucide-react";
 import { useT } from "../../i18n";
+
+const footerStats = [
+  { value: "24/7", labelKey: "footerStatStyleSupport" },
+  { value: "30", labelKey: "footerStatReturnDays" },
+  { value: "100%", labelKey: "footerStatSecureCheckout" },
+  { value: "iB", labelKey: "footerStatLocalMarketplace" },
+];
 
 export default function Footer() {
   const t = useT();
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-16 overflow-hidden border-t border-neutral-200 bg-neutral-100 sm:mt-20 xl:mt-24">
-      <div className="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0">
-        <div className="flex flex-wrap xl:flex-nowrap gap-10 xl:gap-[76px] xl:justify-between pt-[70px] xl:pt-[90px] pb-10 xl:pb-[60px]">
-          <div className="max-w-[330px] w-full">
-            <h2 className="mb-[30px] text-[20px] font-medium text-neutral-900">
-              {t("footerHelpTitle")}
-            </h2>
+    <footer className="mt-14 border-t border-neutral-200 bg-white sm:mt-18 xl:mt-20">
+      <div className="mx-auto max-w-[1170px] px-4 sm:px-8 xl:px-0">
+        <div className="-mt-8 grid gap-3 rounded-3xl border border-neutral-200 bg-white p-4 shadow-[0_22px_90px_-64px_rgba(15,23,42,0.75)] sm:grid-cols-2 lg:grid-cols-4">
+          {footerStats.map((item) => (
+            <div key={item.labelKey} className="rounded-2xl bg-[#FAFAFA] px-5 py-4">
+              <p className="text-2xl font-black tracking-tight text-neutral-950">
+                {item.value}
+              </p>
+              <p className="mt-1 text-sm font-bold text-neutral-500">
+                {t(item.labelKey)}
+              </p>
+            </div>
+          ))}
+        </div>
 
-            <ul className="flex flex-col gap-3">
-              <li className="flex gap-[18px]">
-                <span className="flex-shrink-0">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M4.25 8.51464C4.25 4.45264 7.77146 1.25 12 1.25C16.2285 1.25 19.75 4.45264 19.75 8.51464C19.75 12.3258 17.3871 16.8 13.5748 18.4292C12.574 18.8569 11.426 18.8569 10.4252 18.4292C6.61289 16.8 4.25 12.3258 4.25 8.51464Z"
-                      fill="#3C50E0"
-                    />
-                  </svg>
-                </span>
+        <div className="grid gap-10 py-12 lg:grid-cols-[1.25fr_0.8fr_0.8fr_1fr] lg:py-16">
+          <div>
+            <Link to="/" className="inline-flex items-center gap-3">
+              <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#E11D48] text-2xl font-black text-white">
+                iB
+              </span>
+              <span className="text-3xl font-black tracking-tight text-neutral-950">
+                iBerry
+              </span>
+            </Link>
+            <p className="mt-5 max-w-sm text-sm leading-6 text-neutral-600">
+              {t("footerLead")}
+            </p>
+
+            <div className="mt-6 grid gap-3 text-sm font-semibold text-neutral-700">
+              <a href="#" className="flex items-center gap-3 transition hover:text-[#BE123C]">
+                <MapPin className="h-5 w-5 text-[#E11D48]" strokeWidth={2.1} />
                 {t("footerAddressLine")}
-              </li>
-
-              <li>
-                <a href="#" className="flex items-center gap-[18px]">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M4.7177 3.0919C5.94388 1.80096 7.9721 2.04283 8.98569 3.47641L10.2467 5.25989C11.0574 6.40656 10.9889 8.00073 10.0214 9.0194L9.7765 9.27719C9.77582 9.27897 9.7751 9.2809 9.77436 9.28299C9.76142 9.31935 9.7287 9.43513 9.7609 9.65489C9.82765 10.1104 10.1793 11.0361 11.607 12.5392C13.0391 14.0469 13.9078 14.4023 14.3103 14.4677C14.484 14.4959 14.5748 14.4714 14.6038 14.4612L15.0124 14.031C15.8862 13.111 17.2485 12.9298 18.347 13.5621L20.2575 14.6617C21.8904 15.6016 22.2705 17.9008 20.9655 19.2747L19.545 20.7703C19.1016 21.2371 18.497 21.6355 17.75 21.7092C15.9261 21.8893 11.701 21.6548 7.27161 16.9915C3.13844 12.64 2.35326 8.85513 2.25401 7.00591C2.20497 6.09224 2.61224 5.30855 3.1481 4.7444L4.7177 3.0919Z"
-                      fill="#3C50E0"
-                    />
-                  </svg>
-                  {t("footerPhoneDisplay")}
-                </a>
-              </li>
-
-              <li>
-                <a href="#" className="flex items-center gap-[18px]">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M9.94358 3.25H14.0564C15.8942 3.24998 17.3498 3.24997 18.489 3.40314C19.6614 3.56076 20.6104 3.89288 21.3588 4.64124C22.1071 5.38961 22.4392 6.33856 22.5969 7.51098C22.75 8.65019 22.75 10.1058 22.75 11.9436V12.0564C22.75 13.8942 22.75 15.3498 22.5969 16.489C22.4392 17.6614 22.1071 18.6104 21.3588 19.3588C20.6104 20.1071 19.6614 20.4392 18.489 20.5969C17.3498 20.75 15.8942 20.75 14.0564 20.75H9.94359C8.10583 20.75 6.65019 20.75 5.51098 20.5969C4.33856 20.4392 3.38961 20.1071 2.64124 19.3588C1.89288 18.6104 1.56076 17.6614 1.40314 16.489C1.24997 15.3498 1.24998 13.8942 1.25 12.0564V11.9436C1.24998 10.1058 1.24997 8.65019 1.40314 7.51098C1.56076 6.33856 1.89288 5.38961 2.64124 4.64124C3.38961 3.89288 4.33856 3.56076 5.51098 3.40314C6.65019 3.24997 8.10582 3.24998 9.94358 3.25Z"
-                      fill="#3C50E0"
-                    />
-                  </svg>
-                  {t("footerEmailDisplay")}
-                </a>
-              </li>
-            </ul>
-
-            <div className="flex items-center gap-4 mt-[30px]">
-              <a href="#" aria-label="Facebook" className="flex ease-out duration-200 hover:text-blue-600">
-                <svg className="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M8.99984 0.666504C7.48706 0.666504 6.09165 1.04648 4.81361 1.80644C3.53557 2.54019 2.51836 3.5491 1.76197 4.83317C1.03166 6.11724 0.666504 7.51923 0.666504 9.03915C0.666504 10.428 0.966452 11.7252 1.56635 12.9307C2.19233 14.1099 3.04 15.0926 4.10938 15.8788C5.17876 16.6649 6.37855 17.1497 7.70876 17.3332V11.4763H5.59608V9.03915H7.70876V7.19166C7.70876 6.16965 7.98262 5.37038 8.53035 4.79386C9.10417 4.21734 9.8736 3.92908 10.8386 3.92908C11.4646 3.92908 12.0906 3.98149 12.7166 4.08632V6.16965H11.6602C11.1908 6.16965 10.8386 6.30068 10.6039 6.56273C10.3952 6.79858 10.2909 7.09994 10.2909 7.46682V9.03915H12.6383L12.2471 11.4763H10.2909V17.3332C11.6472 17.1235 12.86 16.6256 13.9294 15.8395C14.9988 15.0533 15.8334 14.0706 16.4333 12.8913C17.0332 11.6859 17.3332 10.4018 17.3332 9.03915C17.3332 7.51923 16.955 6.11724 16.1986 4.83317C15.4683 3.5491 14.4641 2.54019 13.1861 1.80644C11.908 1.04648 10.5126 0.666504 8.99984 0.666504Z" fill="" />
-                </svg>
               </a>
-              <a href="#" aria-label="Instagram" className="flex ease-out duration-200 hover:text-blue-600">
-                <svg className="fill-current" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M7.75 2C4.57436 2 2 4.57436 2 7.75V16.25C2 19.4256 4.57436 22 7.75 22H16.25C19.4256 22 22 19.4256 22 16.25V7.75C22 4.57436 19.4256 2 16.25 2H7.75ZM7.75 3.5H16.25C18.5972 3.5 20.5 5.40279 20.5 7.75V16.25C20.5 18.5972 18.5972 20.5 16.25 20.5H7.75C5.40279 20.5 3.5 18.5972 3.5 16.25V7.75C3.5 5.40279 5.40279 3.5 7.75 3.5Z" fill="" />
-                  <path d="M12 7C9.23858 7 7 9.23858 7 12C7 14.7614 9.23858 17 12 17C14.7614 17 17 14.7614 17 12C17 9.23858 14.7614 7 12 7ZM12 8.5C13.933 8.5 15.5 10.067 15.5 12C15.5 13.933 13.933 15.5 12 15.5C10.067 15.5 8.5 13.933 8.5 12C8.5 10.067 10.067 8.5 12 8.5Z" fill="" />
-                  <path d="M17.875 6.125C17.3918 6.125 17 6.51675 17 7C17 7.48325 17.3918 7.875 17.875 7.875C18.3582 7.875 18.75 7.48325 18.75 7C18.75 6.51675 18.3582 6.125 17.875 6.125Z" fill="" />
-                </svg>
+              <a href="#" className="flex items-center gap-3 transition hover:text-[#BE123C]">
+                <Phone className="h-5 w-5 text-[#E11D48]" strokeWidth={2.1} />
+                {t("footerPhoneDisplay")}
               </a>
-              <a href="#" aria-label="Twitter" className="flex ease-out duration-200 hover:text-blue-600">
-                <svg className="fill-current" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M18.901 2H22.581L14.541 11.188L24 22H16.594L10.794 15.438L5.181 22H1.5L10.1 11.943L1 2H8.594L13.837 8.056L18.901 2ZM17.61 19.716H19.651L7.483 4.16H5.292L17.61 19.716Z" fill="" />
-                </svg>
-              </a>
-              <a href="#" aria-label="LinkedIn" className="flex ease-out duration-200 hover:text-blue-600">
-                <svg className="fill-current" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6.94 8.5H3V21H6.94V8.5Z" fill="" />
-                  <path d="M5 3C3.9 3 3 3.9 3 5C3 6.1 3.9 7 5 7C6.1 7 7 6.1 7 5C7 3.9 6.1 3 5 3Z" fill="" />
-                  <path d="M21 13.3C21 9.9 19.2 8.3 16.8 8.3C14.9 8.3 14 9.3 13.5 10V8.5H9.72V21H13.66V14.8C13.66 13.2 13.96 11.7 15.94 11.7C17.89 11.7 17.92 13.5 17.92 14.9V21H21V13.3Z" fill="" />
-                </svg>
+              <a href="#" className="flex items-center gap-3 transition hover:text-[#BE123C]">
+                <Mail className="h-5 w-5 text-[#E11D48]" strokeWidth={2.1} />
+                {t("footerEmailDisplay")}
               </a>
             </div>
           </div>
 
-          <div className="w-full sm:w-auto">
-            <h2 className="mb-[30px] text-[20px] font-medium text-neutral-900">
+          <div>
+            <h2 className="text-[12px] font-black uppercase tracking-[0.16em] text-neutral-400">
               {t("footerAccountTitle")}
             </h2>
-            <ul className="flex flex-col gap-[14px]">
+            <ul className="mt-5 grid gap-3 text-sm font-bold text-neutral-700">
               <li>
-                <a className="ease-out duration-200 hover:text-blue-600" href="#">
+                <Link className="transition hover:text-[#BE123C]" to="/my-account">
                   {t("footerLinkMyAccount")}
-                </a>
+                </Link>
               </li>
               <li>
-                <a className="ease-out duration-200 hover:text-blue-600" href="#">
+                <Link className="transition hover:text-[#BE123C]" to="/signin">
                   {t("footerLinkLoginRegister")}
-                </a>
+                </Link>
               </li>
               <li>
-                <a className="ease-out duration-200 hover:text-blue-600" href="#">
+                <Link className="transition hover:text-[#BE123C]" to="/cart">
                   {t("footerLinkCart")}
-                </a>
+                </Link>
               </li>
-              {/* Wishlist link hidden for now — restore when ready */}
-              {/* <li>
-                <a className="ease-out duration-200 hover:text-blue-600" href="#">
-                  {t("footerLinkWishlist")}
-                </a>
-              </li> */}
               <li>
-                <a className="ease-out duration-200 hover:text-blue-600" href="/shop-with-sidebar">
+                <Link className="transition hover:text-[#BE123C]" to="/shop-with-sidebar">
                   {t("footerLinkShopCollection")}
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
 
-          <div className="w-full sm:w-auto">
-            <h2 className="mb-[30px] text-[20px] font-medium text-neutral-900">
+          <div>
+            <h2 className="text-[12px] font-black uppercase tracking-[0.16em] text-neutral-400">
               {t("footerQuickLinksTitle")}
             </h2>
-            <ul className="flex flex-col gap-3">
-              <li>
-                <a className="ease-out duration-200 hover:text-blue-600" href="#">
-                  {t("footerLinkPrivacy")}
-                </a>
-              </li>
-              <li>
-                <a className="ease-out duration-200 hover:text-blue-600" href="#">
-                  {t("footerLinkRefund")}
-                </a>
-              </li>
-              <li>
-                <a className="ease-out duration-200 hover:text-blue-600" href="#">
-                  {t("footerLinkTerms")}
-                </a>
-              </li>
-              <li>
-                <a className="ease-out duration-200 hover:text-blue-600" href="#">
-                  {t("footerLinkFaq")}
-                </a>
-              </li>
-              <li>
-                <a className="ease-out duration-200 hover:text-blue-600" href="#">
-                  {t("footerLinkContact")}
-                </a>
-              </li>
+            <ul className="mt-5 grid gap-3 text-sm font-bold text-neutral-700">
+              <li><a className="transition hover:text-[#BE123C]" href="#">{t("footerLinkPrivacy")}</a></li>
+              <li><a className="transition hover:text-[#BE123C]" href="#">{t("footerLinkRefund")}</a></li>
+              <li><a className="transition hover:text-[#BE123C]" href="#">{t("footerLinkTerms")}</a></li>
+              <li><a className="transition hover:text-[#BE123C]" href="#">{t("footerLinkFaq")}</a></li>
+              <li><a className="transition hover:text-[#BE123C]" href="#">{t("footerLinkContact")}</a></li>
             </ul>
           </div>
 
-          <div className="w-full sm:w-auto">
-            <h2 className="mb-[30px] text-[20px] font-medium text-neutral-900 lg:text-right">
-              {t("footerDownloadAppTitle")}
+          <div>
+            <h2 className="text-[12px] font-black uppercase tracking-[0.16em] text-neutral-400">
+              {t("footerCareTitle")}
             </h2>
-
-            <p className="lg:text-right text-[14px] mb-4">
-              {t("footerDownloadAppPromo")}
-            </p>
-
-            <ul className="flex flex-col lg:items-end gap-3">
-              <li>
-                <a
-                  className="inline-flex items-center gap-3 py-[9px] pl-4 pr-[30px] text-white rounded-md bg-neutral-900 ease-out duration-200 hover:bg-opacity-95"
-                  href="#"
-                >
-                  <span className="block leading-none" aria-hidden="true">
-                    <svg
-                      width="15"
-                      height="18"
-                      viewBox="0 0 15 18"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M10.0224 2.88179C10.5544 2.2625 10.9193 1.4045 10.8344 0.54187C10.0597 0.574063 9.10798 1.06053 8.56243 1.67979C8.06935 2.23289 7.63781 3.10445 7.73539 3.94967C8.60168 4.01907 9.49031 3.5054 10.0224 2.88179ZM10.8212 9.52318C10.8257 7.1837 12.7415 6.06714 12.8286 6.0135C11.7567 4.44341 10.0818 4.23004 9.49628 4.21214C8.09902 4.06454 6.74615 5.048 6.03559 5.048C5.30712 5.048 4.20519 4.23004 3.02742 4.25239C1.50753 4.27475 0.0871369 5.15149 -0.690445 6.51493C-2.29853 9.30731 -1.09618 13.4167 0.442616 15.6652C1.21125 16.7683 2.10901 17.9999 3.28231 17.9552C4.42902 17.906 4.85758 17.222 6.24127 17.222C7.61161 17.222 8.01387 17.9552 9.20962 17.9283C10.442 17.906 11.2189 16.8253 11.9604 15.7133C12.8414 14.4496 13.1967 13.2058 13.2104 13.1432C13.183 13.1342 10.8212 12.2304 10.8212 9.52318Z"
-                        fill="white"
-                      />
-                    </svg>
-                  </span>
-                  <div>
-                    <span className="block text-[11px]">{t("footerAppStoreLine1")}</span>
-                    <p className="font-medium">{t("footerAppStoreLine2")}</p>
-                  </div>
-                </a>
-              </li>
-
-              <li>
-                <a
-                  className="inline-flex items-center gap-3 py-[9px] pl-4 pr-[34px] text-white rounded-md bg-blue-600 ease-out duration-200 hover:bg-opacity-95"
-                  href="#"
-                >
-                  <span className="block leading-none" aria-hidden="true">
-                    <svg
-                      width="14"
-                      height="16"
-                      viewBox="0 0 14 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M12.2646 6.5312L2.30689 0.786055C1.78855 0.490086 1.15979 0.485565 0.636931 0.77699C0.109548 1.06841 -0.199982 1.617 0.00014645 2.18821V13.6814C-0.204527 14.2526 0.104998 14.8056 0.636931 15.0925C1.16433 15.3839 1.78855 15.3794 2.30689 15.0834L12.2646 9.33829C12.7875 9.04687 13.1059 8.49828 13.1059 7.9345C13.1059 7.37072 12.7875 6.818 12.2646 6.5312Z"
-                        fill="white"
-                      />
-                    </svg>
-                  </span>
-                  <div>
-                    <span className="block text-[11px]">{t("footerGooglePlayLine1")}</span>
-                    <p className="font-medium">{t("footerGooglePlayLine2")}</p>
-                  </div>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div className="py-5 xl:py-[30px]">
-        <div className="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0">
-          <div className="flex gap-5 flex-wrap items-center justify-between">
-            <p className="text-neutral-900 font-medium">
-              &copy; {year} {t("footerCopyright")}
-            </p>
-
-            <div className="flex flex-wrap items-center gap-4">
-              <p className="font-medium">{t("footerWeAccept")}</p>
-
-              <div className="flex flex-wrap items-center gap-6">
-                <a href="#" aria-label="payment system with visa card">
-                  <svg
-                    width="66"
-                    height="22"
-                    viewBox="0 0 66 22"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-label="visa card"
-                  >
-                    <g clipPath="url(#clip0_317_544)">
-                      <path
-                        d="M18.9469 0.378937L14.0208 15.5261L13.0888 11.2657C11.6745 7.57849 9.17467 4.40728 5.91968 2.1712L10.641 21.6301H16.325L24.2827 0.409661H18.9469V0.378937ZM61.3776 0.378937H55.6935L46.978 21.5891H52.2831L53.4199 18.5167H60.2408L60.9986 21.5891H65.5458L61.3776 0.378937ZM54.5567 14.7683L57.6291 6.82086L59.1449 14.7683H54.5567ZM39.3992 6.43169C39.3992 5.30512 40.1571 4.15806 42.8097 4.15806C44.1921 4.28894 45.5077 4.81516 46.599 5.67381L47.7358 1.13681C46.17 0.481579 44.5042 0.0971718 42.8097 0C37.1256 0 34.4731 3.07246 34.4731 6.44192C34.4731 13.2525 42.0518 12.126 42.0518 15.5261C42.0518 16.284 41.6728 17.4208 38.6414 17.4208C36.8128 17.4187 35.0052 17.0314 33.3362 16.284L32.5783 20.8313C34.3492 21.6766 36.3027 22.0673 38.2624 21.9681C41.6728 22.347 46.978 19.3156 46.978 14.799C46.978 9.46315 39.3992 9.09451 39.3992 6.43169Z"
-                        fill="#1565C0"
-                      />
-                      <path
-                        d="M23.4939 21.9681H28.799L32.2095 0.757812H26.5254L23.4939 21.9681Z"
-                        fill="#1565C0"
-                      />
-                      <path
-                        d="M13.314 12.116L11.3681 2.65278C11.0988 2.07003 10.6637 1.57955 10.1173 1.24258C9.57088 0.905612 8.93728 0.737107 8.29561 0.758095H0C0 0.758095 10.9891 4.16853 13.314 12.116Z"
-                        fill="#FF9800"
-                      />
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_317_544">
-                        <rect width="66" height="22" fill="white" />
-                      </clipPath>
-                    </defs>
-                  </svg>
-                </a>
-                <a href="#" aria-label="payment system with paypal">
-                  <svg
-                    width="21"
-                    height="24"
-                    viewBox="0 0 21 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-label="paypal"
-                  >
-                    <path
-                      d="M5.77879 23.184L6.19845 20.544H5.26244H0.846436L3.91845 1.03192C3.92668 0.971508 3.95685 0.916033 4.00279 0.875919C4.05079 0.838685 4.10976 0.817632 4.17079 0.815918H11.6225C14.1068 0.815918 15.8108 1.33192 16.7105 2.35192C17.1089 2.77981 17.3866 3.30582 17.5148 3.87565C17.6547 4.5689 17.6547 5.28274 17.5148 5.97599V6.576L17.9345 6.816C18.2547 6.97508 18.5434 7.1904 18.7868 7.45165C19.1537 7.89463 19.3902 8.43086 19.4705 9C19.561 9.744 19.5281 10.4983 19.3745 11.232C19.2167 12.1234 18.9041 12.9799 18.4508 13.7637C18.0846 14.3925 17.5895 14.9362 16.9985 15.36C16.4039 15.766 15.7415 16.0622 15.0428 16.2357C14.2583 16.4338 13.4519 16.5305 12.6428 16.5237H12.0545C11.6423 16.5244 11.2433 16.6684 10.9265 16.9317C10.6083 17.2005 10.3991 17.5762 10.3388 17.9877V18.2277L9.60645 22.8837V23.064C9.61537 23.0956 9.61537 23.1285 9.60645 23.16H9.53446L5.77879 23.184Z"
-                      fill="#253D80"
-                    />
-                    <path
-                      d="M18.331 6.09619L18.259 6.54053C17.275 11.5805 13.9034 13.3325 9.60737 13.3325H7.42337C6.89743 13.3319 6.44966 13.7131 6.36738 14.2322L5.25103 21.3362L4.92737 23.3522C4.90268 23.514 4.94931 23.6779 5.0556 23.802C5.1612 23.9262 5.31618 23.9988 5.47938 24.0002H9.36738C9.82818 24.0002 10.2204 23.6635 10.291 23.2082V23.0162L11.0234 18.3726V18.1202C11.0885 17.6669 11.4766 17.3296 11.9354 17.3282H12.571C16.3274 17.3282 19.2794 15.8045 20.131 11.3282C20.5918 9.79837 20.308 8.14099 19.363 6.85253C19.0634 6.54465 18.7144 6.28956 18.331 6.09619Z"
-                      fill="#189BD7"
-                    />
-                    <path
-                      d="M17.2989 5.68791L16.8429 5.56791L16.3389 5.47191C15.7033 5.37659 15.0615 5.3327 14.4189 5.33956H8.56293C8.42579 5.33613 8.2907 5.36493 8.16659 5.42391C7.88887 5.55419 7.69481 5.81545 7.65093 6.11991L6.45093 14.0036V14.2319C6.53321 13.7128 6.98168 13.3309 7.50693 13.3316H9.69094C13.9869 13.3316 17.3586 11.5796 18.3426 6.53956L18.4146 6.09591C18.1568 5.96219 17.8873 5.84973 17.6109 5.7599L17.2989 5.68791Z"
-                      fill="#242E65"
-                    />
-                    <path
-                      d="M7.65094 6.12001C7.69483 5.81623 7.88889 5.55429 8.16729 5.42401C8.29072 5.36503 8.42649 5.33623 8.56295 5.33966H14.419C15.0615 5.3328 15.7033 5.37669 16.3389 5.472L16.843 5.568L17.299 5.68801L17.5273 5.76C17.8036 5.84983 18.0724 5.96229 18.331 6.09601C18.7211 4.59703 18.3639 3.00144 17.371 1.812C16.171 0.539998 14.2029 7.47343e-07 11.6349 7.47343e-07H4.17094C3.64568 -0.000616396 3.19792 0.381053 3.11495 0.900002L0.00727756 20.592C-0.0208368 20.7779 0.0333371 20.9664 0.155394 21.1091C0.277452 21.2517 0.455051 21.3347 0.642937 21.336H5.25094L6.45094 14.0044L7.65094 6.12001Z"
-                      fill="#253D80"
-                    />
-                  </svg>
-                </a>
-                <a href="#" aria-label="payment system with master card">
-                  <svg
-                    width="33"
-                    height="24"
-                    viewBox="0 0 33 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-label="master card"
-                  >
-                    <g clipPath="url(#clip0_317_537)">
-                      <path d="M31.1002 23.67V23.7349H31.1552H31.1852C31.1874 23.7312 31.1886 23.7268 31.1886 23.7225C31.1886 23.7181 31.1874 23.7138 31.1852 23.71H31.1552L31.1002 23.67ZM31.1552 23.6299C31.1663 23.6253 31.1782 23.6229 31.1902 23.6229C31.2022 23.6229 31.2141 23.6253 31.2253 23.6299C31.2292 23.6386 31.2313 23.6479 31.2313 23.6575C31.2313 23.667 31.2292 23.6764 31.2253 23.685C31.2284 23.692 31.2301 23.6997 31.2301 23.7075C31.2301 23.7152 31.2284 23.7229 31.2253 23.73C31.2075 23.7364 31.188 23.7364 31.1702 23.73L31.2452 23.815H31.1852L31.1152 23.73V23.815H31.0652V23.5849L31.1552 23.6299ZM31.1552 23.94C31.1797 23.947 31.2057 23.947 31.2302 23.94C31.2546 23.9316 31.2768 23.9179 31.2952 23.8999C31.3113 23.882 31.3249 23.8618 31.3352 23.8399C31.355 23.7902 31.355 23.7347 31.3352 23.685C31.3249 23.6632 31.3113 23.6429 31.2952 23.625C31.2769 23.6056 31.2548 23.5903 31.2302 23.58H31.1552H31.0802C31.0556 23.5903 31.0335 23.6056 31.0152 23.625C30.9884 23.653 30.9703 23.6884 30.9632 23.7265C30.9562 23.7647 30.9603 23.8041 30.9752 23.8399C30.9844 23.8624 30.998 23.8828 31.0152 23.8999C31.0335 23.9194 31.0556 23.9347 31.0802 23.9449C31.105 23.9497 31.1305 23.9497 31.1552 23.9449V23.94ZM31.1552 23.4949C31.2228 23.4951 31.2875 23.5221 31.3352 23.5699C31.3596 23.592 31.3784 23.6194 31.3902 23.65C31.4052 23.6803 31.413 23.7136 31.413 23.7475C31.413 23.7813 31.4052 23.8147 31.3902 23.845C31.3795 23.8762 31.3605 23.9038 31.3352 23.925C31.3128 23.9488 31.2855 23.9675 31.2552 23.98C31.2235 23.9932 31.1896 24 31.1552 24C31.1209 24 31.0869 23.9932 31.0552 23.98C31.024 23.9664 30.9954 23.9478 30.9702 23.925C30.9489 23.9014 30.9321 23.8744 30.9202 23.845C30.9052 23.8147 30.8974 23.7813 30.8974 23.7475C30.8974 23.7136 30.9052 23.6803 30.9202 23.65C30.9468 23.5897 30.995 23.5416 31.0552 23.515C31.0882 23.5075 31.1223 23.5075 31.1552 23.515V23.4949Z" fill="#231F20"/>
-                      <path d="M31.4103 15.4399V15.0698H31.3154L31.2053 15.3248L31.0953 15.0698H30.9953V15.4399H31.0653V15.1649L31.1703 15.4048H31.2404L31.3454 15.1598V15.4399H31.4103ZM30.8003 15.4399V15.1348H30.9254V15.0698H30.6104V15.1348H30.7304V15.4399H30.8003Z" fill="#F79410"/>
-                      <path d="M20.4555 17.0298H12.1155V2.02979H20.4555V17.0298Z" fill="#FF5F00"/>
-                      <path d="M12.6453 9.53491C12.6427 8.09109 12.9691 6.66574 13.5998 5.36704C14.2305 4.06833 15.149 2.93046 16.2854 2.03989C14.8784 0.935421 13.1893 0.248943 11.4107 0.0588757C9.63226 -0.131191 7.83616 0.182817 6.22765 0.965031C4.61913 1.74724 3.26306 2.96611 2.31435 4.4824C1.36564 5.99869 0.862549 7.75126 0.862549 9.53986C0.862549 11.3285 1.36564 13.0811 2.31435 14.5973C3.26306 16.1137 4.61913 17.3325 6.22765 18.1148C7.83616 18.8969 9.63226 19.211 11.4107 19.0209C13.1893 18.8309 14.8784 18.1444 16.2854 17.0399C15.1483 16.1488 14.2295 15.0101 13.5987 13.7105C12.968 12.4109 12.6419 10.9845 12.6453 9.53986" fill="#EB001B"/>
-                      <path d="M31.7104 9.53479C31.7117 11.3242 31.2092 13.0779 30.2604 14.595C29.3116 16.1121 27.9548 17.3315 26.3454 18.1135C24.7359 18.8955 22.9388 19.2087 21.1597 19.017C19.3806 18.8253 17.6914 18.1367 16.2854 17.0298C17.4218 16.1377 18.3406 14.999 18.9724 13.6997C19.6042 12.4005 19.9326 10.9746 19.9326 9.52984C19.9326 8.08504 19.6042 6.6592 18.9724 5.35993C18.3406 4.06066 17.4218 2.92195 16.2854 2.02982C17.6917 0.922687 19.3813 0.233951 21.1609 0.0424842C22.9405 -0.148983 24.738 0.164557 26.3476 0.947204C27.9573 1.72984 29.314 2.94996 30.2624 4.46784C31.2109 5.98571 31.7126 7.73997 31.7104 9.52984" fill="#F79E1B"/>
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_317_537">
-                        <rect width="33" height="24" fill="white"/>
-                      </clipPath>
-                    </defs>
-                  </svg>
-                </a>
-                <a href="#" aria-label="payment system with apple pay">
-                  <svg
-                    width="53"
-                    height="22"
-                    viewBox="0 0 53 22"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-label="apple pay"
-                  >
-                    <g clipPath="url(#clip0_317_534)">
-                      <path d="M7.08082 4.07879C8.07082 4.16239 9.06082 3.57719 9.68122 2.83139V2.82919C10.2906 2.068 10.6932 1.0384 10.5942 0C9.71202 0.0417999 8.63182 0.585199 8.01362 1.3486C7.44162 1.99979 6.95542 3.07339 7.08082 4.07879ZM4.63004 17.7011C5.72564 17.6593 6.15684 16.9818 7.47682 16.9818C8.80562 16.9818 9.19282 17.7011 10.3478 17.6857C11.5446 17.6615 12.2948 16.599 13.0274 15.5078C13.859 14.2692 14.2066 13.0702 14.2242 13.0042C14.2 12.98 11.9142 12.0912 11.8878 9.4116C11.8636 7.1676 13.6962 6.10279 13.7754 6.03679C12.7436 4.47919 11.1354 4.31199 10.5744 4.27019L10.5788 4.27239C9.14222 4.18659 7.91462 5.09959 7.23702 5.09959C6.54404 5.09959 5.50564 4.31199 4.36604 4.33619C2.89204 4.36259 1.52145 5.20959 0.77125 6.55599C-0.77975 9.2598 0.366451 13.255 1.86685 15.4572C2.60164 16.544 3.47504 17.7429 4.63004 17.7011ZM31.382 9.2114H33.6348C33.824 8.206 34.7392 7.5438 35.9954 7.5438C37.5222 7.5438 38.3802 8.2632 38.3802 9.5942V10.4984L35.2628 10.692C32.3676 10.868 30.799 12.0736 30.799 14.1658C30.8078 16.2756 32.4226 17.6814 34.7414 17.6835C36.31 17.6835 37.762 16.8806 38.4198 15.6002H38.4682V17.5604H40.7782V9.438C40.7782 7.0862 38.9214 5.56159 36.068 5.56159C33.4192 5.56159 31.459 7.0994 31.382 9.2114ZM38.389 13.1406C38.389 14.6652 37.1086 15.752 35.419 15.752C34.0902 15.752 33.241 15.0986 33.241 14.1108C33.241 13.079 34.0572 12.4872 35.617 12.3948L38.389 12.2188V13.1406ZM18.8596 1.2386V17.5582H21.3588V11.9812H24.815C27.9742 11.9812 30.1852 9.779 30.1852 6.59779C30.1852 3.41659 28.0094 1.2386 24.8964 1.2386H18.8596ZM27.6464 6.60659C27.6464 8.6658 26.41 9.856 24.2298 9.856H21.3588V3.37479H24.2386C26.4078 3.37479 27.6464 4.54519 27.6464 6.60659Z" fill="black"/>
-                      <path d="M47.3089 15.3562L44.3719 5.72021H41.7649L45.9889 17.6024L45.7579 18.3218C45.3773 19.5428 44.7591 20.0224 43.6547 20.0224C43.4567 20.0224 43.0783 19.9982 42.9199 19.9806V21.9408C43.0695 21.976 43.6899 22.0002 43.8791 22.0002L43.8769 21.9958C46.3101 21.9958 47.4563 21.0498 48.4573 18.1942L52.8375 5.72021H50.2965L47.3595 15.3562H47.3089Z" fill="black"/>
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_317_534">
-                        <rect width="52.9375" height="22" fill="white"/>
-                      </clipPath>
-                    </defs>
-                  </svg>
-                </a>
-                <a href="#" aria-label="payment system with google pay">
-                  <svg
-                    width="57"
-                    height="22"
-                    viewBox="0 0 57 22"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-label="google pay"
-                  >
-                    <g clipPath="url(#clip0_317_527)">
-                      <path d="M26.7852 10.6968V17.1198H24.7495V1.2646H30.1484C31.4507 1.23931 32.7024 1.73241 33.6507 2.64276C34.599 3.48989 35.13 4.71632 35.1047 5.98069C35.13 7.25768 34.599 8.48411 33.6507 9.3439C32.7024 10.2416 31.5392 10.6968 30.161 10.6968H26.7852ZM26.7852 3.21173V8.74962H30.199C30.9576 8.77492 31.6909 8.47153 32.2093 7.92779C33.284 6.89104 33.2967 5.18414 32.2599 4.10943L32.2093 4.05885C31.6909 3.50253 30.9576 3.19909 30.199 3.22437L26.7852 3.21173ZM39.7955 5.91747C41.3001 5.91747 42.4886 6.32207 43.361 7.1186C44.2335 7.92779 44.6634 9.02779 44.6634 10.4312V17.1071H42.7162V15.6026H42.6277C41.7806 16.8416 40.668 17.4611 39.2645 17.4611C38.0759 17.4611 37.0645 17.1071 36.268 16.3991C35.484 15.7416 35.0415 14.7681 35.0668 13.7439C35.0668 12.6186 35.4967 11.7336 36.3438 11.0635C37.1909 10.3934 38.3289 10.0646 39.7449 10.0646C40.9588 10.0646 41.9449 10.2922 42.7289 10.7221V10.2543C42.7289 9.55888 42.4254 8.90136 41.8944 8.45888C41.3507 7.97839 40.6553 7.71287 39.9346 7.71287C38.7967 7.71287 37.899 8.19337 37.2289 9.15429L35.4335 8.02899C36.407 6.62552 37.861 5.91747 39.7955 5.91747ZM37.1656 13.7945C37.1656 14.3255 37.4185 14.8186 37.8357 15.1221C38.2909 15.4761 38.8473 15.6657 39.4162 15.6531C40.276 15.6531 41.0979 15.3117 41.7047 14.7048C42.3748 14.0727 42.7162 13.3267 42.7162 12.4669C42.084 11.9611 41.199 11.7083 40.061 11.7083C39.2392 11.7083 38.5438 11.9106 37.9875 12.3026C37.4438 12.7071 37.1656 13.2002 37.1656 13.7945ZM55.8403 6.2715L49.0381 21.8991H46.9392L49.468 16.437L44.9921 6.28414H47.2047L50.4289 14.0727H50.4794L53.6277 6.28414L55.8403 6.2715Z" fill="#5F6368"/>
-                      <path d="M18.5541 9.3059C18.5541 8.68639 18.5035 8.06682 18.4024 7.45996H9.81738V10.9622H14.7358C14.5334 12.0875 13.876 13.099 12.9151 13.7312V16.007H15.8484C17.5679 14.4266 18.5541 12.0875 18.5541 9.3059Z" fill="#4285F4"/>
-                      <path d="M9.81736 18.2067C12.2702 18.2067 14.3438 17.3975 15.8484 16.0067L12.9151 13.7309C12.0933 14.2872 11.0438 14.6033 9.81736 14.6033C7.4404 14.6033 5.43002 12.9975 4.70934 10.8481H1.6875V13.1999C3.23002 16.2597 6.3783 18.2067 9.81736 18.2067Z" fill="#34A853"/>
-                      <path d="M4.70925 10.8483C4.32993 9.72296 4.32993 8.49653 4.70925 7.35858V5.01953H1.68741C1.04532 6.28512 0.710693 7.68432 0.710693 9.10345C0.710693 10.5226 1.04532 11.9217 1.68741 13.1873L4.70925 10.8483Z" fill="#FBBC04"/>
-                      <path d="M9.81736 3.60351C11.1197 3.57822 12.3714 4.07132 13.307 4.96903L15.899 2.37708C14.2553 0.821903 12.0806 -0.0252254 9.81736 6.19453e-05C6.3783 6.19453e-05 3.23002 1.94719 1.6875 5.01961L4.70934 7.37134C5.43002 5.20926 7.4404 3.60351 9.81736 3.60351Z" fill="#EA4335"/>
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_317_527">
-                        <rect width="56.375" height="22" fill="white"/>
-                      </clipPath>
-                    </defs>
-                  </svg>
-                </a>
+            <div className="mt-5 grid gap-3">
+              <div className="flex items-center gap-3 rounded-2xl bg-[#FAFAFA] p-4">
+                <Truck className="h-5 w-5 text-[#E11D48]" strokeWidth={2.2} />
+                <p className="text-sm font-bold text-neutral-800">{t("footerCareDelivery")}</p>
+              </div>
+              <div className="flex items-center gap-3 rounded-2xl bg-[#FAFAFA] p-4">
+                <RotateCcw className="h-5 w-5 text-[#E11D48]" strokeWidth={2.2} />
+                <p className="text-sm font-bold text-neutral-800">{t("footerCareReturns")}</p>
+              </div>
+              <div className="flex items-center gap-3 rounded-2xl bg-[#FAFAFA] p-4">
+                <ShieldCheck className="h-5 w-5 text-[#E11D48]" strokeWidth={2.2} />
+                <p className="text-sm font-bold text-neutral-800">{t("footerCareCheckout")}</p>
+              </div>
+              <div className="flex items-center gap-3 rounded-2xl bg-[#FAFAFA] p-4">
+                <HeartHandshake className="h-5 w-5 text-[#E11D48]" strokeWidth={2.2} />
+                <p className="text-sm font-bold text-neutral-800">{t("footerCareSellerSupport")}</p>
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-neutral-200 py-5 text-sm font-bold text-neutral-500">
+          <p>&copy; {year} {t("footerCopyright")}</p>
+          <p>{t("footerWeAccept")}</p>
         </div>
       </div>
     </footer>
   );
 }
-

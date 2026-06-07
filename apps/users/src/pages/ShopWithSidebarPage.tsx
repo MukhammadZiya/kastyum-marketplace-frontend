@@ -44,16 +44,16 @@ function FilterCheckbox({ id, label, checked, onChange }: FilterCheckboxProps) {
   return (
     <label
       htmlFor={id}
-      className="flex cursor-pointer items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900"
+      className="group flex cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-neutral-700 transition duration-150 hover:bg-[#FFF7ED] hover:text-[#C2410C]"
     >
+      <span>{label}</span>
       <input
         id={id}
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className="h-4 w-4 rounded border-neutral-300 text-blue-600 focus:ring-blue-500"
+        className="h-4 w-4 shrink-0 rounded border-neutral-300 text-[#F97316] focus:ring-[#FDBA74]"
       />
-      <span>{label}</span>
     </label>
   );
 }
@@ -88,20 +88,22 @@ function ShopFiltersBody({
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-2">
-        <h3 className="font-semibold text-neutral-900">{t("common.filters")}</h3>
+        <h3 className="text-lg font-black tracking-tight text-neutral-950">
+          {t("common.filters")}
+        </h3>
         {activeFilterCount > 0 ? (
           <button
             type="button"
             onClick={onClear}
-            className="text-xs font-medium text-blue-600 hover:text-blue-800"
+            className="rounded-full bg-[#FFF1F2] px-3 py-1 text-xs font-black text-[#BE123C] transition hover:bg-[#FFE4E6]"
           >
             {t("common.clearAll")} ({activeFilterCount})
           </button>
         ) : null}
       </div>
 
-      <fieldset className="space-y-2 border-0 p-0">
-        <legend className="mb-2 text-sm font-medium text-neutral-900">
+      <fieldset className="space-y-2 border-0 border-t border-neutral-100 p-0 pt-5">
+        <legend className="mb-2 text-[12px] font-black uppercase tracking-[0.14em] text-neutral-400">
           {t("shopFilterCategory")}
         </legend>
         <div className="space-y-2">
@@ -117,8 +119,8 @@ function ShopFiltersBody({
         </div>
       </fieldset>
 
-      <fieldset className="space-y-2 border-0 p-0">
-        <legend className="mb-2 text-sm font-medium text-neutral-900">
+      <fieldset className="space-y-2 border-0 border-t border-neutral-100 p-0 pt-5">
+        <legend className="mb-2 text-[12px] font-black uppercase tracking-[0.14em] text-neutral-400">
           {t("shopFilterPrice")}
         </legend>
         <p className="mb-2 text-xs text-neutral-500">{t("shopFilterPriceHint")}</p>
@@ -135,8 +137,8 @@ function ShopFiltersBody({
         </div>
       </fieldset>
 
-      <fieldset className="space-y-2 border-0 p-0">
-        <legend className="mb-2 text-sm font-medium text-neutral-900">
+      <fieldset className="space-y-2 border-0 border-t border-neutral-100 p-0 pt-5">
+        <legend className="mb-2 text-[12px] font-black uppercase tracking-[0.14em] text-neutral-400">
           {t("shopFilterColor")}
         </legend>
         <div className="space-y-2">
@@ -152,8 +154,8 @@ function ShopFiltersBody({
         </div>
       </fieldset>
 
-      <fieldset className="space-y-2 border-0 p-0">
-        <legend className="mb-2 text-sm font-medium text-neutral-900">
+      <fieldset className="space-y-2 border-0 border-t border-neutral-100 p-0 pt-5">
+        <legend className="mb-2 text-[12px] font-black uppercase tracking-[0.14em] text-neutral-400">
           {t("shopFilterSize")}
         </legend>
         <div className="space-y-2">
@@ -338,7 +340,7 @@ export function ShopWithSidebarPage() {
       />
       {hasHeaderSearch ? (
         <div className="mx-auto max-w-[1170px] px-4 sm:px-8 xl:px-0">
-          <div className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border border-blue-100 bg-blue-50/90 px-4 py-3 text-sm text-neutral-700">
+          <div className="mb-4 flex flex-wrap items-center gap-2 rounded-2xl border border-[#FED7AA] bg-[#FFF7ED] px-4 py-3 text-sm text-neutral-700">
             <span className="font-medium text-neutral-900">
               {t("shopSearchFiltersLabel")}
             </span>
@@ -355,20 +357,20 @@ export function ShopWithSidebarPage() {
             <button
               type="button"
               onClick={clearHeaderParams}
-              className="ml-auto text-sm font-medium text-blue-600 hover:text-blue-800"
+              className="ml-auto text-sm font-black text-[#C2410C] hover:text-[#9A3412]"
             >
               {t("shopClearSearchFilters")}
             </button>
           </div>
         </div>
       ) : null}
-      <section className="bg-neutral-100 py-10">
+      <section className="bg-[#F7F7F8] py-8 sm:py-10">
         <div className="mx-auto flex max-w-[1170px] flex-col gap-6 px-4 sm:px-8 xl:flex-row xl:gap-8 xl:px-0">
-          <details className="xl:hidden rounded-lg border border-neutral-200 bg-white [&_summary::-webkit-details-marker]:hidden">
+          <details className="rounded-2xl border border-neutral-200 bg-white shadow-[0_20px_70px_-55px_rgba(15,23,42,0.6)] xl:hidden [&_summary::-webkit-details-marker]:hidden">
             <summary className="flex cursor-pointer list-none items-center justify-between p-4 font-semibold text-neutral-900">
               {t("common.filters")}
               {activeFilterCount > 0 ? (
-                <span className="rounded-full bg-blue-600 px-2 py-0.5 text-xs text-white">
+                <span className="rounded-full bg-[#F97316] px-2 py-0.5 text-xs text-white">
                   {activeFilterCount}
                 </span>
               ) : null}
@@ -378,12 +380,12 @@ export function ShopWithSidebarPage() {
             </div>
           </details>
 
-          <aside className="hidden h-fit w-[270px] shrink-0 rounded-lg border border-neutral-200 bg-white p-5 xl:block">
+          <aside className="hidden h-fit w-[282px] shrink-0 rounded-2xl border border-neutral-200 bg-white p-5 shadow-[0_20px_70px_-55px_rgba(15,23,42,0.75)] xl:block">
             <ShopFiltersBody {...filterBodyProps} />
           </aside>
 
           <div className="min-w-0 flex-1">
-            <div className="mb-6 flex items-center justify-between rounded-lg border border-neutral-200 bg-white p-3">
+            <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-neutral-200 bg-white p-3 shadow-[0_16px_60px_-52px_rgba(15,23,42,0.65)] sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-neutral-600" aria-live="polite">
                 {t("common.showing")}{" "}
                 <span className="font-medium text-neutral-900">{resultTotal}</span>{" "}
@@ -395,17 +397,17 @@ export function ShopWithSidebarPage() {
                   <span className="text-neutral-500"> {t("common.filtered")}</span>
                 ) : null}
               </p>
-              <div className="flex gap-2">
+              <div className="grid grid-cols-2 overflow-hidden rounded-xl bg-neutral-100 p-1 text-sm font-black">
                 <button
                   onClick={() => setView("grid")}
-                  className={`rounded px-3 py-1.5 ${view === "grid" ? "bg-blue-600 text-white" : "bg-neutral-100"}`}
+                  className={`rounded-lg px-3 py-1.5 transition ${view === "grid" ? "bg-neutral-950 text-white shadow-sm" : "text-neutral-600 hover:text-neutral-950"}`}
                   type="button"
                 >
                   {t("common.grid")}
                 </button>
                 <button
                   onClick={() => setView("list")}
-                  className={`rounded px-3 py-1.5 ${view === "list" ? "bg-blue-600 text-white" : "bg-neutral-100"}`}
+                  className={`rounded-lg px-3 py-1.5 transition ${view === "list" ? "bg-neutral-950 text-white shadow-sm" : "text-neutral-600 hover:text-neutral-950"}`}
                   type="button"
                 >
                   {t("common.list")}
@@ -414,11 +416,11 @@ export function ShopWithSidebarPage() {
             </div>
 
             {isError ? (
-              <div className="rounded-lg border border-dashed border-red-200 bg-white p-12 text-center text-red-800">
+              <div className="rounded-2xl border border-dashed border-red-200 bg-white p-12 text-center text-red-800">
                 <p className="font-medium">{t("shopProductListError")}</p>
               </div>
             ) : products.length === 0 && !isPending ? (
-              <div className="rounded-lg border border-dashed border-neutral-300 bg-white p-12 text-center text-neutral-600">
+              <div className="rounded-2xl border border-dashed border-neutral-300 bg-white p-12 text-center text-neutral-600">
                 <p className="font-medium text-neutral-900">{t("shopNoProductsMatch")}</p>
                 <p className="mt-2 text-sm">{t("shopAdjustFiltersHint")}</p>
                 <div className="mt-4 flex flex-wrap justify-center gap-2">
@@ -426,7 +428,7 @@ export function ShopWithSidebarPage() {
                     <button
                       type="button"
                       onClick={clearHeaderParams}
-                      className="rounded-md border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-800 hover:bg-blue-100"
+                      className="rounded-xl border border-[#FED7AA] bg-[#FFF7ED] px-4 py-2 text-sm font-black text-[#C2410C] hover:bg-[#FFEDD5]"
                     >
                       {t("shopClearSearchFilters")}
                     </button>
@@ -434,14 +436,14 @@ export function ShopWithSidebarPage() {
                   <button
                     type="button"
                     onClick={onClear}
-                    className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                    className="rounded-xl bg-neutral-950 px-4 py-2 text-sm font-black text-white hover:bg-neutral-800"
                   >
                     {t("shopClearSidebarFilters")}
                   </button>
                 </div>
               </div>
             ) : isPending && products.length === 0 ? (
-              <div className="rounded-lg border border-neutral-200 bg-white p-12 text-center text-neutral-600">
+              <div className="rounded-2xl border border-neutral-200 bg-white p-12 text-center text-neutral-600">
                 {t("common.loading")}
               </div>
             ) : (

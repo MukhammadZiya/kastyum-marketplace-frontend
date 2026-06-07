@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import type { Product } from "../../types/product";
 import { useCart } from "../../context/cart";
-import { useQuickViewModal } from "../../context/quickViewModal";
 import { useT } from "../../i18n";
 import { productDisplayTitle } from "../../lib/productDisplayTitle";
 import { showStrikethroughOriginalPrice } from "../../lib/productPriceDisplay";
@@ -15,7 +14,6 @@ function detailQuery(item: Product) {
 export default function SingleListItem({ item }: { item: Product }) {
   const t = useT();
   const { addItem } = useCart();
-  const { open } = useQuickViewModal();
   const q = detailQuery(item);
   const displayTitle = productDisplayTitle(item, t);
   const ariaView = t("productAriaView").replace("{title}", displayTitle);
@@ -51,13 +49,6 @@ export default function SingleListItem({ item }: { item: Product }) {
             type="button"
           >
             {t("common.addToCart")}
-          </button>
-          <button
-            onClick={() => open(item)}
-            className="px-4 py-2 rounded-md border border-neutral-300 text-sm hover:bg-neutral-50"
-            type="button"
-          >
-            {t("productQuickViewButton")}
           </button>
         </div>
       </div>

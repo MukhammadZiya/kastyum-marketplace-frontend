@@ -11,7 +11,7 @@ export default function Breadcrumb({
   const t = useT();
 
   return (
-    <section className="bg-neutral-100 py-7">
+    <section className="bg-neutral-100 py-5">
       <div className="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0">
         <h1 className="text-2xl font-semibold text-neutral-900">{title}</h1>
         <div className="mt-2 text-sm text-neutral-600">
@@ -29,4 +29,3 @@ export default function Breadcrumb({
     </section>
   );
 }
-

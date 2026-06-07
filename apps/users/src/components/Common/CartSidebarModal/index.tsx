@@ -26,13 +26,20 @@ export default function CartSidebarModal() {
       }`}
     >
       <div className="flex items-center justify-end">
-        <div className="w-full max-w-[500px] shadow-lg bg-white px-4 sm:px-[30px] lg:px-11 relative modal-content">
-          <div className="sticky top-0 bg-white flex items-center justify-between pb-7 pt-4 sm:pt-[30px] lg:pt-11 border-b border-neutral-200 mb-[30px]">
-            <h2 className="font-medium text-neutral-900 text-lg sm:text-2xl">Cart View</h2>
+        <div className="relative min-h-screen w-full max-w-[520px] bg-[#FAFAFB] px-4 shadow-2xl sm:px-7 lg:px-9 modal-content">
+          <div className="sticky top-0 z-10 mb-5 flex items-center justify-between border-b border-neutral-200 bg-[#FAFAFB]/95 pb-5 pt-4 backdrop-blur sm:pt-7 lg:pt-9">
+            <div>
+              <h2 className="text-xl font-black tracking-tight text-neutral-950 sm:text-2xl">
+                Cart View
+              </h2>
+              <p className="mt-1 text-sm font-medium text-neutral-500">
+                {items.length} {items.length === 1 ? "item" : "items"}
+              </p>
+            </div>
             <button
               onClick={closeCartModal}
               aria-label="close modal"
-              className="flex items-center justify-center ease-in duration-150 text-neutral-500 hover:text-neutral-900"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-neutral-500 shadow-sm ring-1 ring-neutral-200 transition duration-150 hover:text-neutral-900"
               type="button"
             >
               <svg
@@ -51,8 +58,8 @@ export default function CartSidebarModal() {
             </button>
           </div>
 
-          <div className="h-[66vh] overflow-y-auto no-scrollbar">
-            <div className="flex flex-col gap-6">
+          <div className="h-[66vh] overflow-y-auto no-scrollbar pr-1">
+            <div className="flex flex-col gap-4">
               {items.length > 0 ? (
                 items.map((item) => (
                   <CartSidebarItem
@@ -67,24 +74,28 @@ export default function CartSidebarModal() {
             </div>
           </div>
 
-          <div className="border-t border-neutral-200 bg-white pt-5 pb-4 sm:pb-[30px] lg:pb-11 mt-[30px] sticky bottom-0">
-            <div className="flex items-center justify-between gap-5 mb-6">
-              <p className="font-medium text-xl text-neutral-900">Subtotal:</p>
-              <p className="font-medium text-xl text-neutral-900">${totalPrice.toFixed(2)}</p>
+          <div className="sticky bottom-0 mt-5 border-t border-neutral-200 bg-[#FAFAFB]/95 pb-4 pt-5 backdrop-blur sm:pb-7 lg:pb-9">
+            <div className="mb-5 flex items-center justify-between gap-5 rounded-2xl bg-white px-4 py-4 shadow-sm ring-1 ring-neutral-200">
+              <p className="text-sm font-bold uppercase tracking-wide text-neutral-500">
+                Subtotal
+              </p>
+              <p className="text-xl font-black text-neutral-950">
+                ${totalPrice.toFixed(2)}
+              </p>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="grid gap-3 sm:grid-cols-2">
               <Link
                 onClick={closeCartModal}
                 to="/cart"
-                className="flex w-full justify-center rounded-md bg-blue-600 px-6 py-[13px] font-medium text-white shadow-sm transition duration-200 ease-out hover:-translate-y-px hover:bg-blue-700 hover:shadow-md active:translate-y-0 active:shadow-sm"
+                className="flex w-full justify-center rounded-2xl bg-[#315CF6] px-6 py-3.5 font-bold text-white shadow-sm transition duration-200 ease-out hover:-translate-y-px hover:bg-[#2148D8] hover:shadow-md active:translate-y-0 active:shadow-sm"
               >
                 View Cart
               </Link>
 
               <Link
                 to="/checkout"
-                className="flex w-full justify-center rounded-md bg-neutral-900 px-6 py-[13px] font-medium text-white shadow-sm transition duration-200 ease-out hover:-translate-y-px hover:bg-neutral-800 hover:shadow-md active:translate-y-0 active:shadow-sm"
+                className="flex w-full justify-center rounded-2xl bg-neutral-950 px-6 py-3.5 font-bold text-white shadow-sm transition duration-200 ease-out hover:-translate-y-px hover:bg-neutral-800 hover:shadow-md active:translate-y-0 active:shadow-sm"
               >
                 Checkout
               </Link>
@@ -95,4 +106,3 @@ export default function CartSidebarModal() {
     </div>
   );
 }
-

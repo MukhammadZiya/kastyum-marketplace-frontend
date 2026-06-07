@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getAuthToken } from "@repo/api";
-import { Heart, Menu, Search, ShoppingBag, UserRound, X } from "lucide-react";
+import { Heart, Search, ShoppingBag, UserRound } from "lucide-react";
 import CustomSelect from "./CustomSelect";
 import { LanguageSwitcher } from "./LanguageSwitcher";
-import { getNavMenuItems } from "./menuData";
 import { useCart } from "../../context/cart";
 import { useCartModal } from "../../context/cartSidebarModal";
 import { headerCatalogOptions } from "../../data/headerCatalogOptions";
@@ -13,21 +12,16 @@ import { useT } from "../../i18n";
 
 const Header = () => {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
-  /** Category strip is for shopping; keep sign-in / sign-up focused. */
-  const showCategoryNav = pathname !== "/signin" && pathname !== "/signup";
   const tokenPresent = Boolean(getAuthToken());
   const { data: me, isPending } = useMemberMe();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [searchCatalog, setSearchCatalog] = useState("all");
-  const [navigationOpen, setNavigationOpen] = useState(false);
   const [stickyMenu, setStickyMenu] = useState(false);
   const { openCartModal } = useCartModal();
 
   const { items, totalPrice } = useCart();
   const t = useT();
-  const menuItems = useMemo(() => getNavMenuItems(t), [t]);
   const catalogOptions = useMemo(() => headerCatalogOptions(t), [t]);
 
   const handleStickyMenu = () => {
@@ -74,17 +68,6 @@ const Header = () => {
               </span>
             </Link>
 
-            {showCategoryNav ? (
-              <button
-                id="Toggle"
-                type="button"
-                aria-label={t("common.ariaToggler")}
-                className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-neutral-200 text-neutral-900 transition hover:border-neutral-300 hover:bg-neutral-50 xl:hidden"
-                onClick={() => setNavigationOpen(!navigationOpen)}
-              >
-                {navigationOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-              </button>
-            ) : null}
           </div>
 
           <div className="w-full min-w-0">
@@ -204,41 +187,6 @@ const Header = () => {
         </div>
       </div>
 
-      {showCategoryNav ? (
-        <div className="relative z-20 bg-white">
-          <div className="mx-auto max-w-[1170px] px-4 sm:px-[30px] xl:px-0">
-            <div className="flex items-center justify-between">
-              <div
-                className={`invisible absolute right-4 top-full h-0 w-[calc(100vw-2rem)] max-w-[340px] items-center justify-between xl:visible xl:static xl:flex xl:h-auto xl:w-auto xl:max-w-none ${
-                  navigationOpen
-                    ? "!visible !h-auto max-h-[440px] overflow-y-auto rounded-2xl border border-neutral-200 bg-white p-5 shadow-2xl"
-                    : ""
-                }`}
-              >
-                <nav className="min-w-0 xl:max-w-[calc(100vw-12rem)] xl:overflow-x-auto xl:pb-1">
-                  <ul className="flex flex-col gap-2 xl:flex-row xl:flex-nowrap xl:items-center xl:gap-2">
-                    {menuItems.map((menuItem) => (
-                      <li
-                        key={menuItem.id}
-                        className="group relative"
-                      >
-                        <Link
-                          to={menuItem.path}
-                          className={`flex rounded-full px-3.5 text-[14px] font-semibold text-neutral-700 transition hover:bg-[#FFF1F2] hover:text-[#BE123C] ${
-                            stickyMenu ? "py-2.5 xl:py-3" : "py-2.5 xl:py-4"
-                          }`}
-                        >
-                          {menuItem.title}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </nav>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : null}
     </header>
   );
 };
