@@ -20,15 +20,15 @@ export default function Dropdown({ menuItem, stickyMenu = false }: Props) {
   return (
     <li
       onClick={() => setDropdownToggler((v) => !v)}
-      className={`group relative before:absolute before:left-0 before:top-0 before:h-[3px] before:w-0 before:rounded-b-[3px] before:bg-blue-600 before:duration-200 before:ease-out hover:before:w-full ${
+      className={`group relative before:absolute before:left-0 before:top-0 before:h-[3px] before:w-0 before:rounded-b-[3px] before:bg-[#E11D48] before:duration-200 before:ease-out hover:before:w-full ${
         isActive ? "before:!w-full" : ""
       }`}
     >
       <button
         type="button"
-        className={`flex items-center gap-[6px] text-[14px] font-medium capitalize text-neutral-900 hover:text-blue-600 ${
+        className={`flex items-center gap-[6px] text-[14px] font-medium capitalize text-neutral-900 hover:text-[#BE123C] ${
           stickyMenu ? "xl:py-4" : "xl:py-6"
-        } ${isActive ? "!text-blue-600" : ""}`}
+        } ${isActive ? "!text-[#BE123C]" : ""}`}
       >
         {menuItem.title}
         <svg
@@ -58,8 +58,8 @@ export default function Dropdown({ menuItem, stickyMenu = false }: Props) {
           <li key={item.id}>
             <Link
               to={item.path}
-              className={`flex px-[18px] py-[7px] text-[14px] hover:bg-neutral-50 hover:text-blue-600 ${
-                pathname === item.path ? "bg-neutral-50 text-blue-600" : ""
+              className={`flex px-[18px] py-[7px] text-[14px] hover:bg-[#FFF1F2] hover:text-[#BE123C] ${
+                pathname === item.path ? "bg-[#FFF1F2] text-[#BE123C]" : ""
               }`}
               onClick={() => setDropdownToggler(false)}
             >

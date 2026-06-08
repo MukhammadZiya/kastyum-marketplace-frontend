@@ -15,7 +15,7 @@ export function BlogGridPage() {
                 <p className="text-sm text-neutral-500 mb-2">{post.date} - {post.category}</p>
                 <h2 className="font-semibold text-xl text-neutral-900 mb-3">{post.title}</h2>
                 <p className="text-neutral-600 mb-4">{post.excerpt}</p>
-                <Link to="/blogs/blog-details" className="text-blue-600 font-medium">Read More</Link>
+                <Link to="/blogs/blog-details" className="text-[#BE123C] font-medium">Read More</Link>
               </div>
             </article>
           ))}
@@ -24,4 +24,3 @@ export function BlogGridPage() {
     </>
   );
 }
-

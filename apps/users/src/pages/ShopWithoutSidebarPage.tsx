@@ -35,14 +35,14 @@ export function ShopWithoutSidebarPage() {
             <div className="flex gap-2">
               <button
                 onClick={() => setView("grid")}
-                className={`px-3 py-1.5 rounded ${view === "grid" ? "bg-blue-600 text-white" : "bg-neutral-100"}`}
+                className={`px-3 py-1.5 rounded ${view === "grid" ? "bg-[#E11D48] text-white" : "bg-neutral-100"}`}
                 type="button"
               >
                 Grid
               </button>
               <button
                 onClick={() => setView("list")}
-                className={`px-3 py-1.5 rounded ${view === "list" ? "bg-blue-600 text-white" : "bg-neutral-100"}`}
+                className={`px-3 py-1.5 rounded ${view === "list" ? "bg-[#E11D48] text-white" : "bg-neutral-100"}`}
                 type="button"
               >
                 List

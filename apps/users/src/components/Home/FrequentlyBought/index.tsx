@@ -29,7 +29,7 @@ export default function FrequentlyBought() {
 
   return (
     <section className="overflow-hidden pt-12 sm:pt-16">
-      <div className="mx-auto w-full max-w-[1170px] px-4 sm:px-8 xl:px-0">
+      <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-8 xl:px-0">
         <div className="mb-6 flex items-end justify-between gap-4">
           <div>
             <span className="mb-2 flex items-center gap-2 text-[13px] font-black uppercase tracking-[0.16em] text-[#E11D48]">
@@ -49,7 +49,7 @@ export default function FrequentlyBought() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 gap-x-2 gap-y-6 sm:gap-x-4 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-5">
+        <div className="grid grid-cols-2 gap-x-2 gap-y-5 sm:gap-x-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-5">
           {items.map((item) => (
             <ProductItem
               item={item}

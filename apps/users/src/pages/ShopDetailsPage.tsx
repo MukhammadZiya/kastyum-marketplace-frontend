@@ -23,6 +23,7 @@ import { useCart } from "../context/cart";
 import {
   variantColorsFromApiProduct,
   variantSizesFromApiProduct,
+  type VariantOption,
 } from "../lib/apiProductVariants";
 import { useWishlist } from "../context/wishlist";
 import type { ProductWithRelations } from "@repo/types";
@@ -81,74 +82,108 @@ function audienceLabel(audience: string, t: TranslateFn): string {
   }
 }
 
-function ShopDetailsApiSpecs({
-  apiProduct,
-  t,
-}: {
-  apiProduct: ProductWithRelations;
-  t: TranslateFn;
-}) {
-  const brandName = apiProduct.brand?.name;
-  const materialName = apiProduct.material?.name;
-  const fitName = apiProduct.fit?.name;
-  const styleName = apiProduct.style?.name;
-  const sku = apiProduct.modelNumber?.trim();
-  const sellerNick =
-    apiProduct.sellerId &&
-    typeof apiProduct.sellerId === "object" &&
-    "nick" in apiProduct.sellerId ?
-      apiProduct.sellerId.nick?.trim() || null
-    : null;
+type DetailSpec = {
+  label: string;
+  value: string;
+};
 
+function ShopDetailsSpecs({ items, t }: { items: DetailSpec[]; t: TranslateFn }) {
+  if (items.length === 0) return null;
   return (
     <div className="rounded-2xl bg-white p-5 shadow-[0_16px_50px_-44px_rgba(15,23,42,0.65)] ring-1 ring-neutral-200 sm:p-6">
       <h2 className="text-xs font-black uppercase tracking-[0.18em] text-neutral-500">
         {t("productDetailSpecsHeading")}
       </h2>
       <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-[minmax(0,10rem)_1fr] sm:gap-x-6">
-        {brandName ? (
-          <>
-            <dt className="text-neutral-500">{t("productDetailBrand")}</dt>
-            <dd className="font-medium text-neutral-900">{brandName}</dd>
-          </>
-        ) : null}
-        {materialName ? (
-          <>
-            <dt className="text-neutral-500">{t("productDetailMaterial")}</dt>
-            <dd className="font-medium text-neutral-900">{materialName}</dd>
-          </>
-        ) : null}
-        {fitName ? (
-          <>
-            <dt className="text-neutral-500">{t("productDetailFit")}</dt>
-            <dd className="font-medium text-neutral-900">{fitName}</dd>
-          </>
-        ) : null}
-        {styleName ? (
-          <>
-            <dt className="text-neutral-500">{t("productDetailStyle")}</dt>
-            <dd className="font-medium text-neutral-900">{styleName}</dd>
-          </>
-        ) : null}
-        {sku ? (
-          <>
-            <dt className="text-neutral-500">{t("productDetailSku")}</dt>
-            <dd className="font-medium text-neutral-900">{sku}</dd>
-          </>
-        ) : null}
-        {sellerNick ? (
-          <>
-            <dt className="text-neutral-500">{t("productDetailSeller")}</dt>
-            <dd className="font-medium text-neutral-900">{sellerNick}</dd>
-          </>
-        ) : null}
-        <dt className="text-neutral-500">{t("productDetailAudience")}</dt>
-        <dd className="font-medium text-neutral-900">
-          {audienceLabel(apiProduct.audience, t)}
-        </dd>
+        {items.map((item) => (
+          <div className="contents" key={item.label}>
+            <dt className="text-neutral-500">{item.label}</dt>
+            <dd className="font-medium text-neutral-900">{item.value}</dd>
+          </div>
+        ))}
       </dl>
     </div>
   );
+}
+
+function productArrayValue(product: Product, key: "colors" | "sizes"): string[] {
+  if (key in product) {
+    const value = product[key as keyof Product];
+    if (Array.isArray(value)) {
+      return value.filter((item): item is string => typeof item === "string" && item.trim().length > 0);
+    }
+  }
+  return [];
+}
+
+function productStringValue(product: Product, key: "category"): string | null {
+  if (key in product) {
+    const value = product[key as keyof Product];
+    if (typeof value === "string" && value.trim()) return value.trim();
+  }
+  return null;
+}
+
+function fallbackVariantOptions(values: string[], prefix: string): VariantOption[] {
+  return values.map((value, index) => ({
+    id: `${prefix}-${index}-${value}`,
+    label: value,
+  }));
+}
+
+function buildDetailSpecs(
+  product: Product,
+  apiProduct: ProductWithRelations | undefined,
+  t: TranslateFn,
+): DetailSpec[] {
+  const sellerNick =
+    apiProduct?.sellerId &&
+    typeof apiProduct.sellerId === "object" &&
+    "nick" in apiProduct.sellerId ?
+      apiProduct.sellerId.nick?.trim() || null
+    : null;
+  const category = product.categoryLabel || productStringValue(product, "category");
+  const specs: DetailSpec[] = [
+    {
+      label: t("productDetailBrand"),
+      value: apiProduct?.brand?.name || product.brandName || "iBerry",
+    },
+  ];
+
+  if (apiProduct?.material?.name) {
+    specs.push({
+      label: t("productDetailMaterial"),
+      value: apiProduct.material.name,
+    });
+  }
+  if (apiProduct?.fit?.name) {
+    specs.push({
+      label: t("productDetailFit"),
+      value: apiProduct.fit.name,
+    });
+  }
+  if (apiProduct?.style?.name || category) {
+    specs.push({
+      label: t("productDetailStyle"),
+      value: apiProduct?.style?.name || category || "",
+    });
+  }
+  if (apiProduct?.modelNumber?.trim()) {
+    specs.push({
+      label: t("productDetailSku"),
+      value: apiProduct.modelNumber.trim(),
+    });
+  }
+  specs.push({
+    label: t("productDetailSeller"),
+    value: sellerNick || product.sellerName || "iBerry",
+  });
+  specs.push({
+    label: t("productDetailAudience"),
+    value: apiProduct ? audienceLabel(apiProduct.audience, t) : t("productDetailAudienceMen"),
+  });
+
+  return specs.filter((item) => item.value.trim().length > 0);
 }
 
 function ShopDetailsVariantPickers({
@@ -160,8 +195,8 @@ function ShopDetailsVariantPickers({
   onSelectColor,
   t,
 }: {
-  sizeOptions: ReturnType<typeof variantSizesFromApiProduct>;
-  colorOptions: ReturnType<typeof variantColorsFromApiProduct>;
+  sizeOptions: VariantOption[];
+  colorOptions: VariantOption[];
   selectedSizeId: string | null;
   selectedColorId: string | null;
   onSelectSize: (id: string) => void;
@@ -196,7 +231,7 @@ function ShopDetailsVariantPickers({
                   onClick={() => onSelectSize(s.id)}
                   className={`rounded-md border px-3 py-2 text-sm font-medium transition ${
                     selected ?
-                      "border-blue-600 bg-blue-50 text-blue-900 ring-1 ring-blue-600"
+                      "border-[#E11D48] bg-[#FFF1F2] text-[#BE123C] ring-1 ring-[#E11D48]"
                     : "border-neutral-300 bg-white text-neutral-900 hover:border-neutral-400"
                   }`}
                 >
@@ -227,7 +262,7 @@ function ShopDetailsVariantPickers({
                   onClick={() => onSelectColor(c.id)}
                   className={`flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium transition ${
                     selected ?
-                      "border-blue-600 bg-blue-50 text-blue-900 ring-1 ring-blue-600"
+                      "border-[#E11D48] bg-[#FFF1F2] text-[#BE123C] ring-1 ring-[#E11D48]"
                     : "border-neutral-300 bg-white text-neutral-900 hover:border-neutral-400"
                   }`}
                 >
@@ -272,12 +307,22 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
   const { addItem: addWishlistItem } = useWishlist();
 
   const sizeOptions = useMemo(
-    () => (apiProduct ? variantSizesFromApiProduct(apiProduct) : []),
-    [apiProduct],
+    () =>
+      apiProduct ?
+        variantSizesFromApiProduct(apiProduct)
+      : fallbackVariantOptions(productArrayValue(product, "sizes"), "size"),
+    [apiProduct, product],
   );
   const colorOptions = useMemo(
-    () => (apiProduct ? variantColorsFromApiProduct(apiProduct) : []),
-    [apiProduct],
+    () =>
+      apiProduct ?
+        variantColorsFromApiProduct(apiProduct)
+      : fallbackVariantOptions(productArrayValue(product, "colors"), "color"),
+    [apiProduct, product],
+  );
+  const detailSpecs = useMemo(
+    () => buildDetailSpecs(product, apiProduct, t),
+    [product, apiProduct, t],
   );
 
   useEffect(() => {
@@ -306,17 +351,10 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
   }, [gallerySources.length]);
 
   useEffect(() => {
-    if (!apiProduct) {
-      setSelectedSizeId(null);
-      setSelectedColorId(null);
-      return;
-    }
-    const sizes = variantSizesFromApiProduct(apiProduct);
-    const colors = variantColorsFromApiProduct(apiProduct);
-    setSelectedSizeId(sizes.length === 1 ? sizes[0].id : null);
-    setSelectedColorId(colors.length === 1 ? colors[0].id : null);
+    setSelectedSizeId(sizeOptions.length === 1 ? sizeOptions[0].id : null);
+    setSelectedColorId(colorOptions.length === 1 ? colorOptions[0].id : null);
     setVariantError(null);
-  }, [apiProduct]);
+  }, [sizeOptions, colorOptions]);
 
   const reviewStats = getReviewStats(product.id);
   const displayTitle = productDisplayTitle(product, t);
@@ -458,9 +496,9 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
               : null}
             </div>
             <p className="mt-5 leading-7 text-neutral-600">{description}</p>
-            {mongoId && apiProduct ?
+            {detailSpecs.length > 0 || sizeOptions.length > 0 || colorOptions.length > 0 ?
               <div className="mt-7 grid gap-4 xl:grid-cols-2">
-                <ShopDetailsApiSpecs apiProduct={apiProduct} t={t} />
+                <ShopDetailsSpecs items={detailSpecs} t={t} />
                 <ShopDetailsVariantPickers
                   sizeOptions={sizeOptions}
                   colorOptions={colorOptions}
@@ -510,15 +548,13 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
               <button
                 onClick={() => {
                   setVariantError(null);
-                  if (mongoId && apiProduct) {
-                    if (sizeOptions.length > 0 && !selectedSizeId) {
-                      setVariantError(t("productPleaseSelectSize"));
-                      return;
-                    }
-                    if (colorOptions.length > 0 && !selectedColorId) {
-                      setVariantError(t("productPleaseSelectColor"));
-                      return;
-                    }
+                  if (sizeOptions.length > 0 && !selectedSizeId) {
+                    setVariantError(t("productPleaseSelectSize"));
+                    return;
+                  }
+                  if (colorOptions.length > 0 && !selectedColorId) {
+                    setVariantError(t("productPleaseSelectColor"));
+                    return;
                   }
                   const sizeOpt = sizeOptions.find((s) => s.id === selectedSizeId);
                   const colorOpt = colorOptions.find((c) => c.id === selectedColorId);

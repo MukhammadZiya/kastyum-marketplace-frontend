@@ -63,8 +63,8 @@ export function LanguageSwitcher() {
                 }}
                 className={`flex w-full items-center gap-2.5 px-3 py-2 text-left text-[13px] font-medium sm:text-[14px] ${
                   locale === value
-                    ? "bg-blue-50 text-blue-800"
-                    : "text-neutral-900 hover:bg-neutral-50"
+                    ? "bg-[#FFF1F2] text-[#BE123C]"
+                    : "text-neutral-900 hover:bg-[#FFF1F2]"
                 }`}
               >
                 <span className="text-lg leading-none select-none" aria-hidden>

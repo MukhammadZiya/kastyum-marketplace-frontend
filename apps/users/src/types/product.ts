@@ -14,6 +14,9 @@ export type StorefrontProduct = {
   id: number;
   mongoId?: string;
   title: string;
+  brandName?: string;
+  sellerName?: string;
+  categoryLabel?: string;
   /** When set, UI uses `t(titleKey)` for display (demo catalog). */
   titleKey?: string;
   reviews: number;

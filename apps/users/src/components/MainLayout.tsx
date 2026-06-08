@@ -8,9 +8,6 @@ import ScrollToTop from "./Common/ScrollToTop";
 export function MainLayout() {
   const { pathname, search } = useLocation();
 
-  /** Mobile header stacks into rows; desktop header is a compact search bar. */
-  const mainTopPadding = "pt-[148px] lg:pt-[82px]";
-
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, [pathname, search]);
@@ -18,7 +15,7 @@ export function MainLayout() {
   return (
     <div className="min-h-screen bg-white text-slate-900">
       <Header />
-      <main className={mainTopPadding}>
+      <main>
         <Outlet />
       </main>
       <Footer />

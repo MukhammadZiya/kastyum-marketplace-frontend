@@ -1,192 +1,226 @@
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuthToken } from "@repo/api";
-import { Heart, Search, ShoppingBag, UserRound } from "lucide-react";
-import CustomSelect from "./CustomSelect";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  ChevronDown,
+  Heart,
+  LogOut,
+  Search,
+  ShoppingCart,
+  UserRound,
+} from "lucide-react";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useCart } from "../../context/cart";
 import { useCartModal } from "../../context/cartSidebarModal";
-import { headerCatalogOptions } from "../../data/headerCatalogOptions";
 import { useMemberMe } from "../../hooks/members";
 import { useT } from "../../i18n";
+import { clearMarketplaceSession } from "../../user-auth";
 
 const Header = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const tokenPresent = Boolean(getAuthToken());
   const { data: me, isPending } = useMemberMe();
+  const { openCartModal } = useCartModal();
+  const { items } = useCart();
+  const t = useT();
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchCatalog, setSearchCatalog] = useState("all");
-  const [stickyMenu, setStickyMenu] = useState(false);
-  const { openCartModal } = useCartModal();
-
-  const { items, totalPrice } = useCart();
-  const t = useT();
-  const catalogOptions = useMemo(() => headerCatalogOptions(t), [t]);
-
-  const handleStickyMenu = () => {
-    setStickyMenu(window.scrollY >= 80);
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleStickyMenu);
-    return () => window.removeEventListener("scroll", handleStickyMenu);
-  }, []);
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const params = new URLSearchParams();
-    if (searchCatalog !== "all") params.set("device", searchCatalog);
     if (searchQuery.trim()) params.set("q", searchQuery.trim());
     const qs = params.toString();
     navigate(qs ? `/shop-with-sidebar?${qs}` : "/shop-with-sidebar");
   };
 
+  const accountName =
+    me?.nick?.trim() || me?.email || (isPending ? t("common.loading") : t("common.signIn"));
+
   return (
     <header
-      className={`fixed left-0 top-0 z-[9999] w-full border-b border-neutral-200 bg-white/95 backdrop-blur transition-all duration-300 ease-out ${
-        stickyMenu ? "shadow-[0_10px_30px_-24px_rgba(15,23,42,0.45)]" : ""
-      }`}
+      className="relative z-40 w-full border-t-4 border-[#E11D48] border-b border-neutral-200 bg-white"
     >
-      <div className="relative z-30 mx-auto max-w-[1170px] px-4 sm:px-[30px] xl:px-0">
-        <div
-          className={`grid gap-3 ease-out duration-200 lg:grid-cols-[auto_minmax(340px,1fr)_auto] lg:items-center ${
-            stickyMenu ? "py-3" : "py-4"
-          }`}
-        >
-          <div className="flex w-full items-center justify-between gap-3 lg:w-auto">
-            <Link
-              className="flex shrink-0 items-center gap-2.5 rounded-xl outline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#E11D48]"
-              to="/"
-              aria-label="iBerry home"
-            >
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#E11D48] text-xl font-black tracking-tight text-white shadow-[0_14px_30px_-18px_rgba(225,29,72,0.9)]">
-                iB
-              </span>
-              <span className="text-[28px] font-black tracking-tight text-[#111827]">
-                iBerry
-              </span>
+      <div className="mx-auto max-w-[1280px] px-4 sm:px-8 xl:px-0">
+        <div className="flex min-h-[74px] items-center justify-between gap-4 py-3 lg:min-h-[88px] lg:py-4">
+          <Link
+            className="flex shrink-0 items-center gap-2.5 rounded-xl outline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#E11D48]"
+            to="/"
+            aria-label="iBerry home"
+          >
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E11D48] text-xl font-black tracking-tight text-white shadow-[0_16px_30px_-18px_rgba(225,29,72,0.9)] lg:h-14 lg:w-14 lg:text-2xl">
+              iB
+            </span>
+            <span className="text-[30px] font-black tracking-tight text-[#111827] lg:text-[34px]">
+              iBerry
+            </span>
+          </Link>
+
+          <nav className="hidden items-center gap-10 text-[17px] font-black text-neutral-950 lg:flex">
+            <Link className="transition hover:text-[#E11D48]" to="/contact">
+              About
             </Link>
+            <button className="transition hover:text-[#E11D48]" type="button">
+              News
+            </button>
+            <Link className="transition hover:text-[#E11D48]" to="/contact">
+              Partnership
+            </Link>
+          </nav>
 
-          </div>
+          <div className="flex items-center gap-3">
+            <div className="hidden rounded-2xl border border-neutral-200 bg-white p-1 shadow-sm lg:block">
+              <LanguageSwitcher />
+            </div>
 
-          <div className="w-full min-w-0">
-            <form onSubmit={handleSearchSubmit}>
-              <div className="flex h-12 items-center rounded-2xl border border-neutral-200 bg-neutral-50 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] transition focus-within:border-[#E11D48]/60 focus-within:bg-white focus-within:ring-4 focus-within:ring-[#E11D48]/10">
-                <div className="hidden shrink-0 sm:block [&_button]:!h-12 [&_button]:!rounded-l-2xl [&_button]:!border-0 [&_button]:!bg-transparent">
-                  <CustomSelect
-                    options={catalogOptions}
-                    value={searchCatalog}
-                    onChange={setSearchCatalog}
-                  />
-                </div>
+            <button
+              onClick={openCartModal}
+              type="button"
+              className="relative hidden items-center gap-2 rounded-2xl px-3 py-2 text-sm font-black text-neutral-950 transition hover:bg-[#FFF1F2] lg:flex"
+            >
+              <ShoppingCart className="h-6 w-6" strokeWidth={2.2} />
+              <span className="absolute left-6 top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#E11D48] px-1 text-[11px] text-white">
+                {items.length}
+              </span>
+              {t("common.cart")}
+            </button>
 
-                <div className="relative min-w-0 flex-1">
-                  <input
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    value={searchQuery}
-                    type="search"
-                    name="search"
-                    id="search"
-                    placeholder={t("headerSearchPlaceholder")}
-                    autoComplete="off"
-                    className="h-12 w-full bg-transparent pl-4 pr-12 text-[15px] text-neutral-900 outline-none placeholder:text-neutral-400"
-                  />
-                  <button
-                    id="search-btn"
-                    aria-label={t("common.ariaSearch")}
-                    className="absolute right-1.5 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-xl bg-[#E11D48] text-white transition hover:bg-[#BE123C]"
-                    type="submit"
-                  >
-                    <Search className="h-4.5 w-4.5" strokeWidth={2.25} />
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-
-          <div className="flex w-full items-center justify-between gap-3 lg:w-auto lg:justify-end">
-              <div className="flex min-w-0 items-center gap-2 sm:gap-3">
-                <LanguageSwitcher />
-
-                {tokenPresent ? (
-                  <div className="relative z-10 hidden items-center gap-2 rounded-xl px-2 py-1 transition hover:bg-neutral-50 sm:flex">
-                    {me ? (
-                      <>
-                        <UserRound className="h-5 w-5 shrink-0 text-[#E11D48]" strokeWidth={2.25} />
-                        <div className="min-w-0 text-left">
-                          <span className="block text-[10px] text-neutral-500 uppercase">
-                            {t("common.signedIn")}
-                          </span>
-                          <Link
-                            to="/my-account"
-                            title={t("common.myAccount")}
-                            className="block max-w-[100px] truncate sm:max-w-[160px] font-medium text-[14px] text-neutral-900 hover:text-blue-600"
-                          >
-                            {me.nick?.trim() || me.email}
-                          </Link>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="min-w-0 text-left">
-                        <span className="block text-[10px] text-neutral-500 uppercase">
-                          {t("common.account")}
-                        </span>
-                        <p className="max-w-[120px] truncate text-[14px] font-medium text-neutral-600 sm:max-w-[200px]">
-                          {isPending ? t("common.loading") : t("common.sessionCouldNotLoad")}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <Link to="/signin" className="hidden items-center gap-2 rounded-xl px-2 py-1 transition hover:bg-neutral-50 sm:flex">
-                    <UserRound className="h-5 w-5 shrink-0 text-[#E11D48]" strokeWidth={2.25} />
-                    <div className="leading-tight">
-                      <span className="block text-[10px] text-neutral-500 uppercase">
-                        {t("common.account")}
-                      </span>
-                      <p className="font-medium text-[14px] text-neutral-900">
-                        {t("common.signIn")}
-                      </p>
-                    </div>
-                  </Link>
-                )}
-
-                <Link
-                  to="/wishlist"
-                  aria-label="Wishlist"
-                  className="hidden h-10 w-10 items-center justify-center rounded-xl border border-neutral-200 text-neutral-800 transition hover:border-[#E11D48]/40 hover:bg-[#FFF1F2] hover:text-[#E11D48] sm:inline-flex"
-                >
-                  <Heart className="h-5 w-5" strokeWidth={2.1} />
-                </Link>
-
+            {tokenPresent ? (
+              <div className="relative hidden lg:block">
                 <button
-                  onClick={openCartModal}
                   type="button"
-                  className="flex items-center gap-2 rounded-xl px-2.5 py-1.5 transition duration-200 ease-out hover:bg-neutral-100/90 active:scale-[0.99]"
+                  onClick={() => setAccountMenuOpen((open) => !open)}
+                  className="flex min-w-[230px] items-center gap-3 rounded-full bg-[#FFF1F2] py-2 pl-2 pr-4 text-left transition hover:bg-[#FFE4EA]"
+                  aria-expanded={accountMenuOpen}
+                  aria-haspopup="menu"
                 >
-                  <span className="inline-block relative">
-                    <ShoppingBag className="h-6 w-6 text-[#111827]" strokeWidth={2.1} />
-
-                    <span className="absolute -right-2 -top-2.5 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-[#E11D48] text-[10px] font-semibold text-white">
-                      {items.length}
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full border-4 border-[#FFE4EA] bg-white text-neutral-400">
+                    <UserRound className="h-6 w-6" strokeWidth={2.1} />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-black text-[#BE123C]">
+                      {accountName}
                     </span>
                   </span>
-
-                  <div className="hidden leading-tight sm:block">
-                    <span className="block text-[10px] text-neutral-500 uppercase">
-                      {t("common.cart")}
-                    </span>
-                    <p className="font-medium text-[14px] text-neutral-900">
-                      ${totalPrice.toFixed(2)}
-                    </p>
-                  </div>
+                  <ChevronDown
+                    className={`h-4 w-4 text-[#E11D48] transition ${accountMenuOpen ? "rotate-180" : ""}`}
+                    strokeWidth={2.4}
+                  />
                 </button>
+
+                {accountMenuOpen ? (
+                  <div
+                    className="absolute right-0 top-[calc(100%+10px)] z-50 w-[260px] overflow-hidden rounded-2xl border border-neutral-100 bg-white p-2 shadow-[0_24px_90px_-42px_rgba(15,23,42,0.55)]"
+                    role="menu"
+                  >
+                    <Link
+                      to="/my-account"
+                      onClick={() => setAccountMenuOpen(false)}
+                      className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+                      role="menuitem"
+                    >
+                      <UserRound className="h-5 w-5" strokeWidth={2.1} />
+                      {t("common.myAccount")}
+                    </Link>
+                    <Link
+                      to="/cart"
+                      onClick={() => setAccountMenuOpen(false)}
+                      className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+                      role="menuitem"
+                    >
+                      <ShoppingCart className="h-5 w-5" strokeWidth={2.1} />
+                      {t("common.cart")}
+                    </Link>
+                    <Link
+                      to="/wishlist"
+                      onClick={() => setAccountMenuOpen(false)}
+                      className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+                      role="menuitem"
+                    >
+                      <Heart className="h-5 w-5" strokeWidth={2.1} />
+                      {t("common.wishlist")}
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAccountMenuOpen(false);
+                        clearMarketplaceSession(queryClient);
+                        navigate("/", { replace: true });
+                      }}
+                      className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+                      role="menuitem"
+                    >
+                      <LogOut className="h-5 w-5" strokeWidth={2.1} />
+                      {t("common.logOut")}
+                    </button>
+                  </div>
+                ) : null}
               </div>
+            ) : (
+              <Link
+                to="/signin"
+                className="hidden items-center gap-3 rounded-full bg-[#FFF1F2] py-2 pl-2 pr-5 font-black text-[#BE123C] transition hover:bg-[#FFE4EA] lg:flex"
+              >
+                <span className="flex h-12 w-12 items-center justify-center rounded-full border-4 border-[#FFE4EA] bg-white text-neutral-400">
+                  <UserRound className="h-6 w-6" strokeWidth={2.1} />
+                </span>
+                {t("common.signIn")}
+              </Link>
+            )}
+
+            <div className="lg:hidden">
+              <LanguageSwitcher />
+            </div>
+            <button
+              onClick={openCartModal}
+              type="button"
+              className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-neutral-200 bg-white text-neutral-950 lg:hidden"
+              aria-label={t("common.cart")}
+            >
+              <ShoppingCart className="h-6 w-6" strokeWidth={2.2} />
+              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#E11D48] px-1 text-[11px] font-black text-white">
+                {items.length}
+              </span>
+            </button>
           </div>
         </div>
-      </div>
 
+        <div className="grid gap-3 pb-4 lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-6">
+          <Link
+            to="/shop-with-sidebar"
+            className="hidden h-14 items-center justify-center rounded-xl bg-[#E11D48] px-6 text-xl font-black text-white shadow-[0_18px_44px_-30px_rgba(225,29,72,0.9)] transition hover:-translate-y-px hover:bg-[#BE123C] lg:flex"
+          >
+            Shop
+          </Link>
+
+          <form onSubmit={handleSearchSubmit} className="min-w-0">
+            <div className="flex h-[52px] items-center rounded-xl border border-neutral-200 bg-white shadow-[0_18px_60px_-46px_rgba(15,23,42,0.7)] transition focus-within:border-[#E11D48]/70 focus-within:ring-4 focus-within:ring-[#E11D48]/10 lg:h-14">
+              <input
+                onChange={(e) => setSearchQuery(e.target.value)}
+                value={searchQuery}
+                type="search"
+                name="search"
+                id="search"
+                placeholder={t("headerSearchPlaceholder")}
+                autoComplete="off"
+                className="h-full min-w-0 flex-1 bg-transparent px-5 text-[15px] font-semibold text-neutral-900 outline-none placeholder:text-neutral-400 lg:text-lg"
+              />
+              <button
+                id="search-btn"
+                aria-label={t("common.ariaSearch")}
+                className="m-1 flex h-11 w-12 shrink-0 items-center justify-center rounded-lg bg-[#E11D48] text-white transition hover:bg-[#BE123C] lg:h-12 lg:w-14"
+                type="submit"
+              >
+                <Search className="h-5 w-5" strokeWidth={2.5} />
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </div>
     </header>
   );
 };

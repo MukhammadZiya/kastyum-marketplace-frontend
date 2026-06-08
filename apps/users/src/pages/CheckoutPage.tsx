@@ -31,37 +31,49 @@ export function CheckoutPage() {
 
   return (
     <>
-      <Breadcrumb title="Checkout" pages={["checkout"]} />
-      <section className="bg-neutral-100 py-10">
-        <div className="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0">
-          <div className="grid lg:grid-cols-[1fr_420px] gap-8">
+      <Breadcrumb title={t("checkoutPageTitle")} pages={["checkout"]} />
+      <section className="bg-[#F7F7F8] py-8 sm:py-10">
+        <div className="mx-auto max-w-[1170px] px-4 sm:px-8 xl:px-0">
+          <div className="grid gap-8 lg:grid-cols-[1fr_420px]">
             <div className="space-y-6">
-              <div className="bg-white border border-neutral-200 rounded-lg p-6">
-                <h3 className="font-semibold text-neutral-900 mb-4">Billing Details</h3>
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <input className="border border-neutral-200 rounded-md px-4 py-3" placeholder="First Name" />
-                  <input className="border border-neutral-200 rounded-md px-4 py-3" placeholder="Last Name" />
-                  <input className="border border-neutral-200 rounded-md px-4 py-3 sm:col-span-2" placeholder="Email" />
+              <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-[0_22px_80px_-62px_rgba(15,23,42,0.75)] sm:p-6">
+                <p className="mb-2 text-[12px] font-black uppercase tracking-[0.16em] text-[#BE123C]">
+                  Checkout
+                </p>
+                <h3 className="mb-5 text-2xl font-black tracking-tight text-neutral-950">
+                  {t("checkoutBillingDetails")}
+                </h3>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <input className="rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white" placeholder={t("common.firstName")} />
+                  <input className="rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white" placeholder={t("common.lastName")} />
+                  <input className="rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white sm:col-span-2" placeholder={t("common.email")} />
                   <input
-                    className="border border-neutral-200 rounded-md px-4 py-3 sm:col-span-2"
-                    placeholder="Shipping address"
+                    className="rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white sm:col-span-2"
+                    placeholder={t("checkoutShippingPayment")}
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                   />
                 </div>
               </div>
-              <div className="bg-white border border-neutral-200 rounded-lg p-6">
-                <h3 className="font-semibold text-neutral-900 mb-4">Shipping & Payment</h3>
-                <div className="space-y-3 text-sm text-neutral-700">
-                  <label className="flex items-center gap-2"><input type="radio" name="ship" defaultChecked /> Free Shipping</label>
-                  <label className="flex items-center gap-2"><input type="radio" name="ship" /> Flat Rate</label>
-                  <label className="flex items-center gap-2"><input type="radio" name="pay" defaultChecked /> Cash on Delivery</label>
-                  <label className="flex items-center gap-2"><input type="radio" name="pay" /> PayPal</label>
+              <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-[0_22px_80px_-62px_rgba(15,23,42,0.75)] sm:p-6">
+                <h3 className="mb-5 text-xl font-black tracking-tight text-neutral-950">
+                  {t("checkoutShippingPayment")}
+                </h3>
+                <div className="grid gap-3 text-sm font-bold text-neutral-700 sm:grid-cols-2">
+                  <label className="flex items-center gap-3 rounded-2xl bg-[#FAFAFA] p-4"><input className="text-[#E11D48] focus:ring-[#FDA4AF]" type="radio" name="ship" defaultChecked /> {t("common.freeShipping")}</label>
+                  <label className="flex items-center gap-3 rounded-2xl bg-[#FAFAFA] p-4"><input className="text-[#E11D48] focus:ring-[#FDA4AF]" type="radio" name="ship" /> {t("common.flatRate")}</label>
+                  <label className="flex items-center gap-3 rounded-2xl bg-[#FAFAFA] p-4"><input className="text-[#E11D48] focus:ring-[#FDA4AF]" type="radio" name="pay" defaultChecked /> {t("common.cashOnDelivery")}</label>
+                  <label className="flex items-center gap-3 rounded-2xl bg-[#FAFAFA] p-4"><input className="text-[#E11D48] focus:ring-[#FDA4AF]" type="radio" name="pay" /> {t("common.paypal")}</label>
                 </div>
               </div>
             </div>
-            <div className="bg-white border border-neutral-200 rounded-lg p-6 h-fit">
-              <h3 className="font-semibold text-neutral-900 mb-4">Your Order</h3>
+            <div className="h-fit rounded-3xl border border-neutral-200 bg-white p-5 shadow-[0_22px_80px_-62px_rgba(15,23,42,0.75)] sm:p-6 lg:sticky lg:top-28">
+              <p className="mb-2 text-[12px] font-black uppercase tracking-[0.16em] text-neutral-400">
+                {t("cartOrderSummary")}
+              </p>
+              <h3 className="mb-5 text-2xl font-black tracking-tight text-neutral-950">
+                {t("checkoutYourOrder")}
+              </h3>
               {formError ? (
                 <p className="mb-3 text-sm text-red-600" role="alert">
                   {formError}
@@ -69,30 +81,30 @@ export function CheckoutPage() {
               ) : null}
               {!signedIn ? (
                 <p className="mb-3 text-sm text-neutral-600">
-                  <Link to="/signin" className="text-blue-600 font-medium">
-                    Sign in
+                  <Link to="/signin" className="font-black text-[#BE123C]">
+                    {t("common.signIn")}
                   </Link>{" "}
-                  to place an order.
+                  {t("checkoutSignInToOrder")}
                 </p>
               ) : null}
               {items.length > 0 && !hasOnlyApiItems ? (
-                <p className="mb-3 text-sm text-amber-800 bg-amber-50 border border-amber-100 rounded-md p-3">
-                  Only items from the live catalog can be ordered. Remove showcase pieces from your bag or pick a size from the shop.
+                <p className="mb-3 rounded-2xl border border-rose-100 bg-rose-50 p-3 text-sm text-rose-700">
+                  {t("checkoutCatalogOnlyWarning")}
                 </p>
               ) : null}
               <div className="space-y-3 text-sm">
                 {items.length === 0 ? (
-                  <p className="text-neutral-500">No items in cart.</p>
+                  <p className="text-neutral-500">{t("checkoutNoItems")}</p>
                 ) : (
                   items.map((item) => (
-                    <div key={cartLineKey(item)} className="flex justify-between gap-4">
+                    <div key={cartLineKey(item)} className="flex justify-between gap-4 rounded-2xl bg-[#FAFAFA] p-3">
                       <Link
                         to={
                           item.mongoId
                             ? `/shop-details?id=${encodeURIComponent(item.mongoId)}`
                             : `/shop-details?id=${item.id}`
                         }
-                        className="min-w-0 text-left text-neutral-700 hover:text-blue-600"
+                        className="min-w-0 text-left font-bold text-neutral-800 hover:text-[#BE123C]"
                       >
                         <span className="block">
                           {productDisplayTitle(item, t)}
@@ -112,7 +124,7 @@ export function CheckoutPage() {
                           </span>
                         : null}
                       </Link>
-                      <span className="font-medium text-neutral-900">
+                      <span className="font-black text-neutral-950">
                         ${(item.discountedPrice * item.quantity).toFixed(2)}
                       </span>
                     </div>
@@ -120,12 +132,12 @@ export function CheckoutPage() {
                 )}
               </div>
               <div className="my-4 border-t border-neutral-200" />
-              <div className="flex justify-between">
-                <span className="font-medium">Total</span>
-                <span className="font-semibold">${totalPrice.toFixed(2)}</span>
+              <div className="flex justify-between rounded-2xl bg-[#FFF1F2] px-4 py-4">
+                <span className="font-black text-neutral-800">{t("common.total")}</span>
+                <span className="text-xl font-black text-[#BE123C]">${totalPrice.toFixed(2)}</span>
               </div>
               <button
-                className="w-full mt-6 rounded-md bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white py-3 font-medium"
+                className="mt-6 w-full rounded-2xl bg-[#E11D48] py-3.5 font-black text-white shadow-[0_18px_40px_-22px_rgba(225,29,72,0.7)] transition hover:-translate-y-px hover:bg-[#BE123C] disabled:translate-y-0 disabled:opacity-50"
                 type="button"
                 disabled={
                   createOrder.isPending ||
@@ -136,11 +148,11 @@ export function CheckoutPage() {
                 onClick={() => {
                   setFormError("");
                   if (!signedIn) {
-                    setFormError("Sign in to place an order.");
+                    setFormError(`${t("common.signIn")} ${t("checkoutSignInToOrder")}`);
                     return;
                   }
                   if (!hasOnlyApiItems) {
-                    setFormError("Your cart must only contain catalog products.");
+                    setFormError(t("checkoutCatalogOnlyWarning"));
                     return;
                   }
                   createOrder.mutate(
@@ -162,7 +174,7 @@ export function CheckoutPage() {
                   );
                 }}
               >
-                {createOrder.isPending ? "Placing order…" : "Place order"}
+                {createOrder.isPending ? `${t("checkoutPlaceOrder")}…` : t("checkoutPlaceOrder")}
               </button>
             </div>
           </div>

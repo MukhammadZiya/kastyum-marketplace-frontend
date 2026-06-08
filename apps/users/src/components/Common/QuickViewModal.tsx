@@ -80,8 +80,8 @@ export default function QuickViewModal() {
                     <button
                       onClick={() => setActivePreview(key)}
                       key={img}
-                      className={`flex items-center justify-center w-20 h-20 overflow-hidden rounded-lg bg-neutral-100 ease-out duration-200 hover:border-2 hover:border-blue-600 ${
-                        activePreview === key ? "border-2 border-blue-600" : ""
+                      className={`flex items-center justify-center w-20 h-20 overflow-hidden rounded-lg bg-neutral-100 ease-out duration-200 hover:border-2 hover:border-[#E11D48] ${
+                        activePreview === key ? "border-2 border-[#E11D48]" : ""
                       }`}
                       type="button"
                     >
@@ -153,7 +153,7 @@ export default function QuickViewModal() {
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => quantity > 1 && setQuantity(quantity - 1)}
-                      className="flex items-center justify-center w-10 h-10 rounded-[5px] bg-neutral-100 text-neutral-900 ease-out duration-200 hover:text-blue-600"
+                      className="flex items-center justify-center w-10 h-10 rounded-[5px] bg-neutral-100 text-neutral-900 ease-out duration-200 hover:text-[#BE123C]"
                       type="button"
                     >
                       -
@@ -163,7 +163,7 @@ export default function QuickViewModal() {
                     </span>
                     <button
                       onClick={() => setQuantity(quantity + 1)}
-                      className="flex items-center justify-center w-10 h-10 rounded-[5px] bg-neutral-100 text-neutral-900 ease-out duration-200 hover:text-blue-600"
+                      className="flex items-center justify-center w-10 h-10 rounded-[5px] bg-neutral-100 text-neutral-900 ease-out duration-200 hover:text-[#BE123C]"
                       type="button"
                     >
                       +
@@ -178,7 +178,7 @@ export default function QuickViewModal() {
                     addItem({ ...product, quantity });
                     close();
                   }}
-                  className="inline-flex rounded-md bg-blue-600 px-7 py-3 font-medium text-white shadow-sm transition duration-200 ease-out hover:-translate-y-px hover:bg-blue-700 hover:shadow-md active:translate-y-0 active:shadow-sm"
+                  className="inline-flex rounded-md bg-[#E11D48] px-7 py-3 font-medium text-white shadow-sm transition duration-200 ease-out hover:-translate-y-px hover:bg-[#BE123C] hover:shadow-md active:translate-y-0 active:shadow-sm"
                   type="button"
                 >
                   {t("common.addToCart")}
@@ -192,7 +192,7 @@ export default function QuickViewModal() {
                 <Link
                   to={`/shop-details?id=${product.id}`}
                   onClick={close}
-                  className="inline-flex font-medium text-blue-600 underline-offset-4 hover:underline"
+                  className="inline-flex font-medium text-[#BE123C] underline-offset-4 hover:underline"
                 >
                   {t("productFullDetailsReviews")}
                 </Link>

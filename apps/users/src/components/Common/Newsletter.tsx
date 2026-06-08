@@ -15,7 +15,7 @@ export default function Newsletter() {
             width={1170}
             height={200}
           />
-          <div className="absolute -z-[1] max-w-[523px] max-h-[243px] w-full h-full right-0 top-0 bg-gradient-to-r from-blue-700/60 to-cyan-500/50" />
+          <div className="absolute -z-[1] max-w-[523px] max-h-[243px] w-full h-full right-0 top-0 bg-gradient-to-r from-[#BE123C]/65 to-[#E11D48]/45" />
 
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 px-4 sm:px-[30px] xl:pl-[50px] xl:pr-14 py-11">
             <div className="max-w-[491px] w-full">
@@ -37,7 +37,7 @@ export default function Newsletter() {
                   />
                   <button
                     type="submit"
-                    className="inline-flex justify-center py-3 px-7 text-white bg-blue-600 font-medium rounded-md ease-out duration-200 hover:bg-blue-700"
+                    className="inline-flex justify-center py-3 px-7 text-white bg-[#E11D48] font-medium rounded-md ease-out duration-200 hover:bg-[#BE123C]"
                   >
                     {t("common.subscribe")}
                   </button>
@@ -50,4 +50,3 @@ export default function Newsletter() {
     </section>
   );
 }
-

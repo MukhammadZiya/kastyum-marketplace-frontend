@@ -32,7 +32,7 @@ export default function HeroCarousel() {
           dynamicBullets: true,
         }}
         navigation={true}
-        className="!pb-10 [&_.swiper-pagination]:bottom-3 [&_.swiper-pagination-bullet]:h-2 [&_.swiper-pagination-bullet]:w-2 [&_.swiper-pagination-bullet]:bg-white/40 [&_.swiper-pagination-bullet]:opacity-100 [&_.swiper-pagination-bullet-active]:w-6 [&_.swiper-pagination-bullet-active]:rounded-full [&_.swiper-pagination-bullet-active]:bg-white"
+        className="!pb-10 [&_.swiper-button-next]:opacity-0 [&_.swiper-button-next]:transition [&_.swiper-button-next]:duration-200 [&_.swiper-button-next]:after:text-white [&_.swiper-button-next]:after:text-[24px] [&_.swiper-button-prev]:opacity-0 [&_.swiper-button-prev]:transition [&_.swiper-button-prev]:duration-200 [&_.swiper-button-prev]:after:text-white [&_.swiper-button-prev]:after:text-[24px] group-hover:[&_.swiper-button-next]:opacity-100 group-hover:[&_.swiper-button-prev]:opacity-100 [&_.swiper-pagination]:bottom-3 [&_.swiper-pagination-bullet]:h-2 [&_.swiper-pagination-bullet]:w-2 [&_.swiper-pagination-bullet]:bg-white/40 [&_.swiper-pagination-bullet]:opacity-100 [&_.swiper-pagination-bullet-active]:w-6 [&_.swiper-pagination-bullet-active]:rounded-full [&_.swiper-pagination-bullet-active]:bg-white"
       >
         {slides.map((slide) => (
           <SwiperSlide key={slide.id}>
