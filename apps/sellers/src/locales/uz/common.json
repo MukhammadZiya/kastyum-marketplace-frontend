@@ -17,8 +17,8 @@
     "sellerAuthCheckingSession": "Sessiya tekshirilmoqda…",
     "sellerAuthSignInTitle": "Sotuvchi kabinetiga kirish",
     "sellerAuthSignInSubtitle": "Sotuvchi hisobingiz email va parolini kiriting.",
-    "sellerAuthSignUpTitle": "Sotuvchi hisobi",
-    "sellerAuthSignUpSubtitle": "Do‘kon, mahsulotlar va buyurtmalarni boshqarish uchun ro‘yxatdan o‘ting.",
+    "sellerAuthSignUpTitle": "Sotuvchi arizasi",
+    "sellerAuthSignUpSubtitle": "iBerry’da sotish uchun ariza yuboring. Har bir do‘kon kirishdan oldin tekshiriladi.",
     "sellerAuthEmail": "Email",
     "sellerAuthEmailPh": "you@store.com",
     "sellerAuthPassword": "Parol",
@@ -32,7 +32,7 @@
     "sellerAuthSignInSubmit": "Kirish",
     "sellerAuthContinueWith": "Yoki davom etish",
     "sellerAuthCreatingAccount": "Hisob yaratilmoqda…",
-    "sellerAuthSignUpSubmit": "Sotuvchi hisobi yaratish",
+    "sellerAuthSignUpSubmit": "Sotuvchi arizasini yuborish",
     "sellerAuthNoAccount": "Sotuvchi kabinetida yangimisiz?",
     "sellerAuthCreateSellerAccount": "Ro‘yxatdan o‘tish",
     "sellerAuthHasAccount": "Allaqachon hisobingiz bormi?",
@@ -276,6 +276,12 @@
     "sellerAudienceMen": "Erkaklar",
     "sellerAudienceWomen": "Ayollar",
     "sellerAudienceKids": "Bolalar",
-    "sellerEmDash": "—"
+    "sellerEmDash": "—",
+    "sellerAuthPhone": "Telefon",
+    "sellerAuthPhonePh": "+998 90 123 45 67",
+    "sellerAuthSubmittingApplication": "Ariza yuborilmoqda...",
+    "sellerAuthApplicationReceived": "Ariza qabul qilindi",
+    "sellerAuthApplicationSuccess": "Sotuvchi arizangiz ko‘rib chiqilmoqda. Tez orada siz bilan bog‘lanamiz.",
+    "sellerAuthApprovalNotice": "Sotuvchi kabinetiga faqat ariza tasdiqlangandan keyin kirish mumkin. Agar ariza yuborgan bo‘lsangiz, ko‘rib chiqishimizni kuting."
   }
 }

@@ -17,6 +17,8 @@ export type MemberSignupBody = {
   type?: MemberType;
 };
 
+export type SellerApplicationBody = Omit<MemberSignupBody, "type">;
+
 export type MemberLoginBody = {
   email: string;
   password: string;

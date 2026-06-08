@@ -17,8 +17,8 @@
     "sellerAuthCheckingSession": "Проверка сессии…",
     "sellerAuthSignInTitle": "Вход продавца",
     "sellerAuthSignInSubtitle": "Введите email и пароль от аккаунта продавца.",
-    "sellerAuthSignUpTitle": "Регистрация продавца",
-    "sellerAuthSignUpSubtitle": "Создайте аккаунт для управления магазином, товарами и заказами.",
+    "sellerAuthSignUpTitle": "Заявка продавца",
+    "sellerAuthSignUpSubtitle": "Подайте заявку на продажу в iBerry. Мы проверяем каждый магазин перед открытием доступа.",
     "sellerAuthEmail": "Эл. почта",
     "sellerAuthEmailPh": "you@store.com",
     "sellerAuthPassword": "Пароль",
@@ -32,7 +32,7 @@
     "sellerAuthSignInSubmit": "Войти",
     "sellerAuthContinueWith": "Или продолжить через",
     "sellerAuthCreatingAccount": "Создание аккаунта…",
-    "sellerAuthSignUpSubmit": "Создать аккаунт продавца",
+    "sellerAuthSignUpSubmit": "Отправить заявку продавца",
     "sellerAuthNoAccount": "Нет аккаунта продавца?",
     "sellerAuthCreateSellerAccount": "Зарегистрироваться",
     "sellerAuthHasAccount": "Уже есть аккаунт?",
@@ -276,6 +276,12 @@
     "sellerAudienceMen": "Мужчины",
     "sellerAudienceWomen": "Женщины",
     "sellerAudienceKids": "Дети",
-    "sellerEmDash": "—"
+    "sellerEmDash": "—",
+    "sellerAuthPhone": "Телефон",
+    "sellerAuthPhonePh": "+998 90 123 45 67",
+    "sellerAuthSubmittingApplication": "Отправка заявки...",
+    "sellerAuthApplicationReceived": "Заявка получена",
+    "sellerAuthApplicationSuccess": "Ваша заявка продавца находится на рассмотрении. Мы скоро свяжемся с вами.",
+    "sellerAuthApprovalNotice": "Доступ продавца откроется только после одобрения заявки. Если вы уже подали заявку, дождитесь проверки."
   }
 }

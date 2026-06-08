@@ -58,6 +58,7 @@ export type {
   MemberAdminUpdateBody,
   MemberListQuery,
   MemberLoginBody,
+  SellerApplicationBody,
   MemberSignupBody,
   MemberUpdateBody,
   NotificationListQuery,
@@ -70,5 +71,6 @@ export type {
   ApiErrorBody,
   MemberAuthResponse,
   PaginatedResult,
+  SellerApplicationResponse,
   TokenPayload,
 } from "./api/responses";

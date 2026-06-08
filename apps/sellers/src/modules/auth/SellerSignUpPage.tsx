@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { MemberSignupBody } from "../../lib/marketplaceTypes";
-import { formatRequestFailureMessage, postMemberSignup } from "@repo/api";
+import { Link, Navigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import type { SellerApplicationBody } from "@repo/types";
+import { formatRequestFailureMessage, postSellerApplication } from "@repo/api";
 import { Button } from "@repo/ui";
 import { SellerAuthScaffold } from "../../components/seller/SellerAuthScaffold";
 import { useT } from "../../i18n";
@@ -11,37 +11,30 @@ import {
   accountTypeIsSeller,
   useClearSellerSessionWhenInvalid,
   useSellerSessionQuery,
-  writeSellerSessionToCache,
 } from "../../seller-auth";
 
 export function SellerSignUpPage() {
   const t = useT();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
   const { token, isLoading, isSuccess, data, isError } = useSellerSessionQuery();
 
-  const [fields, setFields] = useState<MemberSignupBody>({
+  const [fields, setFields] = useState<SellerApplicationBody>({
     nick: "",
     email: "",
     password: "",
-    type: "SELLER",
   });
   const [confirmPassword, setConfirmPassword] = useState("");
   const [formError, setFormError] = useState("");
+  const [applicationMessage, setApplicationMessage] = useState("");
 
   useClearSellerSessionWhenInvalid(token, { isError, isSuccess, data });
 
   const signup = useMutation({
-    mutationFn: (body: MemberSignupBody) =>
-      postMemberSignup({ ...body, type: "SELLER" }),
+    mutationFn: postSellerApplication,
     onSuccess: (response) => {
-      if (!accountTypeIsSeller(response.member.type)) {
-        setFormError(t("common.sellerAuthErrorNotSeller"));
-        return;
-      }
-      writeSellerSessionToCache(queryClient, response.accessToken, response.member);
-      navigate("/", { replace: true });
+      setApplicationMessage(response.message || t("common.sellerAuthApplicationSuccess"));
+      setFields({ nick: "", email: "", password: "", phone: "" });
+      setConfirmPassword("");
     },
     onError: (err: unknown) => {
       setFormError(formatRequestFailureMessage(err));
@@ -72,6 +65,7 @@ export function SellerSignUpPage() {
         onSubmit={(e) => {
           e.preventDefault();
           setFormError("");
+          setApplicationMessage("");
           if (!fields.nick.trim()) {
             setFormError("Enter a store or display name.");
             return;
@@ -90,9 +84,16 @@ export function SellerSignUpPage() {
             setFormError(t("common.sellerAuthPasswordMismatch"));
             return;
           }
-          signup.mutate({ ...fields, email });
+          signup.mutate({ ...fields, email, nick: fields.nick.trim(), phone: fields.phone?.trim() });
         }}
       >
+        {applicationMessage ? (
+          <div className="rounded-2xl border border-[#E11D48]/15 bg-[#FFF1F4] px-4 py-4 text-sm font-semibold text-[#9F1239]" role="status">
+            <p className="font-black">{t("common.sellerAuthApplicationReceived")}</p>
+            <p className="mt-1 font-medium">{applicationMessage}</p>
+          </div>
+        ) : null}
+
         {formError ? (
           <p className="text-sm text-red-600" role="alert">
             {formError}
@@ -109,7 +110,7 @@ export function SellerSignUpPage() {
           <input
             id="seller-signup-nick"
             autoComplete="username"
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-[#00966d] focus:bg-white focus:ring-4 focus:ring-[#00966d]/15"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-[#E11D48] focus:bg-white focus:ring-4 focus:ring-[#E11D48]/15"
             placeholder={t("common.sellerAuthNickPh")}
             value={fields.nick}
             onChange={(e) => setFields((prev) => ({ ...prev, nick: e.target.value }))}
@@ -127,10 +128,27 @@ export function SellerSignUpPage() {
             id="seller-signup-email"
             type="email"
             autoComplete="email"
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-[#00966d] focus:bg-white focus:ring-4 focus:ring-[#00966d]/15"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-[#E11D48] focus:bg-white focus:ring-4 focus:ring-[#E11D48]/15"
             placeholder={t("common.sellerAuthEmailPh")}
             value={fields.email}
             onChange={(e) => setFields((prev) => ({ ...prev, email: e.target.value }))}
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="seller-signup-phone"
+            className="mb-2 block text-sm font-medium text-slate-700"
+          >
+            {t("common.sellerAuthPhone")}
+          </label>
+          <input
+            id="seller-signup-phone"
+            autoComplete="tel"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-[#E11D48] focus:bg-white focus:ring-4 focus:ring-[#E11D48]/15"
+            placeholder={t("common.sellerAuthPhonePh")}
+            value={fields.phone ?? ""}
+            onChange={(e) => setFields((prev) => ({ ...prev, phone: e.target.value }))}
           />
         </div>
 
@@ -145,7 +163,7 @@ export function SellerSignUpPage() {
             id="seller-signup-password"
             type="password"
             autoComplete="new-password"
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-[#00966d] focus:bg-white focus:ring-4 focus:ring-[#00966d]/15"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-[#E11D48] focus:bg-white focus:ring-4 focus:ring-[#E11D48]/15"
             placeholder={t("common.sellerAuthPasswordPh")}
             value={fields.password}
             onChange={(e) => setFields((prev) => ({ ...prev, password: e.target.value }))}
@@ -163,7 +181,7 @@ export function SellerSignUpPage() {
             id="seller-signup-confirm"
             type="password"
             autoComplete="new-password"
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-[#00966d] focus:bg-white focus:ring-4 focus:ring-[#00966d]/15"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-[#E11D48] focus:bg-white focus:ring-4 focus:ring-[#E11D48]/15"
             placeholder={t("common.sellerAuthConfirmPasswordPh")}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -174,15 +192,15 @@ export function SellerSignUpPage() {
           type="submit"
           variant="primary"
           size="lg"
-          className="w-full bg-[#00966d] hover:bg-[#007a5a]"
+          className="w-full bg-[#E11D48] hover:bg-[#BE123C]"
           disabled={signup.isPending}
         >
-          {signup.isPending ? t("common.sellerAuthCreatingAccount") : t("common.sellerAuthSignUpSubmit")}
+          {signup.isPending ? t("common.sellerAuthSubmittingApplication") : t("common.sellerAuthSignUpSubmit")}
         </Button>
 
         <p className="text-center text-sm text-slate-600">
           {t("common.sellerAuthHasAccount")}{" "}
-          <Link to="/signin" className="font-medium text-[#006b4d] hover:underline">
+          <Link to="/signin" className="font-medium text-[#BE123C] hover:underline">
             {t("common.sellerAuthSignInLink")}
           </Link>
         </p>
@@ -193,7 +211,7 @@ export function SellerSignUpPage() {
             href={marketplaceSignupUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-[#006b4d] hover:underline"
+            className="font-medium text-[#BE123C] hover:underline"
           >
             {t("common.sellerAuthOpenMarketplaceSignup")}
           </a>

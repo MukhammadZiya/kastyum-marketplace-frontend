@@ -18,8 +18,8 @@
     "sellerAuthCheckingSession": "Checking session…",
     "sellerAuthSignInTitle": "Seller sign in",
     "sellerAuthSignInSubtitle": "Use the email and password for your seller account.",
-    "sellerAuthSignUpTitle": "Create seller account",
-    "sellerAuthSignUpSubtitle": "Register to manage your store, products, and orders.",
+    "sellerAuthSignUpTitle": "Seller application",
+    "sellerAuthSignUpSubtitle": "Apply to sell on iBerry. We review each store before opening seller access.",
     "sellerAuthEmail": "Email",
     "sellerAuthEmailPh": "you@store.com",
     "sellerAuthPassword": "Password",
@@ -33,7 +33,7 @@
     "sellerAuthSignInSubmit": "Sign in",
     "sellerAuthContinueWith": "Or continue with",
     "sellerAuthCreatingAccount": "Creating account…",
-    "sellerAuthSignUpSubmit": "Create seller account",
+    "sellerAuthSignUpSubmit": "Send seller application",
     "sellerAuthNoAccount": "New to seller portal?",
     "sellerAuthCreateSellerAccount": "Create an account",
     "sellerAuthHasAccount": "Already registered?",
@@ -278,6 +278,12 @@
     "sellerAudienceMen": "Men",
     "sellerAudienceWomen": "Women",
     "sellerAudienceKids": "Kids",
-    "sellerEmDash": "—"
+    "sellerEmDash": "—",
+    "sellerAuthPhone": "Phone",
+    "sellerAuthPhonePh": "+998 90 123 45 67",
+    "sellerAuthSubmittingApplication": "Sending application...",
+    "sellerAuthApplicationReceived": "Application received",
+    "sellerAuthApplicationSuccess": "Your seller application is under review. We will contact you soon.",
+    "sellerAuthApprovalNotice": "Seller access opens only after your application is approved. If you already applied, please wait for our review."
   }
 }
