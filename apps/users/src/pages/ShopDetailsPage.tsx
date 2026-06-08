@@ -612,7 +612,7 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
           </div>
         </div>
 
-        <ProductReviewsSection productId={product.id} />
+        <ProductReviewsSection productId={product.id} productMongoId={mongoId} />
       </div>
     </section>
   );
