@@ -45,17 +45,29 @@ export function SellerInventoryPage() {
   const rowEls =
     data?.list.length ?
       data.list.map((p: ProductSellerListItem) => (
-        <tr key={p._id} className="border-t border-slate-100">
-          <td className="px-4 py-3 font-medium text-slate-900">{p.title}</td>
-          <td className="px-4 py-3 text-slate-600">{p.modelNumber}</td>
-          <td className="px-4 py-3">${p.price.toFixed(2)}</td>
-          <td className="px-4 py-3 tabular-nums">{p.stockCount}</td>
-          <td className="px-4 py-3 tabular-nums">
+        <tr key={p._id} className="border-t border-neutral-100 transition hover:bg-[#FAFAFB]">
+          <td className="px-4 py-4 font-black text-slate-950">{p.title}</td>
+          <td className="px-4 py-4 text-slate-600">{p.modelNumber}</td>
+          <td className="px-4 py-4 font-black tabular-nums text-slate-950">
+            ${p.price.toFixed(2)}
+          </td>
+          <td className="px-4 py-4 tabular-nums">{p.stockCount}</td>
+          <td className="px-4 py-4 tabular-nums">
             {p.status === "ACTIVE" ? p.stockCount : 0}
           </td>
-          <td className="px-4 py-3 tabular-nums">{p.soldCount ?? 0}</td>
-          <td className="px-4 py-3">{p.status}</td>
-          <td className="px-4 py-3 text-slate-600">
+          <td className="px-4 py-4 tabular-nums">{p.soldCount ?? 0}</td>
+          <td className="px-4 py-4">
+            <span
+              className={`inline-flex rounded-full px-3 py-1 text-xs font-black ${
+                p.status === "ACTIVE" ?
+                  "bg-[#FFF1F2] text-[#BE123C]"
+                : "bg-slate-100 text-slate-500"
+              }`}
+            >
+              {p.status}
+            </span>
+          </td>
+          <td className="px-4 py-4 text-slate-600">
             {p.updatedAt
               ? new Date(p.updatedAt).toLocaleDateString()
               : t("common.sellerEmDash")}
@@ -72,6 +84,7 @@ export function SellerInventoryPage() {
       <Card
         title={t("common.sellerProductsListInventoryTitle")}
         description={t("common.sellerProductsListInventoryDesc")}
+        className="rounded-3xl border-neutral-200 shadow-[0_20px_60px_-52px_rgba(15,23,42,0.8)]"
       >
         <SellerTableScaffold columns={columns} emptyLabel={emptyLabel}>
           {rowEls}

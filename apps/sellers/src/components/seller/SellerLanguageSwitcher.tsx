@@ -35,7 +35,7 @@ export function SellerLanguageSwitcher() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-[22px] leading-none transition hover:border-[#00966d]/30 hover:bg-emerald-50/50"
+        className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-[22px] leading-none transition hover:border-[#E11D48]/30 hover:bg-[#FFF1F2]"
         aria-expanded={open}
         aria-haspopup="listbox"
         aria-label={t("common.ariaLanguageMenu")}
@@ -63,7 +63,7 @@ export function SellerLanguageSwitcher() {
                 }}
                 className={`flex w-full items-center gap-2.5 px-3 py-2 text-left text-[13px] font-medium sm:text-[14px] ${
                   locale === value
-                    ? "bg-emerald-50 text-[#006b4d]"
+                    ? "bg-[#FFF1F2] text-[#BE123C]"
                     : "text-slate-900 hover:bg-slate-50"
                 }`}
               >

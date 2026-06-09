@@ -49,14 +49,14 @@ const SIDEBAR_TONE: Record<
     subInactive: "text-slate-600 hover:bg-white/60 hover:text-slate-900",
   },
   seller: {
-    parentActive: "bg-emerald-50 text-emerald-900",
-    parentInactive: "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+    parentActive: "bg-[#FFF1F2] text-[#BE123C]",
+    parentInactive: "text-slate-600 hover:bg-[#FFF1F2] hover:text-[#BE123C]",
     leafActive:
-      "bg-[#00966d] text-white shadow-sm shadow-[#00966d]/25",
-    leafInactive: "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+      "bg-[#E11D48] text-white shadow-sm shadow-[#E11D48]/25",
+    leafInactive: "text-slate-600 hover:bg-[#FFF1F2] hover:text-[#BE123C]",
     subActive:
-      "bg-[#00966d] text-white shadow-sm shadow-[#00966d]/25",
-    subInactive: "text-slate-600 hover:bg-white/60 hover:text-slate-900",
+      "bg-[#E11D48] text-white shadow-sm shadow-[#E11D48]/25",
+    subInactive: "text-slate-600 hover:bg-white/70 hover:text-[#BE123C]",
   },
 };
 
