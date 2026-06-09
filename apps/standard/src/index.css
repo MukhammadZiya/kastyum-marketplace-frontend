@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@source "../../admin/src/**/*.{ts,tsx}";
+@source "../../sellers/src/**/*.{ts,tsx}";
+@source "../../users/src/**/*.{ts,tsx}";
+@source "../../../packages/ui/src/**/*.{ts,tsx}";
+
+.hero-serif-title {
+  font-family: "DM Serif Display", Georgia, "Times New Roman", serif;
+}
+
+/* Wide hero carousel — circular nav like marketplace reference */
+.trending-hero-carousel .swiper-button-prev,
+.trending-hero-carousel .swiper-button-next {
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-top: 0;
+  top: 50%;
+  translate: 0 -50%;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  color: #262626;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.trending-hero-carousel .swiper-button-prev:hover,
+.trending-hero-carousel .swiper-button-next:hover {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.trending-hero-carousel .swiper-button-prev::after,
+.trending-hero-carousel .swiper-button-next::after {
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+.trending-hero-carousel .swiper-button-prev {
+  left: 0.5rem;
+}
+
+.trending-hero-carousel .swiper-button-next {
+  right: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .trending-hero-carousel .swiper-button-prev {
+    left: 0.75rem;
+  }
+
+  .trending-hero-carousel .swiper-button-next {
+    right: 0.75rem;
+  }
+}
+
+.trending-hero-carousel .swiper-button-disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}

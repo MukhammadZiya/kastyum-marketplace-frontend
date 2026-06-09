@@ -10,9 +10,13 @@ import { SellersListPage } from "./modules/sellers/SellersListPage";
 import { UserCreatePage } from "./modules/users/UserCreatePage";
 import { UsersListPage } from "./modules/users/UsersListPage";
 
-function App() {
+type AppProps = {
+  basename?: string;
+};
+
+function App({ basename }: AppProps = {}) {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <Routes>
         <Route path="/login" element={<AdminLoginPage />} />
         <Route element={<RequireAdminAuth />}>
