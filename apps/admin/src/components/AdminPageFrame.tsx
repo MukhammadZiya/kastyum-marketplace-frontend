@@ -35,7 +35,7 @@ export function AdminPageFrame({ title, addon, children }: Props) {
             <button
               type="button"
               onClick={mobileNav.openMobileNav}
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200/90 bg-white text-slate-700 shadow-sm hover:bg-slate-50 lg:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-xl border border-neutral-200 bg-white text-slate-700 shadow-sm transition hover:border-[#FDA4AF] hover:bg-[#FFF1F2] hover:text-[#BE123C] lg:hidden"
               aria-label={t("common.adminAriaOpenNav")}
             >
               <Menu className="h-5 w-5" strokeWidth={2} />

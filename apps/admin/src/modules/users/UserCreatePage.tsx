@@ -28,6 +28,7 @@ export function UserCreatePage() {
       <Card
         title={t("common.adminUserCreateCardTitle")}
         description={t("common.adminUserCreateCardDesc")}
+        className="rounded-3xl border-neutral-200 shadow-[0_18px_50px_rgba(15,23,42,0.05)]"
       >
         <form onSubmit={handleSubmit} className="max-w-lg space-y-4">
           <div>
@@ -59,7 +60,12 @@ export function UserCreatePage() {
               placeholder={t("common.adminPhFullName")}
             />
           </div>
-          <Button type="submit" variant="accent" size="md">
+          <Button
+            type="submit"
+            variant="accent"
+            size="md"
+            className="!border-[#E11D48] !bg-[#E11D48] hover:!bg-[#BE123C]"
+          >
             {t("common.adminSaveUser")}
           </Button>
         </form>

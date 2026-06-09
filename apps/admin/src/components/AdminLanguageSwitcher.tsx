@@ -35,7 +35,7 @@ export function AdminLanguageSwitcher() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex h-10 w-10 items-center justify-center rounded-md border border-slate-200 bg-white text-[22px] leading-none transition hover:border-slate-300 hover:bg-slate-50"
+        className="flex h-10 w-10 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[22px] leading-none shadow-sm transition hover:border-[#FDA4AF] hover:bg-[#FFF1F2]"
         aria-expanded={open}
         aria-haspopup="listbox"
         aria-label={t("common.ariaLanguageMenu")}
@@ -49,7 +49,7 @@ export function AdminLanguageSwitcher() {
         <ul
           role="listbox"
           aria-label={t("common.ariaLanguageMenu")}
-          className="absolute right-0 z-[10000] mt-1 min-w-[11rem] rounded-md border border-slate-200 bg-white py-1 shadow-lg"
+          className="absolute right-0 z-[10000] mt-2 min-w-[11rem] rounded-2xl border border-neutral-200 bg-white p-1.5 shadow-xl"
         >
           {LOCALES.map(({ value, labelKey }) => (
             <li key={value} role="presentation">
@@ -61,10 +61,10 @@ export function AdminLanguageSwitcher() {
                   setLocale(value);
                   setOpen(false);
                 }}
-                className={`flex w-full items-center gap-2.5 px-3 py-2 text-left text-[13px] font-medium sm:text-[14px] ${
+                className={`flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left text-[13px] font-bold transition sm:text-[14px] ${
                   locale === value
-                    ? "bg-blue-50 text-blue-800"
-                    : "text-slate-900 hover:bg-slate-50"
+                    ? "bg-[#FFF1F2] text-[#BE123C]"
+                    : "text-slate-900 hover:bg-[#FAFAFB]"
                 }`}
               >
                 <span className="text-lg leading-none select-none" aria-hidden>
