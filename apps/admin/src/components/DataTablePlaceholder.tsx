@@ -12,11 +12,11 @@ export function DataTablePlaceholder({
   children,
 }: Props) {
   return (
-    <table className="w-full min-w-[520px] text-left text-sm">
+    <table className="w-full min-w-[520px] overflow-hidden text-left text-sm">
       <thead>
-        <tr className="border-b border-slate-200 text-xs font-medium uppercase tracking-wide text-slate-400">
+        <tr className="border-b border-neutral-200 bg-[#FAFAFB] text-xs font-black uppercase tracking-[0.14em] text-slate-400">
           {columns.map((col) => (
-            <th key={col} className="px-4 py-3 font-medium">
+            <th key={col} className="px-4 py-3 font-black">
               {col}
             </th>
           ))}
@@ -27,7 +27,7 @@ export function DataTablePlaceholder({
           <tr>
             <td
               colSpan={columns.length}
-              className="px-4 py-12 text-center text-slate-500"
+              className="px-4 py-12 text-center font-medium text-slate-500"
             >
               {emptyMessage}
             </td>

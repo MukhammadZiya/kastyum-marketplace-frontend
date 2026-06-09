@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Trash2 } from "lucide-react";
 import { cartLineKey, type CartItem } from "../../../context/cart";
 import { useT } from "../../../i18n";
 import { productDisplayTitle } from "../../../lib/productDisplayTitle";
@@ -13,41 +14,43 @@ export default function CartSidebarItem({
   const t = useT();
   const displayTitle = productDisplayTitle(item, t);
   const ariaView = t("productAriaView").replace("{title}", displayTitle);
+  const detailTo = item.mongoId
+    ? `/shop-details?id=${encodeURIComponent(item.mongoId)}`
+    : `/shop-details?id=${item.id}`;
+  const imageSrc = item.imgs?.thumbnails?.[0] ?? item.imgs?.previews?.[0];
+  const lineTotal = item.discountedPrice * item.quantity;
 
   return (
-    <div className="flex items-center justify-between gap-5 rounded-lg border border-transparent px-1 py-1 transition duration-200 ease-out hover:border-neutral-100 hover:bg-neutral-50/80">
-      <div className="flex w-full items-center gap-6">
+    <article className="group relative overflow-hidden rounded-2xl border border-neutral-200 bg-white p-3 shadow-[0_18px_60px_-48px_rgba(15,23,42,0.6)] transition duration-200 ease-out hover:border-neutral-300 hover:shadow-[0_24px_70px_-50px_rgba(15,23,42,0.65)]">
+      <div className="flex gap-3">
         <Link
-          to={
-            item.mongoId
-              ? `/shop-details?id=${encodeURIComponent(item.mongoId)}`
-              : `/shop-details?id=${item.id}`
-          }
-          className="flex h-[90px] w-full max-w-[90px] items-center justify-center rounded-[10px] bg-neutral-100"
+          to={detailTo}
+          className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[#F7F8FA] ring-1 ring-neutral-100 transition group-hover:bg-[#F1F3F6]"
           aria-label={ariaView}
         >
-          <img
-            src={item.imgs?.thumbnails[0]}
-            alt=""
-            className="max-h-[78px] max-w-[78px] object-contain object-center"
-          />
+          {imageSrc ?
+            <img
+              src={imageSrc}
+              alt=""
+              className="h-full w-full object-contain object-center p-2"
+            />
+          : <span className="text-[11px] font-semibold text-neutral-400">
+              {t("productImageUnavailable")}
+            </span>}
         </Link>
 
-        <div className="min-w-0">
-          <h3 className="mb-1 font-medium text-neutral-900">
+        <div className="min-w-0 flex-1 pr-8">
+          <h3 className="line-clamp-2 text-[15px] font-black leading-snug text-neutral-950">
             <Link
-              to={
-                item.mongoId
-                  ? `/shop-details?id=${encodeURIComponent(item.mongoId)}`
-                  : `/shop-details?id=${item.id}`
-              }
-              className="ease-out duration-200 hover:text-blue-600"
+              to={detailTo}
+              className="transition duration-200 ease-out hover:text-[#BE123C]"
             >
               {displayTitle}
             </Link>
           </h3>
+
           {item.selectedSizeName || item.selectedColorName ?
-            <p className="mb-1 text-xs text-neutral-500">
+            <div className="mt-2 flex flex-wrap gap-1.5">
               {[
                 item.selectedSizeName ?
                   `${t("cartItemSizeLabel")}: ${item.selectedSizeName}`
@@ -57,39 +60,50 @@ export default function CartSidebarItem({
                 : null,
               ]
                 .filter(Boolean)
-                .join(" · ")}
-            </p>
+                .map((label) => (
+                  <span
+                    key={label}
+                    className="rounded-full bg-neutral-100 px-2 py-1 text-[11px] font-semibold text-neutral-600"
+                  >
+                    {label}
+                  </span>
+                ))}
+            </div>
           : null}
-          <p className="text-[14px] text-neutral-600">
-            {t("common.price")}: ${item.discountedPrice}
-          </p>
+
+          <div className="mt-4 flex items-end justify-between gap-3">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-wide text-neutral-400">
+                {t("common.price")}
+              </p>
+              <p className="text-lg font-black text-[#E11D48]">
+                ${item.discountedPrice}
+              </p>
+            </div>
+            <div className="rounded-full bg-neutral-950 px-3 py-1.5 text-xs font-bold text-white">
+              x{item.quantity}
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div className="mt-3 flex items-center justify-between border-t border-neutral-100 pt-3">
+        <p className="text-xs font-semibold text-neutral-500">
+          {t("common.total")}
+        </p>
+        <p className="text-base font-black text-neutral-950">
+          ${lineTotal.toFixed(2)}
+        </p>
       </div>
 
       <button
         onClick={() => onRemove(cartLineKey(item))}
         aria-label={t("ariaRemoveProductFromCart")}
-        className="flex items-center justify-center rounded-lg max-w-[38px] w-full h-[38px] bg-neutral-100 border border-neutral-200 text-neutral-900 ease-out duration-200 hover:bg-red-50 hover:border-red-200 hover:text-red-600"
+        className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white text-neutral-500 shadow-sm ring-1 ring-neutral-200 transition duration-200 hover:bg-red-50 hover:text-red-600 hover:ring-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
         type="button"
       >
-        <svg
-          className="fill-current"
-          width="22"
-          height="22"
-          viewBox="0 0 22 22"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M8.63993 9.39928C9.01774 9.3615 9.35464 9.63715 9.39242 10.015L9.85076 14.5983C9.88854 14.9761 9.61289 15.313 9.23508 15.3508C8.85727 15.3886 8.52036 15.1129 8.48258 14.7351L8.02425 10.1518C7.98647 9.77397 8.26212 9.43706 8.63993 9.39928Z"
-            fill=""
-          />
-          <path
-            d="M13.3601 9.39928C13.7379 9.43706 14.0135 9.77397 13.9758 10.1518L13.5174 14.7351C13.4796 15.1129 13.1427 15.3886 12.7649 15.3508C12.3871 15.313 12.1115 14.9761 12.1492 14.5983L12.6076 10.015C12.6454 9.63715 12.9823 9.3615 13.3601 9.39928Z"
-            fill=""
-          />
-        </svg>
+        <Trash2 className="h-4.5 w-4.5" strokeWidth={2.15} />
       </button>
-    </div>
+    </article>
   );
 }

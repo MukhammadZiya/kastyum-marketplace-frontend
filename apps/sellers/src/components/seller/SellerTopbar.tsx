@@ -12,19 +12,19 @@ export function SellerTopbar() {
   const queryClient = useQueryClient();
 
   return (
-    <header className="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm shadow-slate-200/40">
+    <header className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-neutral-200 bg-white p-5 shadow-[0_18px_60px_-46px_rgba(15,23,42,0.7)]">
       <div className="flex min-w-0 items-center gap-4">
         <div
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#00966d] text-sm font-bold text-white shadow-sm shadow-[#00966d]/25"
+          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#E11D48] text-base font-black text-white shadow-[0_16px_30px_-18px_rgba(225,29,72,0.9)]"
           aria-hidden
         >
-          S
+          iB
         </div>
         <div className="min-w-0">
-          <p className="text-sm text-slate-500">
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-[#BE123C]">
             {t("common.sellerTopYourStorefront")}
           </p>
-          <h2 className="truncate text-lg font-semibold tracking-tight text-slate-900">
+          <h2 className="truncate text-xl font-black tracking-tight text-slate-950">
             {t("common.sellerTopDemoStore")}
           </h2>
         </div>
@@ -35,7 +35,7 @@ export function SellerTopbar() {
           type="button"
           variant="ghost"
           size="sm"
-          className="gap-1.5 text-slate-600 hover:text-slate-900"
+          className="gap-1.5 rounded-xl text-slate-600 hover:bg-[#FFF1F2] hover:text-[#BE123C]"
           onClick={() => {
             logoutSeller(queryClient);
             navigate("/signin", { replace: true });
@@ -44,11 +44,11 @@ export function SellerTopbar() {
           <LogOut className="h-4 w-4" strokeWidth={2} aria-hidden />
           {t("common.sellerTopLogOut")}
         </Button>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-[#006b4d] ring-1 ring-[#00966d]/20">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#00966d]" aria-hidden />
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FFF1F2] px-3 py-1 text-xs font-black text-[#BE123C] ring-1 ring-[#E11D48]/15">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#E11D48]" aria-hidden />
           {t("common.sellerTopStoreLive")}
         </span>
-        <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
+        <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-600">
           {t("common.sellerTopSellerPanel")}
         </span>
       </div>

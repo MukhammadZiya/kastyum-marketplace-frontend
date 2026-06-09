@@ -1,6 +1,6 @@
 export type MemberType = "ADMIN" | "SELLER" | "USER";
 
-export type MemberStatus = "ACTIVE" | "BLOCK" | "DELETE";
+export type MemberStatus = "ACTIVE" | "PENDING" | "BLOCK" | "DELETE";
 
 export type ProductStatus = "ACTIVE" | "INACTIVE" | "DELETE";
 

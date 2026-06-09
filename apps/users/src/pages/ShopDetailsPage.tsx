@@ -1,4 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Heart,
+  Minus,
+  Plus,
+  ShoppingBag,
+} from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import Breadcrumb from "../components/Common/Breadcrumb";
 import { StarRating } from "../components/Common/StarRating";
@@ -15,6 +23,7 @@ import { useCart } from "../context/cart";
 import {
   variantColorsFromApiProduct,
   variantSizesFromApiProduct,
+  type VariantOption,
 } from "../lib/apiProductVariants";
 import { useWishlist } from "../context/wishlist";
 import type { ProductWithRelations } from "@repo/types";
@@ -73,74 +82,108 @@ function audienceLabel(audience: string, t: TranslateFn): string {
   }
 }
 
-function ShopDetailsApiSpecs({
-  apiProduct,
-  t,
-}: {
-  apiProduct: ProductWithRelations;
-  t: TranslateFn;
-}) {
-  const brandName = apiProduct.brand?.name;
-  const materialName = apiProduct.material?.name;
-  const fitName = apiProduct.fit?.name;
-  const styleName = apiProduct.style?.name;
-  const sku = apiProduct.modelNumber?.trim();
+type DetailSpec = {
+  label: string;
+  value: string;
+};
+
+function ShopDetailsSpecs({ items, t }: { items: DetailSpec[]; t: TranslateFn }) {
+  if (items.length === 0) return null;
+  return (
+    <div className="rounded-2xl bg-white p-5 shadow-[0_16px_50px_-44px_rgba(15,23,42,0.65)] ring-1 ring-neutral-200 sm:p-6">
+      <h2 className="text-xs font-black uppercase tracking-[0.18em] text-neutral-500">
+        {t("productDetailSpecsHeading")}
+      </h2>
+      <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-[minmax(0,10rem)_1fr] sm:gap-x-6">
+        {items.map((item) => (
+          <div className="contents" key={item.label}>
+            <dt className="text-neutral-500">{item.label}</dt>
+            <dd className="font-medium text-neutral-900">{item.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  );
+}
+
+function productArrayValue(product: Product, key: "colors" | "sizes"): string[] {
+  if (key in product) {
+    const value = product[key as keyof Product];
+    if (Array.isArray(value)) {
+      return value.filter((item): item is string => typeof item === "string" && item.trim().length > 0);
+    }
+  }
+  return [];
+}
+
+function productStringValue(product: Product, key: "category"): string | null {
+  if (key in product) {
+    const value = product[key as keyof Product];
+    if (typeof value === "string" && value.trim()) return value.trim();
+  }
+  return null;
+}
+
+function fallbackVariantOptions(values: string[], prefix: string): VariantOption[] {
+  return values.map((value, index) => ({
+    id: `${prefix}-${index}-${value}`,
+    label: value,
+  }));
+}
+
+function buildDetailSpecs(
+  product: Product,
+  apiProduct: ProductWithRelations | undefined,
+  t: TranslateFn,
+): DetailSpec[] {
   const sellerNick =
-    apiProduct.sellerId &&
+    apiProduct?.sellerId &&
     typeof apiProduct.sellerId === "object" &&
     "nick" in apiProduct.sellerId ?
       apiProduct.sellerId.nick?.trim() || null
     : null;
+  const category = product.categoryLabel || productStringValue(product, "category");
+  const specs: DetailSpec[] = [
+    {
+      label: t("productDetailBrand"),
+      value: apiProduct?.brand?.name || product.brandName || "iBerry",
+    },
+  ];
 
-  return (
-    <div className="mt-6 space-y-5 rounded-xl border border-neutral-200 bg-neutral-50/90 p-5">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-500">
-        {t("productDetailSpecsHeading")}
-      </h2>
-      <dl className="grid gap-3 text-sm sm:grid-cols-[minmax(0,10rem)_1fr] sm:gap-x-6">
-        {brandName ? (
-          <>
-            <dt className="text-neutral-500">{t("productDetailBrand")}</dt>
-            <dd className="font-medium text-neutral-900">{brandName}</dd>
-          </>
-        ) : null}
-        {materialName ? (
-          <>
-            <dt className="text-neutral-500">{t("productDetailMaterial")}</dt>
-            <dd className="font-medium text-neutral-900">{materialName}</dd>
-          </>
-        ) : null}
-        {fitName ? (
-          <>
-            <dt className="text-neutral-500">{t("productDetailFit")}</dt>
-            <dd className="font-medium text-neutral-900">{fitName}</dd>
-          </>
-        ) : null}
-        {styleName ? (
-          <>
-            <dt className="text-neutral-500">{t("productDetailStyle")}</dt>
-            <dd className="font-medium text-neutral-900">{styleName}</dd>
-          </>
-        ) : null}
-        {sku ? (
-          <>
-            <dt className="text-neutral-500">{t("productDetailSku")}</dt>
-            <dd className="font-medium text-neutral-900">{sku}</dd>
-          </>
-        ) : null}
-        {sellerNick ? (
-          <>
-            <dt className="text-neutral-500">{t("productDetailSeller")}</dt>
-            <dd className="font-medium text-neutral-900">{sellerNick}</dd>
-          </>
-        ) : null}
-        <dt className="text-neutral-500">{t("productDetailAudience")}</dt>
-        <dd className="font-medium text-neutral-900">
-          {audienceLabel(apiProduct.audience, t)}
-        </dd>
-      </dl>
-    </div>
-  );
+  if (apiProduct?.material?.name) {
+    specs.push({
+      label: t("productDetailMaterial"),
+      value: apiProduct.material.name,
+    });
+  }
+  if (apiProduct?.fit?.name) {
+    specs.push({
+      label: t("productDetailFit"),
+      value: apiProduct.fit.name,
+    });
+  }
+  if (apiProduct?.style?.name || category) {
+    specs.push({
+      label: t("productDetailStyle"),
+      value: apiProduct?.style?.name || category || "",
+    });
+  }
+  if (apiProduct?.modelNumber?.trim()) {
+    specs.push({
+      label: t("productDetailSku"),
+      value: apiProduct.modelNumber.trim(),
+    });
+  }
+  specs.push({
+    label: t("productDetailSeller"),
+    value: sellerNick || product.sellerName || "iBerry",
+  });
+  specs.push({
+    label: t("productDetailAudience"),
+    value: apiProduct ? audienceLabel(apiProduct.audience, t) : t("productDetailAudienceMen"),
+  });
+
+  return specs.filter((item) => item.value.trim().length > 0);
 }
 
 function ShopDetailsVariantPickers({
@@ -152,8 +195,8 @@ function ShopDetailsVariantPickers({
   onSelectColor,
   t,
 }: {
-  sizeOptions: ReturnType<typeof variantSizesFromApiProduct>;
-  colorOptions: ReturnType<typeof variantColorsFromApiProduct>;
+  sizeOptions: VariantOption[];
+  colorOptions: VariantOption[];
   selectedSizeId: string | null;
   selectedColorId: string | null;
   onSelectSize: (id: string) => void;
@@ -163,7 +206,11 @@ function ShopDetailsVariantPickers({
   if (sizeOptions.length === 0 && colorOptions.length === 0) return null;
 
   return (
-    <div className="mt-6 space-y-5">
+    <div className="rounded-2xl bg-white p-5 shadow-[0_16px_50px_-44px_rgba(15,23,42,0.65)] ring-1 ring-neutral-200 sm:p-6">
+      <h2 className="text-xs font-black uppercase tracking-[0.18em] text-neutral-500">
+        {t("productOptionsHeading")}
+      </h2>
+      <div className="mt-5 space-y-5">
       {sizeOptions.length > 0 ?
         <div>
           <p className="text-sm font-medium text-neutral-800">
@@ -184,7 +231,7 @@ function ShopDetailsVariantPickers({
                   onClick={() => onSelectSize(s.id)}
                   className={`rounded-md border px-3 py-2 text-sm font-medium transition ${
                     selected ?
-                      "border-blue-600 bg-blue-50 text-blue-900 ring-1 ring-blue-600"
+                      "border-[#E11D48] bg-[#FFF1F2] text-[#BE123C] ring-1 ring-[#E11D48]"
                     : "border-neutral-300 bg-white text-neutral-900 hover:border-neutral-400"
                   }`}
                 >
@@ -215,7 +262,7 @@ function ShopDetailsVariantPickers({
                   onClick={() => onSelectColor(c.id)}
                   className={`flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium transition ${
                     selected ?
-                      "border-blue-600 bg-blue-50 text-blue-900 ring-1 ring-blue-600"
+                      "border-[#E11D48] bg-[#FFF1F2] text-[#BE123C] ring-1 ring-[#E11D48]"
                     : "border-neutral-300 bg-white text-neutral-900 hover:border-neutral-400"
                   }`}
                 >
@@ -233,6 +280,7 @@ function ShopDetailsVariantPickers({
           </div>
         </div>
       : null}
+      </div>
     </div>
   );
 }
@@ -259,12 +307,22 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
   const { addItem: addWishlistItem } = useWishlist();
 
   const sizeOptions = useMemo(
-    () => (apiProduct ? variantSizesFromApiProduct(apiProduct) : []),
-    [apiProduct],
+    () =>
+      apiProduct ?
+        variantSizesFromApiProduct(apiProduct)
+      : fallbackVariantOptions(productArrayValue(product, "sizes"), "size"),
+    [apiProduct, product],
   );
   const colorOptions = useMemo(
-    () => (apiProduct ? variantColorsFromApiProduct(apiProduct) : []),
-    [apiProduct],
+    () =>
+      apiProduct ?
+        variantColorsFromApiProduct(apiProduct)
+      : fallbackVariantOptions(productArrayValue(product, "colors"), "color"),
+    [apiProduct, product],
+  );
+  const detailSpecs = useMemo(
+    () => buildDetailSpecs(product, apiProduct, t),
+    [product, apiProduct, t],
   );
 
   useEffect(() => {
@@ -273,17 +331,30 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
   }, [product.mongoId, product.id, gallerySources]);
 
   useEffect(() => {
-    if (!apiProduct) {
-      setSelectedSizeId(null);
-      setSelectedColorId(null);
-      return;
-    }
-    const sizes = variantSizesFromApiProduct(apiProduct);
-    const colors = variantColorsFromApiProduct(apiProduct);
-    setSelectedSizeId(sizes.length === 1 ? sizes[0].id : null);
-    setSelectedColorId(colors.length === 1 ? colors[0].id : null);
+    if (gallerySources.length < 2) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowLeft") {
+        setActiveImageIndex((index) =>
+          index === 0 ? gallerySources.length - 1 : index - 1,
+        );
+        setMainImageFailed(false);
+      }
+      if (event.key === "ArrowRight") {
+        setActiveImageIndex((index) => (index + 1) % gallerySources.length);
+        setMainImageFailed(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [gallerySources.length]);
+
+  useEffect(() => {
+    setSelectedSizeId(sizeOptions.length === 1 ? sizeOptions[0].id : null);
+    setSelectedColorId(colorOptions.length === 1 ? colorOptions[0].id : null);
     setVariantError(null);
-  }, [apiProduct]);
+  }, [sizeOptions, colorOptions]);
 
   const reviewStats = getReviewStats(product.id);
   const displayTitle = productDisplayTitle(product, t);
@@ -310,13 +381,25 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
       ? gallerySources[Math.min(activeImageIndex, gallerySources.length - 1)]
       : "";
   const showImagePlaceholder = gallerySources.length === 0 || mainImageFailed;
+  const hasGalleryControls = gallerySources.length > 1 && !showImagePlaceholder;
+  const goToPreviousImage = () => {
+    setActiveImageIndex((index) =>
+      index === 0 ? gallerySources.length - 1 : index - 1,
+    );
+    setMainImageFailed(false);
+  };
+  const goToNextImage = () => {
+    setActiveImageIndex((index) => (index + 1) % gallerySources.length);
+    setMainImageFailed(false);
+  };
 
   return (
-    <section className="py-10">
-      <div className="mx-auto max-w-[1170px] px-4 sm:px-8 xl:px-0">
-        <div className="grid gap-10 lg:grid-cols-[570px_1fr]">
-          <div>
-            <div className="flex min-h-[min(520px,72vh)] items-center justify-center overflow-hidden rounded-lg bg-neutral-100 p-4 sm:p-6 lg:p-8">
+    <section className="bg-white py-5 sm:py-8">
+      <div className="mx-auto max-w-[1280px] px-4 sm:px-8 xl:px-0">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,690px)_minmax(390px,1fr)] lg:gap-10">
+          <div className="min-w-0 lg:grid lg:grid-cols-[86px_minmax(0,1fr)] lg:gap-5">
+            <div className="order-2">
+              <div className="flex min-h-[430px] items-start justify-center overflow-hidden bg-white p-2 sm:min-h-[min(650px,78vh)] sm:p-3 lg:min-h-[650px]">
               {showImagePlaceholder ?
                 <div className="w-full max-w-full">
                   <ProductImagePlaceholder label={t("productImageUnavailable")} />
@@ -324,7 +407,7 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
               : <img
                   src={activeImageSrc}
                   alt={displayTitle}
-                  className="max-h-[min(560px,68vh)] w-full max-w-full object-contain object-center"
+                  className="max-h-[420px] w-full max-w-full object-contain object-center sm:max-h-[min(640px,76vh)]"
                   loading="eager"
                   decoding="async"
                   fetchPriority="high"
@@ -332,10 +415,31 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
                   onLoad={() => setMainImageFailed(false)}
                 />
               }
+              </div>
+              {hasGalleryControls ?
+                <div className="mt-4 flex items-center justify-center gap-3">
+                  <button
+                    type="button"
+                    onClick={goToPreviousImage}
+                    aria-label={t("common.ariaPrevious")}
+                    className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-neutral-900 shadow-[0_14px_34px_-22px_rgba(15,23,42,0.75)] ring-1 ring-neutral-200 transition hover:bg-[#E11D48] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D48]"
+                  >
+                    <ChevronLeft className="h-6 w-6" strokeWidth={2.35} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={goToNextImage}
+                    aria-label={t("common.ariaNext")}
+                    className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-neutral-900 shadow-[0_14px_34px_-22px_rgba(15,23,42,0.75)] ring-1 ring-neutral-200 transition hover:bg-[#E11D48] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D48]"
+                  >
+                    <ChevronRight className="h-6 w-6" strokeWidth={2.35} />
+                  </button>
+                </div>
+              : null}
             </div>
             {gallerySources.length > 1 ?
               <nav
-                className="mt-5 -mx-1 flex gap-3 overflow-x-auto pb-1 [scrollbar-gutter:stable] sm:mx-0 sm:flex-wrap sm:overflow-visible"
+                className="order-1 -mx-1 mt-4 flex gap-3 overflow-x-auto pb-2 [scrollbar-gutter:stable] sm:mx-0 lg:mt-0 lg:flex-col lg:overflow-visible lg:pb-0"
                 aria-label={t("productGalleryThumbnails")}
               >
                 {gallerySources.map((img, i) => {
@@ -352,16 +456,16 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
                         setActiveImageIndex(i);
                         setMainImageFailed(false);
                       }}
-                      className={`flex h-20 w-20 shrink-0 items-center justify-center rounded-md border bg-neutral-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                      className={`flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-xl border bg-white p-1 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D48] sm:h-24 sm:w-24 lg:h-20 lg:w-20 ${
                         selected
-                          ? "border-blue-600 ring-1 ring-blue-600"
+                          ? "border-[#E11D48] ring-2 ring-[#E11D48]/20"
                           : "border-neutral-200 hover:border-neutral-300"
                       }`}
                     >
                       <img
                         src={img}
                         alt=""
-                        className="max-h-14 max-w-14 object-contain"
+                        className="h-full w-full rounded-xl object-cover object-center"
                         loading="lazy"
                         decoding="async"
                       />
@@ -371,8 +475,8 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
               </nav>
             : null}
           </div>
-          <div>
-              <h1 className="text-3xl font-semibold text-neutral-900">{displayTitle}</h1>
+          <div className="min-w-0 border-t border-neutral-200 pt-6 sm:pt-7 lg:sticky lg:top-[178px] lg:self-start lg:border-t-0 lg:pt-3">
+              <h1 className="text-2xl font-black tracking-tight text-neutral-950 sm:text-3xl">{displayTitle}</h1>
             <div className="mt-3 flex flex-wrap items-center gap-3">
               {reviewStats && reviewStats.count > 0 ?
                 <>
@@ -384,33 +488,33 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
               : <span className="text-sm text-neutral-600">{reviewSummaryText}</span>}
             </div>
             <div className="mt-3 flex items-center gap-2">
-              <span className="text-2xl font-semibold text-neutral-900">
+              <span className="text-4xl font-black text-[#E11D48]">
                 ${product.discountedPrice}
               </span>
               {showStrikethroughOriginalPrice(product) ?
                 <span className="text-neutral-500 line-through">${product.price}</span>
               : null}
             </div>
-            <p className="mt-5 text-neutral-600">{description}</p>
-            {mongoId && apiProduct ?
-              <ShopDetailsApiSpecs apiProduct={apiProduct} t={t} />
-            : null}
-            {mongoId && apiProduct ?
-              <ShopDetailsVariantPickers
-                sizeOptions={sizeOptions}
-                colorOptions={colorOptions}
-                selectedSizeId={selectedSizeId}
-                selectedColorId={selectedColorId}
-                onSelectSize={(id) => {
-                  setSelectedSizeId(id);
-                  setVariantError(null);
-                }}
-                onSelectColor={(id) => {
-                  setSelectedColorId(id);
-                  setVariantError(null);
-                }}
-                t={t}
-              />
+            <p className="mt-5 leading-7 text-neutral-600">{description}</p>
+            {detailSpecs.length > 0 || sizeOptions.length > 0 || colorOptions.length > 0 ?
+              <div className="mt-7 grid gap-4 xl:grid-cols-2">
+                <ShopDetailsSpecs items={detailSpecs} t={t} />
+                <ShopDetailsVariantPickers
+                  sizeOptions={sizeOptions}
+                  colorOptions={colorOptions}
+                  selectedSizeId={selectedSizeId}
+                  selectedColorId={selectedColorId}
+                  onSelectSize={(id) => {
+                    setSelectedSizeId(id);
+                    setVariantError(null);
+                  }}
+                  onSelectColor={(id) => {
+                    setSelectedColorId(id);
+                    setVariantError(null);
+                  }}
+                  t={t}
+                />
+              </div>
             : null}
             {variantError ?
               <p className="mt-3 text-sm text-red-600" role="alert">
@@ -418,41 +522,39 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
               </p>
             : null}
 
-            <div className="mt-6 flex items-center gap-3">
+            <div className="mt-7 inline-flex items-center gap-3 rounded-xl bg-neutral-50 p-1">
               <button
                 onClick={() => setQty((v) => Math.max(1, v - 1))}
-                className="h-10 w-10 rounded border border-neutral-300 text-lg leading-none text-neutral-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                className="h-11 w-11 rounded-lg bg-white text-lg leading-none text-neutral-800 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D48]"
                 type="button"
                 aria-label={t("productQuantityDecrease")}
               >
-                -
+                <Minus className="mx-auto h-4 w-4" strokeWidth={2.4} />
               </button>
               <span className="min-w-14 text-center tabular-nums" aria-live="polite">
                 {qty}
               </span>
               <button
                 onClick={() => setQty((v) => v + 1)}
-                className="h-10 w-10 rounded border border-neutral-300 text-lg leading-none text-neutral-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                className="h-11 w-11 rounded-lg bg-white text-lg leading-none text-neutral-800 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D48]"
                 type="button"
                 aria-label={t("productQuantityIncrease")}
               >
-                +
+                <Plus className="mx-auto h-4 w-4" strokeWidth={2.4} />
               </button>
             </div>
 
-            <div className="mt-7 flex gap-3">
+            <div className="mt-7 grid gap-3 sm:grid-cols-[1fr_auto]">
               <button
                 onClick={() => {
                   setVariantError(null);
-                  if (mongoId && apiProduct) {
-                    if (sizeOptions.length > 0 && !selectedSizeId) {
-                      setVariantError(t("productPleaseSelectSize"));
-                      return;
-                    }
-                    if (colorOptions.length > 0 && !selectedColorId) {
-                      setVariantError(t("productPleaseSelectColor"));
-                      return;
-                    }
+                  if (sizeOptions.length > 0 && !selectedSizeId) {
+                    setVariantError(t("productPleaseSelectSize"));
+                    return;
+                  }
+                  if (colorOptions.length > 0 && !selectedColorId) {
+                    setVariantError(t("productPleaseSelectColor"));
+                    return;
                   }
                   const sizeOpt = sizeOptions.find((s) => s.id === selectedSizeId);
                   const colorOpt = colorOptions.find((c) => c.id === selectedColorId);
@@ -492,23 +594,25 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
                     selectedColorName: colorOpt?.label,
                   });
                 }}
-                className="rounded-md bg-blue-600 px-7 py-3 text-white shadow-sm transition duration-200 ease-out hover:-translate-y-px hover:bg-blue-700 hover:shadow-md active:translate-y-0 active:shadow-sm"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#E11D48] px-7 py-3.5 font-bold text-white shadow-[0_18px_40px_-24px_rgba(225,29,72,1)] transition duration-200 ease-out hover:-translate-y-px hover:bg-[#BE123C] hover:shadow-md active:translate-y-0 active:shadow-sm"
                 type="button"
               >
+                <ShoppingBag className="h-5 w-5" strokeWidth={2.25} />
                 {t("productPurchaseNow")}
               </button>
               <button
                 onClick={() => addWishlistItem(product)}
-                className="rounded-md border border-neutral-300 px-5 py-3 hover:bg-neutral-50"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-neutral-300 px-5 py-3.5 font-bold hover:bg-neutral-50"
                 type="button"
               >
+                <Heart className="h-5 w-5" strokeWidth={2.2} />
                 {t("productDetailAddWishlist")}
               </button>
             </div>
           </div>
         </div>
 
-        <ProductReviewsSection productId={product.id} />
+        <ProductReviewsSection productId={product.id} productMongoId={mongoId} />
       </div>
     </section>
   );

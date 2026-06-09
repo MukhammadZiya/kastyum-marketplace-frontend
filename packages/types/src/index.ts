@@ -42,14 +42,23 @@ export type { Order, OrderItem, OrderListRow } from "./entities/order";
 export type { Notification, NotificationAdminListItem } from "./entities/notification";
 
 export type {
+  ProductReview,
+  ProductReviewEligibility,
+  ProductReviewListResponse,
+  ProductReviewStats,
+} from "./entities/review";
+
+export type {
   AdminCreateProductPayload,
   CreateAttributeBody,
   CreateOrderBody,
   CreateOrderItemBody,
+  CreateProductReviewBody,
   CreateProductBody,
   MemberAdminUpdateBody,
   MemberListQuery,
   MemberLoginBody,
+  SellerApplicationBody,
   MemberSignupBody,
   MemberUpdateBody,
   NotificationListQuery,
@@ -62,5 +71,6 @@ export type {
   ApiErrorBody,
   MemberAuthResponse,
   PaginatedResult,
+  SellerApplicationResponse,
   TokenPayload,
 } from "./api/responses";

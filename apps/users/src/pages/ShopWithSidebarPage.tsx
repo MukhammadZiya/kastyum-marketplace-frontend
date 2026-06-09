@@ -7,14 +7,11 @@ import {
   emptyShopFilterState,
   PRICE_FILTER_SPECS,
   SHOP_DEPARTMENT_CATEGORY_LABELS,
-  shopData,
-  shopFilterOptionLists,
   type PriceFilterId,
   type ShopFilterState,
 } from "../data/shopData";
 import SingleGridItem from "../components/Shop/SingleGridItem";
 import SingleListItem from "../components/Shop/SingleListItem";
-import { useAllAttributes } from "../hooks/attributes";
 import { useProductList } from "../hooks/products";
 import { useT } from "../i18n";
 import type { TranslateFn } from "../i18n/types";
@@ -44,16 +41,16 @@ function FilterCheckbox({ id, label, checked, onChange }: FilterCheckboxProps) {
   return (
     <label
       htmlFor={id}
-      className="flex cursor-pointer items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900"
+      className="group flex cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-neutral-700 transition duration-150 hover:bg-[#FFF1F2] hover:text-[#BE123C]"
     >
+      <span>{label}</span>
       <input
         id={id}
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className="h-4 w-4 rounded border-neutral-300 text-blue-600 focus:ring-blue-500"
+        className="h-4 w-4 shrink-0 rounded border-neutral-300 accent-[#E11D48] focus:ring-[#FDA4AF]"
       />
-      <span>{label}</span>
     </label>
   );
 }
@@ -62,12 +59,8 @@ function ShopFiltersBody({
   filters,
   onToggleCategory,
   onTogglePrice,
-  onToggleColor,
-  onToggleSize,
   onClear,
   categories,
-  colors,
-  sizes,
   activeFilterCount,
   t,
   priceOptions,
@@ -75,12 +68,8 @@ function ShopFiltersBody({
   filters: ShopFilterState;
   onToggleCategory: (v: string) => void;
   onTogglePrice: (v: PriceFilterId) => void;
-  onToggleColor: (v: string) => void;
-  onToggleSize: (v: string) => void;
   onClear: () => void;
   categories: string[];
-  colors: string[];
-  sizes: string[];
   activeFilterCount: number;
   t: TranslateFn;
   priceOptions: { id: PriceFilterId; label: string }[];
@@ -88,20 +77,22 @@ function ShopFiltersBody({
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-2">
-        <h3 className="font-semibold text-neutral-900">{t("common.filters")}</h3>
+        <h3 className="text-lg font-black tracking-tight text-neutral-950">
+          {t("common.filters")}
+        </h3>
         {activeFilterCount > 0 ? (
           <button
             type="button"
             onClick={onClear}
-            className="text-xs font-medium text-blue-600 hover:text-blue-800"
+            className="rounded-full bg-[#FFF1F2] px-3 py-1 text-xs font-black text-[#BE123C] transition hover:bg-[#FFE4E6]"
           >
             {t("common.clearAll")} ({activeFilterCount})
           </button>
         ) : null}
       </div>
 
-      <fieldset className="space-y-2 border-0 p-0">
-        <legend className="mb-2 text-sm font-medium text-neutral-900">
+      <fieldset className="space-y-2 border-0 border-t border-neutral-100 p-0 pt-5">
+        <legend className="mb-2 text-[12px] font-black uppercase tracking-[0.14em] text-neutral-400">
           {t("shopFilterCategory")}
         </legend>
         <div className="space-y-2">
@@ -117,8 +108,8 @@ function ShopFiltersBody({
         </div>
       </fieldset>
 
-      <fieldset className="space-y-2 border-0 p-0">
-        <legend className="mb-2 text-sm font-medium text-neutral-900">
+      <fieldset className="space-y-2 border-0 border-t border-neutral-100 p-0 pt-5">
+        <legend className="mb-2 text-[12px] font-black uppercase tracking-[0.14em] text-neutral-400">
           {t("shopFilterPrice")}
         </legend>
         <p className="mb-2 text-xs text-neutral-500">{t("shopFilterPriceHint")}</p>
@@ -135,39 +126,6 @@ function ShopFiltersBody({
         </div>
       </fieldset>
 
-      <fieldset className="space-y-2 border-0 p-0">
-        <legend className="mb-2 text-sm font-medium text-neutral-900">
-          {t("shopFilterColor")}
-        </legend>
-        <div className="space-y-2">
-          {colors.map((color) => (
-            <FilterCheckbox
-              key={color}
-              id={`color-${color}`}
-              label={color}
-              checked={filters.colors.has(color)}
-              onChange={() => onToggleColor(color)}
-            />
-          ))}
-        </div>
-      </fieldset>
-
-      <fieldset className="space-y-2 border-0 p-0">
-        <legend className="mb-2 text-sm font-medium text-neutral-900">
-          {t("shopFilterSize")}
-        </legend>
-        <div className="space-y-2">
-          {sizes.map((size) => (
-            <FilterCheckbox
-              key={size}
-              id={`size-${size}`}
-              label={size}
-              checked={filters.sizes.has(size)}
-              onChange={() => onToggleSize(size)}
-            />
-          ))}
-        </div>
-      </fieldset>
     </div>
   );
 }
@@ -209,15 +167,8 @@ export function ShopWithSidebarPage() {
     });
   }, [setSearchParams]);
 
-  const { data: attrBundle } = useAllAttributes();
-
   const categories = useMemo(
     () => [...SHOP_DEPARTMENT_CATEGORY_LABELS],
-    [],
-  );
-
-  const { colors: fallbackColors, sizes: fallbackSizes } = useMemo(
-    () => shopFilterOptionLists(shopData),
     [],
   );
 
@@ -238,22 +189,8 @@ export function ShopWithSidebarPage() {
     if (filters.priceBuckets.size > 0) {
       p.priceBuckets = [...filters.priceBuckets].join(",");
     }
-    if (attrBundle?.color?.length && filters.colors.size > 0) {
-      const ids = [...filters.colors]
-        .map((name) => attrBundle.color!.find((c) => c.name === name)?._id)
-        .filter((x): x is string => Boolean(x));
-      if (ids.length === 1) p.color = ids[0];
-      else if (ids.length > 1) p.colors = ids.join(",");
-    }
-    if (attrBundle?.size?.length && filters.sizes.size > 0) {
-      const ids = [...filters.sizes]
-        .map((name) => attrBundle.size!.find((s) => s.name === name)?._id)
-        .filter((x): x is string => Boolean(x));
-      if (ids.length === 1) p.size = ids[0];
-      else if (ids.length > 1) p.sizes = ids.join(",");
-    }
     return p;
-  }, [q, device, filters, catParam, attrBundle]);
+  }, [q, device, filters, catParam]);
 
   const { data, isPending, isError } = useProductList(listParams);
 
@@ -263,20 +200,6 @@ export function ShopWithSidebarPage() {
   }, [data]);
 
   const resultTotal = data?.total ?? 0;
-
-  const colors = useMemo(() => {
-    if (attrBundle?.color?.length) {
-      return [...new Set(attrBundle.color.map((c) => c.name))].sort();
-    }
-    return fallbackColors;
-  }, [attrBundle, fallbackColors]);
-
-  const sizes = useMemo(() => {
-    if (attrBundle?.size?.length) {
-      return [...new Set(attrBundle.size.map((s) => s.name))].sort();
-    }
-    return fallbackSizes;
-  }, [attrBundle, fallbackSizes]);
 
   useEffect(() => {
     if (!catParam) return;
@@ -295,9 +218,7 @@ export function ShopWithSidebarPage() {
   const activeFilterCount = useMemo(() => {
     return (
       filters.categories.size +
-      filters.priceBuckets.size +
-      filters.colors.size +
-      filters.sizes.size
+      filters.priceBuckets.size
     );
   }, [filters]);
 
@@ -307,24 +228,14 @@ export function ShopWithSidebarPage() {
   const onTogglePrice = useCallback((v: PriceFilterId) => {
     setFilters((prev) => toggleSetKey("priceBuckets", v, prev));
   }, []);
-  const onToggleColor = useCallback((v: string) => {
-    setFilters((prev) => toggleSetKey("colors", v, prev));
-  }, []);
-  const onToggleSize = useCallback((v: string) => {
-    setFilters((prev) => toggleSetKey("sizes", v, prev));
-  }, []);
   const onClear = useCallback(() => setFilters(emptyShopFilterState()), []);
 
   const filterBodyProps = {
     filters,
     onToggleCategory,
     onTogglePrice,
-    onToggleColor,
-    onToggleSize,
     onClear,
     categories,
-    colors,
-    sizes,
     activeFilterCount,
     t,
     priceOptions,
@@ -337,8 +248,8 @@ export function ShopWithSidebarPage() {
         pages={[t("breadcrumbShop"), t("shopBreadcrumbAllPieces")]}
       />
       {hasHeaderSearch ? (
-        <div className="mx-auto max-w-[1170px] px-4 sm:px-8 xl:px-0">
-          <div className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border border-blue-100 bg-blue-50/90 px-4 py-3 text-sm text-neutral-700">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-8 xl:px-0">
+          <div className="mb-4 mt-4 flex flex-wrap items-center gap-2 rounded-xl border border-[#FFE4EA] bg-white px-4 py-3 text-sm text-neutral-700 shadow-[0_14px_42px_-36px_rgba(15,23,42,0.45)]">
             <span className="font-medium text-neutral-900">
               {t("shopSearchFiltersLabel")}
             </span>
@@ -355,20 +266,20 @@ export function ShopWithSidebarPage() {
             <button
               type="button"
               onClick={clearHeaderParams}
-              className="ml-auto text-sm font-medium text-blue-600 hover:text-blue-800"
+              className="ml-auto text-sm font-black text-[#BE123C] hover:text-[#E11D48]"
             >
               {t("shopClearSearchFilters")}
             </button>
           </div>
         </div>
       ) : null}
-      <section className="bg-neutral-100 py-10">
-        <div className="mx-auto flex max-w-[1170px] flex-col gap-6 px-4 sm:px-8 xl:flex-row xl:gap-8 xl:px-0">
-          <details className="xl:hidden rounded-lg border border-neutral-200 bg-white [&_summary::-webkit-details-marker]:hidden">
+      <section className="bg-[#FAFAFB] py-8 sm:py-10">
+        <div className="mx-auto flex max-w-[1280px] flex-col gap-6 px-4 sm:px-8 xl:flex-row xl:gap-8 xl:px-0">
+          <details className="rounded-xl border border-neutral-200 bg-white shadow-[0_20px_70px_-58px_rgba(15,23,42,0.5)] xl:hidden [&_summary::-webkit-details-marker]:hidden">
             <summary className="flex cursor-pointer list-none items-center justify-between p-4 font-semibold text-neutral-900">
               {t("common.filters")}
               {activeFilterCount > 0 ? (
-                <span className="rounded-full bg-blue-600 px-2 py-0.5 text-xs text-white">
+                <span className="rounded-full bg-[#E11D48] px-2 py-0.5 text-xs text-white">
                   {activeFilterCount}
                 </span>
               ) : null}
@@ -378,12 +289,12 @@ export function ShopWithSidebarPage() {
             </div>
           </details>
 
-          <aside className="hidden h-fit w-[270px] shrink-0 rounded-lg border border-neutral-200 bg-white p-5 xl:block">
+          <aside className="hidden h-fit w-[282px] shrink-0 rounded-xl border border-neutral-200 bg-white p-5 shadow-[0_18px_70px_-58px_rgba(15,23,42,0.55)] xl:block">
             <ShopFiltersBody {...filterBodyProps} />
           </aside>
 
           <div className="min-w-0 flex-1">
-            <div className="mb-6 flex items-center justify-between rounded-lg border border-neutral-200 bg-white p-3">
+            <div className="mb-6 flex flex-col gap-3 rounded-xl border border-neutral-200 bg-white p-3 shadow-[0_16px_60px_-54px_rgba(15,23,42,0.5)] sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-neutral-600" aria-live="polite">
                 {t("common.showing")}{" "}
                 <span className="font-medium text-neutral-900">{resultTotal}</span>{" "}
@@ -395,17 +306,17 @@ export function ShopWithSidebarPage() {
                   <span className="text-neutral-500"> {t("common.filtered")}</span>
                 ) : null}
               </p>
-              <div className="flex gap-2">
+              <div className="grid grid-cols-2 overflow-hidden rounded-xl bg-neutral-100 p-1 text-sm font-black">
                 <button
                   onClick={() => setView("grid")}
-                  className={`rounded px-3 py-1.5 ${view === "grid" ? "bg-blue-600 text-white" : "bg-neutral-100"}`}
+                  className={`rounded-lg px-3 py-1.5 transition ${view === "grid" ? "bg-neutral-950 text-white shadow-sm" : "text-neutral-600 hover:text-neutral-950"}`}
                   type="button"
                 >
                   {t("common.grid")}
                 </button>
                 <button
                   onClick={() => setView("list")}
-                  className={`rounded px-3 py-1.5 ${view === "list" ? "bg-blue-600 text-white" : "bg-neutral-100"}`}
+                  className={`rounded-lg px-3 py-1.5 transition ${view === "list" ? "bg-neutral-950 text-white shadow-sm" : "text-neutral-600 hover:text-neutral-950"}`}
                   type="button"
                 >
                   {t("common.list")}
@@ -414,11 +325,11 @@ export function ShopWithSidebarPage() {
             </div>
 
             {isError ? (
-              <div className="rounded-lg border border-dashed border-red-200 bg-white p-12 text-center text-red-800">
+              <div className="rounded-2xl border border-dashed border-red-200 bg-white p-12 text-center text-red-800">
                 <p className="font-medium">{t("shopProductListError")}</p>
               </div>
             ) : products.length === 0 && !isPending ? (
-              <div className="rounded-lg border border-dashed border-neutral-300 bg-white p-12 text-center text-neutral-600">
+              <div className="rounded-2xl border border-dashed border-neutral-300 bg-white p-12 text-center text-neutral-600">
                 <p className="font-medium text-neutral-900">{t("shopNoProductsMatch")}</p>
                 <p className="mt-2 text-sm">{t("shopAdjustFiltersHint")}</p>
                 <div className="mt-4 flex flex-wrap justify-center gap-2">
@@ -426,7 +337,7 @@ export function ShopWithSidebarPage() {
                     <button
                       type="button"
                       onClick={clearHeaderParams}
-                      className="rounded-md border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-800 hover:bg-blue-100"
+                      className="rounded-xl border border-[#FFE4EA] bg-[#FFF1F2] px-4 py-2 text-sm font-black text-[#BE123C] hover:bg-[#FFE4EA]"
                     >
                       {t("shopClearSearchFilters")}
                     </button>
@@ -434,14 +345,14 @@ export function ShopWithSidebarPage() {
                   <button
                     type="button"
                     onClick={onClear}
-                    className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                    className="rounded-xl bg-neutral-950 px-4 py-2 text-sm font-black text-white hover:bg-neutral-800"
                   >
                     {t("shopClearSidebarFilters")}
                   </button>
                 </div>
               </div>
             ) : isPending && products.length === 0 ? (
-              <div className="rounded-lg border border-neutral-200 bg-white p-12 text-center text-neutral-600">
+              <div className="rounded-2xl border border-neutral-200 bg-white p-12 text-center text-neutral-600">
                 {t("common.loading")}
               </div>
             ) : (

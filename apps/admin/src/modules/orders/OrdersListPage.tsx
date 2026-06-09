@@ -9,6 +9,21 @@ import { getAuthToken } from "@repo/api";
 import { getAdminListEmptyMessage } from "../../lib/adminListEmptyMessage";
 import { useT } from "../../i18n";
 
+function statusClass(status: string) {
+  const normalized = status.toUpperCase();
+  if (
+    normalized === "PAID" ||
+    normalized === "SHIPPED" ||
+    normalized === "DELIVERED"
+  ) {
+    return "bg-[#FFF1F2] text-[#BE123C]";
+  }
+  if (normalized === "CANCELLED" || normalized === "REFUNDED") {
+    return "bg-red-50 text-red-700";
+  }
+  return "bg-slate-100 text-slate-600";
+}
+
 export function OrdersListPage() {
   const t = useT();
   const signedIn = !!getAuthToken();
@@ -41,22 +56,33 @@ export function OrdersListPage() {
   const rowEls =
     data?.list.length ?
       data.list.map((o: OrderListRow) => (
-        <tr key={o._id} className="border-t border-slate-100">
+        <tr
+          key={o._id}
+          className="border-t border-neutral-100 transition hover:bg-[#FAFAFB]"
+        >
           <td className="px-4 py-3 font-mono text-xs text-slate-600">
             {o._id.slice(-8)}
           </td>
-          <td className="px-4 py-3">{o.memberId?.nick ?? "—"}</td>
+          <td className="px-4 py-3 font-black text-slate-950">
+            {o.memberId?.nick ?? "—"}
+          </td>
           <td className="max-w-[min(280px,32vw)] px-4 py-3 text-sm text-slate-700">
             <span className="line-clamp-3 break-words">
               {o.shippingAddress?.trim() || "—"}
             </span>
           </td>
-          <td className="px-4 py-3 font-medium">${o.totalAmount.toFixed(2)}</td>
-          <td className="px-4 py-3">{o.status}</td>
+          <td className="px-4 py-3 font-black text-slate-950">
+            ${o.totalAmount.toFixed(2)}
+          </td>
+          <td className="px-4 py-3">
+            <span
+              className={`inline-flex rounded-full px-2.5 py-1 text-xs font-black ${statusClass(o.status)}`}
+            >
+              {o.status}
+            </span>
+          </td>
           <td className="px-4 py-3 text-slate-600">
-            {o.createdAt
-              ? new Date(o.createdAt).toLocaleString()
-              : "—"}
+            {o.createdAt ? new Date(o.createdAt).toLocaleString() : "—"}
           </td>
         </tr>
       ))
@@ -73,7 +99,11 @@ export function OrdersListPage() {
         </p>
       }
     >
-      <TableCard title={t("common.adminOrdersListTitle")} description={tableDescription}>
+      <TableCard
+        title={t("common.adminOrdersListTitle")}
+        description={tableDescription}
+        className="rounded-3xl border-neutral-200 shadow-[0_18px_50px_rgba(15,23,42,0.05)]"
+      >
         <DataTablePlaceholder columns={columns} emptyMessage={emptyMessage}>
           {rowEls}
         </DataTablePlaceholder>

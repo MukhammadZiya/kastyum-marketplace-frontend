@@ -8,4 +8,7 @@ export const productKeys = {
     [...productKeys.lists(), filters ?? {}] as const,
   details: () => [...productKeys.all, "detail"] as const,
   detail: (id: string) => [...productKeys.details(), id] as const,
+  reviews: (id: string) => [...productKeys.all, "reviews", id] as const,
+  reviewEligibility: (id: string) =>
+    [...productKeys.reviews(id), "eligibility"] as const,
 };

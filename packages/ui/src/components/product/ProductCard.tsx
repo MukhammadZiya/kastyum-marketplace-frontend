@@ -42,7 +42,7 @@ export function ProductCard({ id, name, price, oldPrice, image }: ProductCardPro
         </div>
 
         <Button variant="primary" size="sm">
-          Add to cart
+          Savatga
         </Button>
       </div>
     </article>

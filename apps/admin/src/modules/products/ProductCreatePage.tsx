@@ -278,12 +278,15 @@ export function ProductCreatePage() {
     <AdminPageFrame
       title={t(ADMIN_PAGE_TITLE_KEYS.products)}
       addon={
-        <p className="text-sm text-slate-500">{t("common.adminProductCreateAddon")}</p>
+        <p className="text-sm text-slate-500">
+          {t("common.adminProductCreateAddon")}
+        </p>
       }
     >
       <Card
         title={t("common.adminProductCreateCardTitle")}
         description={t("common.adminProductCreateCardDesc")}
+        className="rounded-3xl border-neutral-200 shadow-[0_18px_50px_rgba(15,23,42,0.05)]"
       >
         <form onSubmit={handleSubmit} className="max-w-3xl space-y-6">
           {formError ?
@@ -293,7 +296,10 @@ export function ProductCreatePage() {
           : null}
 
           <div>
-            <label htmlFor="admin-product-seller" className="mb-1 block text-sm font-medium text-slate-700">
+            <label
+              htmlFor="admin-product-seller"
+              className="mb-1 block text-sm font-medium text-slate-700"
+            >
               {t("common.adminProductFieldSeller")}
             </label>
             <select
@@ -440,7 +446,7 @@ export function ProductCreatePage() {
             </select>
           </div>
 
-          <div className="border-t border-slate-100 pt-4">
+          <div className="border-t border-neutral-100 pt-4">
             <h3 className="mb-2 text-sm font-semibold text-slate-900">
               {t("common.adminProductSectionAttributes")}
             </h3>
@@ -457,7 +463,7 @@ export function ProductCreatePage() {
                 <span className="mb-2 block text-sm font-medium text-slate-700">
                   {t("common.adminProductFieldSizes")}
                 </span>
-                <div className="max-h-36 space-y-2 overflow-y-auto rounded-lg border border-slate-200 p-3">
+                <div className="max-h-36 space-y-2 overflow-y-auto rounded-2xl border border-neutral-200 bg-[#FAFAFB] p-3">
                   {sizeOptions.length === 0 ?
                     <span className="text-xs text-slate-500">{t("common.adminProductNoSizes")}</span>
                   : sizeOptions.map((s) => (
@@ -507,7 +513,7 @@ export function ProductCreatePage() {
                 <span className="mb-2 block text-sm font-medium text-slate-700">
                   {t("common.adminProductFieldColors")}
                 </span>
-                <div className="max-h-36 space-y-2 overflow-y-auto rounded-lg border border-slate-200 p-3">
+                <div className="max-h-36 space-y-2 overflow-y-auto rounded-2xl border border-neutral-200 bg-[#FAFAFB] p-3">
                   {colorOptions.length === 0 ?
                     <span className="text-xs text-slate-500">{t("common.adminProductNoColors")}</span>
                   : colorOptions.map((c) => (
@@ -566,7 +572,7 @@ export function ProductCreatePage() {
               </div>
             </div>
 
-            <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50/80 p-4">
+            <div className="mt-6 rounded-2xl border border-neutral-200 bg-[#FAFAFB] p-4">
               {variantRows.length === 0 ?
                 <div>
                   <label htmlFor="admin-product-stock" className="mb-1 block text-sm font-medium text-slate-700">
@@ -591,22 +597,22 @@ export function ProductCreatePage() {
                   <p className="mb-3 text-xs text-slate-600">
                     {t("common.adminProductHintVariantStock")}
                   </p>
-                  <div className="overflow-x-auto rounded-md border border-slate-200 bg-white">
+                  <div className="overflow-x-auto rounded-2xl border border-neutral-200 bg-white">
                     <table className="w-full min-w-[320px] text-left text-sm">
                       <thead>
-                        <tr className="border-b border-slate-200 bg-slate-50 text-slate-600">
-                          <th className="px-3 py-2 font-medium">
+                        <tr className="border-b border-neutral-200 bg-[#FAFAFB] text-slate-600">
+                          <th className="px-3 py-2 font-black">
                             {t("common.adminProductVariantColCombo")}
                           </th>
-                          <th className="px-3 py-2 font-medium">
+                          <th className="px-3 py-2 font-black">
                             {t("common.adminProductVariantColQty")}
                           </th>
                         </tr>
                       </thead>
                       <tbody>
                         {variantRows.map((row) => (
-                          <tr key={row.key} className="border-t border-slate-100">
-                            <td className="px-3 py-2 text-slate-800">
+                          <tr key={row.key} className="border-t border-neutral-100 transition hover:bg-[#FAFAFB]">
+                            <td className="px-3 py-2 font-medium text-slate-800">
                               {variantRowLabel(row)}
                             </td>
                             <td className="px-3 py-2">
@@ -864,7 +870,7 @@ export function ProductCreatePage() {
               {t("common.adminProductFieldImages")}
             </span>
             <p className="mb-3 text-xs text-slate-500">{t("common.adminProductHintImages")}</p>
-            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+            <div className="rounded-2xl border border-neutral-200 bg-[#FAFAFB] p-4">
               <input
                 id="admin-product-photos-input"
                 type="file"
@@ -880,7 +886,7 @@ export function ProductCreatePage() {
               <div className="flex flex-wrap items-center gap-3">
                 <label
                   htmlFor="admin-product-photos-input"
-                  className="inline-flex cursor-pointer select-none rounded-md border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-blue-400 hover:bg-blue-50/60 hover:text-blue-900 focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-blue-600"
+                  className="inline-flex cursor-pointer select-none rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm font-black text-slate-900 shadow-sm transition hover:border-[#FDA4AF] hover:bg-[#FFF1F2] hover:text-[#BE123C] focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[#E11D48]"
                 >
                   {t("common.adminProductPhotosPickButton")}
                 </label>
@@ -903,7 +909,13 @@ export function ProductCreatePage() {
             </div>
           </div>
 
-          <Button type="submit" variant="accent" size="md" disabled={createProduct.isPending}>
+          <Button
+            type="submit"
+            variant="accent"
+            size="md"
+            className="!border-[#E11D48] !bg-[#E11D48] hover:!bg-[#BE123C]"
+            disabled={createProduct.isPending}
+          >
             {createProduct.isPending
               ? t("common.adminProductSubmitting")
               : t("common.adminSaveProduct")}

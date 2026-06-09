@@ -5,8 +5,10 @@ import { useMemberLogin, useMemberTelegramLogin } from "../hooks/members";
 import type { MemberLoginBody } from "../lib/marketplaceTypes";
 import { getSellerSignInUrl } from "../lib/sellerAppUrl";
 import { TelegramLoginButton } from "../components/Auth/TelegramLoginButton";
+import { useT } from "../i18n";
 
 export function SignInPage() {
+  const t = useT();
   const navigate = useNavigate();
   const login = useMemberLogin();
   const telegramLogin = useMemberTelegramLogin();
@@ -18,14 +20,17 @@ export function SignInPage() {
 
   return (
     <>
-      <Breadcrumb title="Sign in" pages={["account", "sign in"]} />
-      <section className="py-10 bg-neutral-100">
-        <div className="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0">
-          <div className="max-w-[570px] mx-auto rounded-xl bg-white border border-neutral-200 p-6 sm:p-10">
-            <h2 className="text-2xl font-semibold text-neutral-900 text-center mb-2">
-              Sign In to Your Account
+      <Breadcrumb title={t("signInBreadcrumb")} pages={["account", "sign in"]} />
+      <section className="bg-[#F7F7F8] py-8 sm:py-10">
+        <div className="mx-auto max-w-[1170px] px-4 sm:px-8 xl:px-0">
+          <div className="mx-auto max-w-[570px] rounded-3xl border border-neutral-200 bg-white p-6 shadow-[0_22px_80px_-62px_rgba(15,23,42,0.75)] sm:p-10">
+            <p className="mb-2 text-center text-[12px] font-black uppercase tracking-[0.16em] text-[#BE123C]">
+              iBerry
+            </p>
+            <h2 className="mb-2 text-center text-2xl font-black tracking-tight text-neutral-950">
+              {t("signInHeading")}
             </h2>
-            <p className="text-center text-neutral-600 mb-8">Enter your details below</p>
+            <p className="mb-8 text-center text-neutral-600">{t("signInSubtext")}</p>
             <form
               className="space-y-5"
               onSubmit={(e) => {
@@ -47,10 +52,10 @@ export function SignInPage() {
                 </p>
               ) : null}
               <div>
-                <label className="block mb-2">Email</label>
+                <label className="mb-2 block font-bold">{t("common.email")}</label>
                 <input
-                  className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 px-5"
-                  placeholder="Enter your email"
+                  className="w-full rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-5 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white"
+                  placeholder={t("signInEmailPlaceholder")}
                   value={values.email}
                   onChange={(e) =>
                     setValues((v) => ({ ...v, email: e.target.value }))
@@ -58,11 +63,11 @@ export function SignInPage() {
                 />
               </div>
               <div>
-                <label className="block mb-2">Password</label>
+                <label className="mb-2 block font-bold">{t("common.password")}</label>
                 <input
                   type="password"
-                  className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 px-5"
-                  placeholder="Enter your password"
+                  className="w-full rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-5 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white"
+                  placeholder={t("common.password")}
                   value={values.password}
                   onChange={(e) =>
                     setValues((v) => ({ ...v, password: e.target.value }))
@@ -70,11 +75,11 @@ export function SignInPage() {
                 />
               </div>
               <button
-                className="w-full py-3 rounded-lg bg-neutral-900 text-white hover:bg-blue-600 disabled:opacity-60"
+                className="w-full rounded-2xl bg-[#E11D48] py-3.5 font-black text-white shadow-[0_18px_40px_-22px_rgba(225,29,72,0.7)] transition hover:-translate-y-px hover:bg-[#BE123C] disabled:translate-y-0 disabled:opacity-60"
                 type="submit"
                 disabled={login.isPending}
               >
-                {login.isPending ? "Signing in…" : "Sign in to account"}
+                {login.isPending ? `${t("common.signIn")}…` : t("common.signIn")}
               </button>
 
               <div className="relative my-6">
@@ -101,11 +106,11 @@ export function SignInPage() {
                 }}
               />
 
-              <div className="rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-center text-sm text-neutral-600">
+              <div className="rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 text-center text-sm text-neutral-600">
                 <p className="mb-2">Selling on Kastyum?</p>
                 <button
                   type="button"
-                  className="font-medium text-blue-600 hover:text-blue-700 hover:underline"
+                  className="font-black text-[#BE123C] hover:underline"
                   onClick={() =>
                     window.open(getSellerSignInUrl(), "_blank", "noopener,noreferrer")
                   }
@@ -115,7 +120,7 @@ export function SignInPage() {
               </div>
               <p className="text-center text-sm">
                 Don&apos;t have an account?
-                <Link to="/signup" className="text-blue-600 pl-2">
+                <Link to="/signup" className="pl-2 font-black text-[#BE123C]">
                   Sign Up Now!
                 </Link>
               </p>

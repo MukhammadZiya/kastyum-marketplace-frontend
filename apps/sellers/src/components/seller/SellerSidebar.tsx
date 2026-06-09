@@ -9,14 +9,14 @@ export function SellerSidebarHeader() {
   const t = useT();
   return (
     <div className="flex items-center gap-3">
-      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#00966d] text-sm font-bold text-white shadow-sm shadow-[#00966d]/30">
-        S
+      <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#E11D48] text-sm font-black text-white shadow-[0_16px_30px_-18px_rgba(225,29,72,0.9)]">
+        iB
       </div>
       <div>
-        <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
-          {t("common.sellerBrandName")}
+        <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-400">
+          iBerry
         </p>
-        <p className="text-sm font-semibold text-slate-900">
+        <p className="text-sm font-black text-slate-950">
           {t("common.sellerBrandTitle")}
         </p>
       </div>
@@ -30,15 +30,15 @@ export function SellerSidebarFooter() {
   const queryClient = useQueryClient();
 
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/80 p-3">
+    <div className="flex items-center gap-3 rounded-2xl border border-[#FFE4EA] bg-[#FFF1F2] p-3">
       <div
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#00966d]/15 text-sm font-semibold text-[#006b4d]"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-sm font-black text-[#BE123C] ring-1 ring-[#E11D48]/15"
         aria-hidden
       >
         SE
       </div>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium text-slate-900">
+        <p className="truncate text-sm font-black text-slate-950">
           {t("common.sellerProfileNick")}
         </p>
         <p className="truncate text-xs text-slate-500">
@@ -49,7 +49,7 @@ export function SellerSidebarFooter() {
         type="button"
         variant="ghost"
         size="sm"
-        className="!h-9 !w-9 shrink-0 !p-0 text-slate-500 hover:text-slate-900"
+        className="!h-9 !w-9 shrink-0 !p-0 text-slate-500 hover:bg-white hover:text-[#BE123C]"
         onClick={() => {
           logoutSeller(queryClient);
           navigate("/signin", { replace: true });

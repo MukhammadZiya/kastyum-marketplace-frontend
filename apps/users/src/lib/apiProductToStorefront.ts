@@ -36,10 +36,19 @@ export function apiProductToStorefront(
     custom ?
       { thumbnails: [custom, ...thumbnails], previews: [custom, ...previews] }
     : { thumbnails, previews };
+  const sellerName =
+    p.sellerId &&
+    typeof p.sellerId === "object" &&
+    "nick" in p.sellerId ?
+      p.sellerId.nick?.trim() || undefined
+    : undefined;
   return {
     id: numericIdFromMongoId(p._id),
     mongoId: p._id,
     title: p.title,
+    brandName: p.brand?.name,
+    sellerName,
+    categoryLabel: p.departmentCategory,
     reviews: 0,
     price: listPrice,
     discountedPrice: salePrice,

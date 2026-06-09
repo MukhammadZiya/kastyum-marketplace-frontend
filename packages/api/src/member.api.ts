@@ -2,6 +2,8 @@ import type {
   Member,
   MemberAuthResponse,
   MemberLoginBody,
+  SellerApplicationBody,
+  SellerApplicationResponse,
   MemberSignupBody,
   MemberUpdateBody,
 } from "@repo/types";
@@ -12,6 +14,16 @@ export async function postMemberSignup(
 ): Promise<MemberAuthResponse> {
   const { data } = await apiClient.post<MemberAuthResponse>(
     "/member/signup",
+    body,
+  );
+  return data;
+}
+
+export async function postSellerApplication(
+  body: SellerApplicationBody,
+): Promise<SellerApplicationResponse> {
+  const { data } = await apiClient.post<SellerApplicationResponse>(
+    "/member/seller/apply",
     body,
   );
   return data;
@@ -32,6 +44,16 @@ export async function postMemberTelegramLogin(
 ): Promise<MemberAuthResponse> {
   const { data } = await apiClient.post<MemberAuthResponse>(
     "/member/telegram-login",
+    body,
+  );
+  return data;
+}
+
+export async function postSellerTelegramLogin(
+  body: any,
+): Promise<MemberAuthResponse> {
+  const { data } = await apiClient.post<MemberAuthResponse>(
+    "/member/seller/telegram-login",
     body,
   );
   return data;
