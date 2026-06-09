@@ -18,9 +18,13 @@ import { BlogDetailsWithSidebarPage } from "./pages/BlogDetailsWithSidebarPage";
 import { BlogDetailsPage } from "./pages/BlogDetailsPage";
 import { MyAccountPage } from "./pages/MyAccountPage";
 
-function App() {
+type AppProps = {
+  basename?: string;
+};
+
+function App({ basename }: AppProps = {}) {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<HomePage />} />
@@ -46,4 +50,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

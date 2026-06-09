@@ -7,9 +7,13 @@ import { SellerOrdersPage } from "./modules/orders/SellerOrdersPage";
 import { SellerInventoryPage } from "./modules/products/SellerInventoryPage";
 import { SellerProductsPage } from "./modules/products/SellerProductsPage";
 
-function App() {
+type AppProps = {
+  basename?: string;
+};
+
+function App({ basename }: AppProps = {}) {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <Routes>
         <Route path="/signin" element={<SellerSignInPage />} />
         <Route path="/signup" element={<SellerSignUpPage />} />
