@@ -92,7 +92,7 @@ export function SignInPage() {
               </div>
 
               <TelegramLoginButton
-                botName={import.meta.env.VITE_TELEGRAM_BOT_NAME || "kastyum_bot"}
+                botName={import.meta.env.VITE_TELEGRAM_BOT_NAME || "iBerry_official_bot"}
                 onAuth={(user) => {
                   setFormError("");
                   telegramLogin.mutate(user, {

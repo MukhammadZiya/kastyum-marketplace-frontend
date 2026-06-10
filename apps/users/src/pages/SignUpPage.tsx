@@ -43,7 +43,7 @@ export function SignUpPage() {
                 One secure Telegram login creates your buyer account automatically.
               </p>
               <TelegramLoginButton
-                botName={import.meta.env.VITE_TELEGRAM_BOT_NAME || "iBerry_marketplace_bot"}
+                botName={import.meta.env.VITE_TELEGRAM_BOT_NAME || "iBerry_official_bot"}
                 onAuth={(user) => {
                   setFormError("");
                   telegramLogin.mutate(user, {
