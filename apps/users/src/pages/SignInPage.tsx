@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Breadcrumb from "../components/Common/Breadcrumb";
 import { useMemberLogin, useMemberTelegramLogin } from "../hooks/members";
 import type { MemberLoginBody } from "../lib/marketplaceTypes";
-import { getSellerSignInUrl } from "../lib/sellerAppUrl";
+import { getSellerSignupUrl } from "../lib/sellerAppUrl";
 import { TelegramLoginButton } from "../components/Auth/TelegramLoginButton";
 import { useT } from "../i18n";
 
@@ -107,15 +107,15 @@ export function SignInPage() {
               />
 
               <div className="rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 text-center text-sm text-neutral-600">
-                <p className="mb-2">Selling on Kastyum?</p>
+                <p className="mb-2">{t("signInWantSell")}</p>
                 <button
                   type="button"
                   className="font-black text-[#BE123C] hover:underline"
                   onClick={() =>
-                    window.open(getSellerSignInUrl(), "_blank", "noopener,noreferrer")
+                    window.open(getSellerSignupUrl(), "_blank", "noopener,noreferrer")
                   }
                 >
-                  Open seller sign-in (new tab)
+                  {t("signInOpenSellerSignup")}
                 </button>
               </div>
               <p className="text-center text-sm">

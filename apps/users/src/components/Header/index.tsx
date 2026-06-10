@@ -8,6 +8,7 @@ import {
   LogOut,
   Search,
   ShoppingCart,
+  Store,
   UserRound,
 } from "lucide-react";
 import { LanguageSwitcher } from "./LanguageSwitcher";
@@ -15,6 +16,7 @@ import { useCart } from "../../context/cart";
 import { useCartModal } from "../../context/cartSidebarModal";
 import { useMemberMe } from "../../hooks/members";
 import { useT } from "../../i18n";
+import { getSellerSignInUrl, getSellerSignupUrl } from "../../lib/sellerAppUrl";
 import { clearMarketplaceSession } from "../../user-auth";
 
 const Header = () => {
@@ -28,6 +30,7 @@ const Header = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+  const [signInMenuOpen, setSignInMenuOpen] = useState(false);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,9 +69,13 @@ const Header = () => {
             <button className="transition hover:text-[#E11D48]" type="button">
               News
             </button>
-            <Link className="transition hover:text-[#E11D48]" to="/contact">
-              Partnership
-            </Link>
+            <button
+              type="button"
+              className="transition hover:text-[#E11D48]"
+              onClick={() => window.open(getSellerSignupUrl(), "_blank", "noopener,noreferrer")}
+            >
+              {t("common.sellOnIberry")}
+            </button>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -160,15 +167,53 @@ const Header = () => {
                 ) : null}
               </div>
             ) : (
-              <Link
-                to="/signin"
-                className="hidden items-center gap-3 rounded-full bg-[#FFF1F2] py-2 pl-2 pr-5 font-black text-[#BE123C] transition hover:bg-[#FFE4EA] lg:flex"
-              >
-                <span className="flex h-12 w-12 items-center justify-center rounded-full border-4 border-[#FFE4EA] bg-white text-neutral-400">
-                  <UserRound className="h-6 w-6" strokeWidth={2.1} />
-                </span>
-                {t("common.signIn")}
-              </Link>
+              <div className="relative hidden lg:block">
+                <button
+                  type="button"
+                  onClick={() => setSignInMenuOpen((open) => !open)}
+                  className="flex items-center gap-3 rounded-full bg-[#FFF1F2] py-2 pl-2 pr-5 font-black text-[#BE123C] transition hover:bg-[#FFE4EA]"
+                  aria-expanded={signInMenuOpen}
+                  aria-haspopup="menu"
+                >
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full border-4 border-[#FFE4EA] bg-white text-neutral-400">
+                    <UserRound className="h-6 w-6" strokeWidth={2.1} />
+                  </span>
+                  {t("common.signIn")}
+                  <ChevronDown
+                    className={`h-4 w-4 transition ${signInMenuOpen ? "rotate-180" : ""}`}
+                    strokeWidth={2.4}
+                  />
+                </button>
+
+                {signInMenuOpen ? (
+                  <div
+                    className="absolute right-0 top-[calc(100%+10px)] z-50 w-[220px] overflow-hidden rounded-2xl border border-neutral-100 bg-white p-2 shadow-[0_24px_90px_-42px_rgba(15,23,42,0.55)]"
+                    role="menu"
+                  >
+                    <Link
+                      to="/signin"
+                      onClick={() => setSignInMenuOpen(false)}
+                      className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+                      role="menuitem"
+                    >
+                      <UserRound className="h-5 w-5" strokeWidth={2.1} />
+                      {t("common.signInAsUser")}
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSignInMenuOpen(false);
+                        window.location.href = getSellerSignInUrl();
+                      }}
+                      className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+                      role="menuitem"
+                    >
+                      <Store className="h-5 w-5" strokeWidth={2.1} />
+                      {t("common.signInAsSeller")}
+                    </button>
+                  </div>
+                ) : null}
+              </div>
             )}
 
             <div className="lg:hidden">
