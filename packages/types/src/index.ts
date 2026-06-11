@@ -14,7 +14,6 @@ export type {
   AttributeKind,
   Brand,
   Color,
-  Fit,
   Material,
   Size,
   Style,

@@ -1,5 +1,5 @@
 import type { ProductStatus, TargetAudience } from "../enums";
-import type { Brand, Color, Fit, Material, Size, Style } from "./attributes";
+import type { Brand, Color, Material, Size, Style } from "./attributes";
 import type { Member } from "./member";
 
 /** Per size, or per size+color when both are set on the product. */
@@ -27,7 +27,6 @@ export type ProductDocument = {
   brand?: string;
   material?: string;
   style?: string;
-  fit?: string;
   images: string[];
   stockCount: number;
   variantStock?: ProductVariantStockLine[];
@@ -39,41 +38,38 @@ export type ProductDocument = {
 
 export type ProductWithRelations = Omit<
   ProductDocument,
-  "sellerId" | "colors" | "sizes" | "brand" | "material" | "fit" | "style"
+  "sellerId" | "colors" | "sizes" | "brand" | "material" | "style"
 > & {
   sellerId: Member;
   colors: Color[];
   sizes: Size[];
   brand?: Brand;
   material?: Material;
-  fit?: Fit;
   style?: Style;
 };
 
 
 export type ProductSellerListItem = Omit<
   ProductDocument,
-  "sellerId" | "colors" | "sizes" | "brand" | "material" | "fit" | "style"
+  "sellerId" | "colors" | "sizes" | "brand" | "material" | "style"
 > & {
   sellerId: string;
   colors: Color[];
   sizes: Size[];
   brand?: Brand;
   material?: Material;
-  fit?: Fit;
   style?: Style;
   soldCount?: number;
 };
 
 export type ProductAdminListItem = Omit<
   ProductDocument,
-  "sellerId" | "colors" | "sizes" | "brand" | "material" | "fit" | "style"
+  "sellerId" | "colors" | "sizes" | "brand" | "material" | "style"
 > & {
   sellerId: Member;
   colors: Color[];
   sizes: Size[];
   brand?: Brand;
   material?: string;
-  fit?: string;
   style?: string;
 };

@@ -6,11 +6,13 @@ import {
   ChevronDown,
   Heart,
   LogOut,
+  Menu,
   Search,
   ShoppingCart,
   Store,
   UserRound,
 } from "lucide-react";
+import { Drawer } from "@repo/ui";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useCart } from "../../context/cart";
 import { useCartModal } from "../../context/cartSidebarModal";
@@ -31,6 +33,7 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [signInMenuOpen, setSignInMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const accountMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -254,6 +257,16 @@ const Header = () => {
                 {items.length}
               </span>
             </button>
+
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              type="button"
+              className="flex h-11 w-11 items-center justify-center rounded-2xl border border-neutral-200 bg-white text-neutral-950 lg:hidden"
+              aria-label={t("common.ariaToggler")}
+              aria-expanded={mobileMenuOpen}
+            >
+              <Menu className="h-6 w-6" strokeWidth={2.2} />
+            </button>
           </div>
         </div>
 
@@ -290,6 +303,117 @@ const Header = () => {
 
         </div>
       </div>
+
+      <Drawer
+        open={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+        side="right"
+        title={t("common.ariaToggler")}
+      >
+        <div className="p-2">
+        <div className="flex flex-col gap-1">
+          <Link
+            to="/shop-with-sidebar"
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+          >
+            <Store className="h-5 w-5" strokeWidth={2.1} />
+            Shop
+          </Link>
+          <Link
+            to="/contact"
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+          >
+            About
+          </Link>
+          <button
+            type="button"
+            className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+          >
+            News
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setMobileMenuOpen(false);
+              window.open(getSellerSignupUrl(), "_blank", "noopener,noreferrer");
+            }}
+            className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+          >
+            {t("common.sellOnIberry")}
+          </button>
+        </div>
+
+        <div className="my-3 h-px bg-neutral-100" />
+
+        {tokenPresent ? (
+          <div className="flex flex-col gap-1">
+            <div className="truncate px-3 py-2 text-sm font-black text-[#BE123C]">
+              {accountName}
+            </div>
+            <Link
+              to="/my-account"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+            >
+              <UserRound className="h-5 w-5" strokeWidth={2.1} />
+              {t("common.myAccount")}
+            </Link>
+            <Link
+              to="/wishlist"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+            >
+              <Heart className="h-5 w-5" strokeWidth={2.1} />
+              {t("common.wishlist")}
+            </Link>
+            <Link
+              to="/cart"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+            >
+              <ShoppingCart className="h-5 w-5" strokeWidth={2.1} />
+              {t("common.cart")}
+            </Link>
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                clearMarketplaceSession(queryClient);
+                navigate("/", { replace: true });
+              }}
+              className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+            >
+              <LogOut className="h-5 w-5" strokeWidth={2.1} />
+              {t("common.logOut")}
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-1">
+            <Link
+              to="/signin"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+            >
+              <UserRound className="h-5 w-5" strokeWidth={2.1} />
+              {t("common.signInAsUser")}
+            </Link>
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                window.location.href = getSellerSignInUrl();
+              }}
+              className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+            >
+              <Store className="h-5 w-5" strokeWidth={2.1} />
+              {t("common.signInAsSeller")}
+            </button>
+          </div>
+        )}
+        </div>
+      </Drawer>
     </header>
   );
 };

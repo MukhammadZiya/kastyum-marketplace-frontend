@@ -21,11 +21,6 @@ export type Material = {
   name: string;
 };
 
-export type Fit = {
-  _id: string;
-  name: string;
-};
-
 export type Style = {
   _id: string;
   name: string;
@@ -36,7 +31,6 @@ export type AttributeKind =
   | "size"
   | "brand"
   | "material"
-  | "fit"
   | "style";
 
 export type AttributeEntity =
@@ -44,7 +38,6 @@ export type AttributeEntity =
   | Size
   | Brand
   | Material
-  | Fit
   | Style;
 
 export type AllAttributesBundle = {
@@ -52,6 +45,5 @@ export type AllAttributesBundle = {
   size: Size[];
   brand: Brand[];
   material: Material[];
-  fit: Fit[];
   style: Style[];
 };

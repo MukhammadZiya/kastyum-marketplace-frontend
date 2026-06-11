@@ -106,9 +106,6 @@ export async function postProductCreate(
   if (body.material?.trim()) {
     fd.append("material", body.material.trim());
   }
-  if (body.fit?.trim()) {
-    fd.append("fit", body.fit.trim());
-  }
   if (body.style?.trim()) {
     fd.append("style", body.style.trim());
   }

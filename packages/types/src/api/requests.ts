@@ -61,7 +61,6 @@ export type ProductsQueryParams = {
   limit?: number;
   brand?: string;
   material?: string;
-  fit?: string;
   color?: string;
   size?: string;
   minPrice?: number;
@@ -94,7 +93,6 @@ export type CreateProductBody = {
   sizes?: string[];
   brand?: string;
   material?: string;
-  fit?: string;
   style?: string;
   images?: string[];
   stockCount: number;
@@ -117,7 +115,6 @@ export type AdminCreateProductPayload = {
   sizeIds?: string[];
   brand?: string;
   material?: string;
-  fit?: string;
   style?: string;
   status?: ProductStatus;
   /** Append to storefront home “new arrivals” after create (if room; skips duplicate). */

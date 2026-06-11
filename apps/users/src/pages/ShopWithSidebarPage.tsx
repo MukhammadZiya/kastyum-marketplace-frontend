@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { ChevronDown, SlidersHorizontal } from "lucide-react";
 import type { ProductsQueryParams } from "@repo/types";
 import Breadcrumb from "../components/Common/Breadcrumb";
 import { headerCatalogLabel } from "../data/headerCatalogOptions";
 import {
+  departmentCategoryLabel,
   emptyShopFilterState,
   PRICE_FILTER_SPECS,
   SHOP_DEPARTMENT_CATEGORY_LABELS,
@@ -64,6 +66,7 @@ function ShopFiltersBody({
   activeFilterCount,
   t,
   priceOptions,
+  showHeading = true,
 }: {
   filters: ShopFilterState;
   onToggleCategory: (v: string) => void;
@@ -73,25 +76,34 @@ function ShopFiltersBody({
   activeFilterCount: number;
   t: TranslateFn;
   priceOptions: { id: PriceFilterId; label: string }[];
+  showHeading?: boolean;
 }) {
+  const clearButton = (
+    <button
+      type="button"
+      onClick={onClear}
+      className="rounded-full bg-[#FFF1F2] px-3 py-1 text-xs font-black text-[#BE123C] transition hover:bg-[#FFE4E6]"
+    >
+      {t("common.clearAll")} ({activeFilterCount})
+    </button>
+  );
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-2">
-        <h3 className="text-lg font-black tracking-tight text-neutral-950">
-          {t("common.filters")}
-        </h3>
-        {activeFilterCount > 0 ? (
-          <button
-            type="button"
-            onClick={onClear}
-            className="rounded-full bg-[#FFF1F2] px-3 py-1 text-xs font-black text-[#BE123C] transition hover:bg-[#FFE4E6]"
-          >
-            {t("common.clearAll")} ({activeFilterCount})
-          </button>
-        ) : null}
-      </div>
+      {showHeading ? (
+        <div className="flex items-center justify-between gap-2">
+          <h3 className="text-lg font-black tracking-tight text-neutral-950">
+            {t("common.filters")}
+          </h3>
+          {activeFilterCount > 0 ? clearButton : null}
+        </div>
+      ) : activeFilterCount > 0 ? (
+        <div className="flex justify-end">{clearButton}</div>
+      ) : null}
 
-      <fieldset className="space-y-2 border-0 border-t border-neutral-100 p-0 pt-5">
+      <fieldset
+        className={`space-y-2 border-0 p-0 ${showHeading ? "border-t border-neutral-100 pt-5" : ""}`}
+      >
         <legend className="mb-2 text-[12px] font-black uppercase tracking-[0.14em] text-neutral-400">
           {t("shopFilterCategory")}
         </legend>
@@ -100,7 +112,7 @@ function ShopFiltersBody({
             <FilterCheckbox
               key={cat}
               id={`cat-${cat}`}
-              label={cat}
+              label={departmentCategoryLabel(cat, t)}
               checked={filters.categories.has(cat)}
               onChange={() => onToggleCategory(cat)}
             />
@@ -275,17 +287,24 @@ export function ShopWithSidebarPage() {
       ) : null}
       <section className="bg-[#FAFAFB] py-8 sm:py-10">
         <div className="mx-auto flex max-w-[1280px] flex-col gap-6 px-4 sm:px-8 xl:flex-row xl:gap-8 xl:px-0">
-          <details className="rounded-xl border border-neutral-200 bg-white shadow-[0_20px_70px_-58px_rgba(15,23,42,0.5)] xl:hidden [&_summary::-webkit-details-marker]:hidden">
-            <summary className="flex cursor-pointer list-none items-center justify-between p-4 font-semibold text-neutral-900">
-              {t("common.filters")}
-              {activeFilterCount > 0 ? (
-                <span className="rounded-full bg-[#E11D48] px-2 py-0.5 text-xs text-white">
-                  {activeFilterCount}
-                </span>
-              ) : null}
+          <details className="group rounded-xl border border-neutral-200 bg-white shadow-[0_20px_70px_-58px_rgba(15,23,42,0.5)] xl:hidden [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4 font-black text-neutral-900">
+              <span className="flex items-center gap-2">
+                <SlidersHorizontal className="h-4 w-4 text-neutral-400" strokeWidth={2.2} />
+                {t("common.filters")}
+                {activeFilterCount > 0 ? (
+                  <span className="rounded-full bg-[#E11D48] px-2 py-0.5 text-xs font-black text-white">
+                    {activeFilterCount}
+                  </span>
+                ) : null}
+              </span>
+              <ChevronDown
+                className="h-5 w-5 shrink-0 text-neutral-400 transition-transform duration-200 group-open:rotate-180"
+                strokeWidth={2.2}
+              />
             </summary>
-            <div className="border-t border-neutral-100 p-5 pt-2">
-              <ShopFiltersBody {...filterBodyProps} />
+            <div className="border-t border-neutral-100 p-5 pt-4">
+              <ShopFiltersBody {...filterBodyProps} showHeading={false} />
             </div>
           </details>
 
