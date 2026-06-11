@@ -5,6 +5,7 @@ import { ShopWithSidebarPage } from "./pages/ShopWithSidebarPage";
 import { ShopWithoutSidebarPage } from "./pages/ShopWithoutSidebarPage";
 import { CartPage } from "./pages/CartPage";
 import { CheckoutPage } from "./pages/CheckoutPage";
+import { PaymentResultPage } from "./pages/PaymentResultPage";
 import { ContactPage } from "./pages/ContactPage";
 import { WishlistPage } from "./pages/WishlistPage";
 import { SignInPage } from "./pages/SignInPage";
@@ -32,6 +33,7 @@ function App({ basename }: AppProps = {}) {
           <Route path="shop-without-sidebar" element={<ShopWithoutSidebarPage />} />
           <Route path="cart" element={<CartPage />} />
           <Route path="checkout" element={<CheckoutPage />} />
+          <Route path="payment-result" element={<PaymentResultPage />} />
           <Route path="contact" element={<ContactPage />} />
           <Route path="wishlist" element={<WishlistPage />} />
           <Route path="shop-details" element={<ShopDetailsPage />} />

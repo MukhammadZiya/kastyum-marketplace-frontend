@@ -1,9 +1,12 @@
 import React, { createContext, useContext, useMemo, useState } from "react";
 
+type CartAnchorRect = Pick<DOMRect, "top" | "right" | "bottom" | "left">;
+
 const CartSidebarModalContext = createContext<
   | {
       isCartModalOpen: boolean;
-      openCartModal: () => void;
+      anchorRect: CartAnchorRect | null;
+      openCartModal: (anchorRect?: CartAnchorRect) => void;
       closeCartModal: () => void;
     }
   | undefined
@@ -15,14 +18,19 @@ export function CartSidebarModalProvider({
   children: React.ReactNode;
 }) {
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
+  const [anchorRect, setAnchorRect] = useState<CartAnchorRect | null>(null);
 
   const value = useMemo(
     () => ({
       isCartModalOpen,
-      openCartModal: () => setIsCartModalOpen(true),
+      anchorRect,
+      openCartModal: (rect?: CartAnchorRect) => {
+        if (rect) setAnchorRect(rect);
+        setIsCartModalOpen(true);
+      },
       closeCartModal: () => setIsCartModalOpen(false),
     }),
-    [isCartModalOpen]
+    [isCartModalOpen, anchorRect]
   );
 
   return (
@@ -37,4 +45,3 @@ export function useCartModal() {
   if (!ctx) throw new Error("useCartModal must be used within provider");
   return ctx;
 }
-

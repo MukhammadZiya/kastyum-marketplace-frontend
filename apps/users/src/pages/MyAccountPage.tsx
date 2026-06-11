@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import Breadcrumb from "../components/Common/Breadcrumb";
 import { useMyOrders } from "../hooks/orders";
+import { usePreparePayment } from "../hooks/payments";
 import { useMemberMe, useMemberUpdate } from "../hooks/members";
 import { getAuthToken } from "@repo/api";
 import { useT } from "../i18n";
@@ -36,6 +37,40 @@ function accountTabLabel(tab: (typeof tabs)[number], t: ReturnType<typeof useT>)
     case "Security":
       return t("accountTabSecurity");
   }
+}
+
+function PayNowButton({ orderId }: { orderId: string }) {
+  const t = useT();
+  const preparePayment = usePreparePayment();
+  const [error, setError] = useState("");
+
+  return (
+    <div className="mt-3">
+      {error ? (
+        <p className="mb-1 text-xs text-red-600" role="alert">
+          {error}
+        </p>
+      ) : null}
+      <button
+        type="button"
+        disabled={preparePayment.isPending}
+        onClick={() => {
+          setError("");
+          preparePayment.mutate(orderId, {
+            onSuccess: (res) => {
+              window.location.href = res.octo_pay_url;
+            },
+            onError: (err) => {
+              setError(err instanceof Error ? err.message : "Payment initialization failed.");
+            },
+          });
+        }}
+        className="rounded-xl bg-[#E11D48] px-4 py-2 text-sm font-black text-white transition hover:bg-[#BE123C] disabled:opacity-60"
+      >
+        {preparePayment.isPending ? `${t("payNow")}…` : t("payNow")}
+      </button>
+    </div>
+  );
 }
 
 function OrdersPanel() {
@@ -101,6 +136,7 @@ function OrdersPanel() {
               </li>
             ))}
           </ul>
+          {o.paymentStatus !== "PAID" ? <PayNowButton orderId={o._id} /> : null}
         </li>
       ))}
     </ul>

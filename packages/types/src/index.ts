@@ -3,6 +3,7 @@ export type {
   MemberType,
   NotificationType,
   OrderStatus,
+  PaymentStatus,
   ProductStatus,
   TargetAudience,
 } from "./enums";
@@ -38,6 +39,8 @@ export type {
 } from "./entities/homeShowcase";
 
 export type { Order, OrderItem, OrderListRow } from "./entities/order";
+
+export type { OctoPrepareResponse, PaymentStatusResponse } from "./entities/payment";
 
 export type { Notification, NotificationAdminListItem } from "./entities/notification";
 

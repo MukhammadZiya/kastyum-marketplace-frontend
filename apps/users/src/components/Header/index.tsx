@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuthToken } from "@repo/api";
 import { useQueryClient } from "@tanstack/react-query";
@@ -24,13 +24,37 @@ const Header = () => {
   const queryClient = useQueryClient();
   const tokenPresent = Boolean(getAuthToken());
   const { data: me, isPending } = useMemberMe();
-  const { openCartModal } = useCartModal();
+  const { isCartModalOpen, openCartModal, closeCartModal } = useCartModal();
   const { items } = useCart();
   const t = useT();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [signInMenuOpen, setSignInMenuOpen] = useState(false);
+  const accountMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!accountMenuOpen && !signInMenuOpen) return;
+
+    function handleClickOutside(event: MouseEvent) {
+      if (!accountMenuRef.current?.contains(event.target as Node)) {
+        setAccountMenuOpen(false);
+        setSignInMenuOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [accountMenuOpen, signInMenuOpen]);
+
+  const toggleCartModal = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (isCartModalOpen) {
+      closeCartModal();
+      return;
+    }
+    const { top, right, bottom, left } = event.currentTarget.getBoundingClientRect();
+    openCartModal({ top, right, bottom, left });
+  };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,9 +108,9 @@ const Header = () => {
             </div>
 
             <button
-              onClick={openCartModal}
+              onClick={toggleCartModal}
               type="button"
-              className="relative hidden items-center gap-2 rounded-2xl px-3 py-2 text-sm font-black text-neutral-950 transition hover:bg-[#FFF1F2] lg:flex"
+              className="cart-toggle relative hidden items-center gap-2 rounded-2xl px-3 py-2 text-sm font-black text-neutral-950 transition hover:bg-[#FFF1F2] lg:flex"
             >
               <ShoppingCart className="h-6 w-6" strokeWidth={2.2} />
               <span className="absolute left-6 top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#E11D48] px-1 text-[11px] text-white">
@@ -96,7 +120,7 @@ const Header = () => {
             </button>
 
             {tokenPresent ? (
-              <div className="relative hidden lg:block">
+              <div className="relative hidden lg:block" ref={accountMenuRef}>
                 <button
                   type="button"
                   onClick={() => setAccountMenuOpen((open) => !open)}
@@ -167,7 +191,7 @@ const Header = () => {
                 ) : null}
               </div>
             ) : (
-              <div className="relative hidden lg:block">
+              <div className="relative hidden lg:block" ref={accountMenuRef}>
                 <button
                   type="button"
                   onClick={() => setSignInMenuOpen((open) => !open)}
@@ -220,9 +244,9 @@ const Header = () => {
               <LanguageSwitcher />
             </div>
             <button
-              onClick={openCartModal}
+              onClick={toggleCartModal}
               type="button"
-              className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-neutral-200 bg-white text-neutral-950 lg:hidden"
+              className="cart-toggle relative flex h-11 w-11 items-center justify-center rounded-2xl border border-neutral-200 bg-white text-neutral-950 lg:hidden"
               aria-label={t("common.cart")}
             >
               <ShoppingCart className="h-6 w-6" strokeWidth={2.2} />

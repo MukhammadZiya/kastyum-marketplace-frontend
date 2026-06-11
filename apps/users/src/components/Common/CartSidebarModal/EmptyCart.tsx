@@ -5,12 +5,12 @@ export default function EmptyCart() {
   const { closeCartModal } = useCartModal();
 
   return (
-    <div className="text-center">
-      <div className="mx-auto pb-[30px]">
+    <div className="py-4 text-center">
+      <div className="mx-auto pb-3">
         <svg
           className="mx-auto"
-          width="100"
-          height="100"
+          width="64"
+          height="64"
           viewBox="0 0 100 100"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -25,12 +25,12 @@ export default function EmptyCart() {
         </svg>
       </div>
 
-      <p className="pb-6">Your cart is empty!</p>
+      <p className="pb-4 text-sm font-semibold text-neutral-500">Your cart is empty!</p>
 
       <Link
         onClick={closeCartModal}
         to="/shop-with-sidebar"
-        className="mx-auto flex w-full justify-center rounded-md bg-neutral-900 px-6 py-[13px] font-medium text-white shadow-sm transition duration-200 ease-out hover:-translate-y-px hover:bg-neutral-800 hover:shadow-md active:translate-y-0 active:shadow-sm lg:w-10/12"
+        className="mx-auto flex w-full justify-center rounded-xl bg-neutral-950 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition duration-200 ease-out hover:-translate-y-px hover:bg-neutral-800 hover:shadow-md active:translate-y-0 active:shadow-sm"
       >
         Continue Shopping
       </Link>

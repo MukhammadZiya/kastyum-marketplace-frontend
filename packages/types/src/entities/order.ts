@@ -1,4 +1,4 @@
-import type { OrderStatus } from "../enums";
+import type { OrderStatus, PaymentStatus } from "../enums";
 import type { Member } from "./member";
 
 export type OrderItem = {
@@ -19,6 +19,8 @@ export type Order = {
   totalAmount: number;
   status: OrderStatus;
   shippingAddress?: string;
+  paymentStatus: PaymentStatus;
+  currency: string;
   createdAt?: string;
   updatedAt?: string;
 };
