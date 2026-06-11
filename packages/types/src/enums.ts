@@ -12,6 +12,12 @@ export type OrderStatus =
   | "SHIPPED"
   | "CANCELLED";
 
+export type PaymentStatus =
+  | "UNPAID"
+  | "PROCESSING"
+  | "PAID"
+  | "FAILED";
+
 export type NotificationType =
   | "ORDER_NEW"
   | "ORDER_UPDATE"

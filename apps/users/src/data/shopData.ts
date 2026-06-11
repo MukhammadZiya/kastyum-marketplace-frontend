@@ -1,4 +1,5 @@
 import type { Product } from "../types/product";
+import type { TranslateFn } from "../i18n/types";
 import { productLightWebImgs } from "./lightWebpImages";
 
 export type ShopProduct = Product & {
@@ -15,6 +16,24 @@ export const SHOP_DEPARTMENT_CATEGORY_LABELS = [
   "Men's tailoring",
   "Seasonal",
 ] as const;
+
+const DEPARTMENT_CATEGORY_LABEL_KEYS: Record<
+  (typeof SHOP_DEPARTMENT_CATEGORY_LABELS)[number],
+  string
+> = {
+  "Formal wear": "shopDepartmentFormalWear",
+  "Men's tailoring": "shopDepartmentMensTailoring",
+  Seasonal: "shopDepartmentSeasonal",
+};
+
+/** Translates a `departmentCategory` value for display in the shop filters. */
+export function departmentCategoryLabel(value: string, t: TranslateFn): string {
+  const key =
+    DEPARTMENT_CATEGORY_LABEL_KEYS[
+      value as (typeof SHOP_DEPARTMENT_CATEGORY_LABELS)[number]
+    ];
+  return key ? t(key) : value;
+}
 
 export function filterByHeaderCatalog(
   products: readonly ShopProduct[],

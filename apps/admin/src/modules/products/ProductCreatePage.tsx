@@ -73,7 +73,6 @@ export function ProductCreatePage() {
   const [sizeIds, setSizeIds] = useState<string[]>([]);
   const [brandId, setBrandId] = useState("");
   const [materialId, setMaterialId] = useState("");
-  const [fitId, setFitId] = useState("");
   const [styleId, setStyleId] = useState("");
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [homeShowcaseNewArrivals, setHomeShowcaseNewArrivals] = useState(false);
@@ -90,7 +89,6 @@ export function ProductCreatePage() {
   const [newColorHex, setNewColorHex] = useState("");
   const [newBrandName, setNewBrandName] = useState("");
   const [newMaterialName, setNewMaterialName] = useState("");
-  const [newFitName, setNewFitName] = useState("");
   const [newStyleName, setNewStyleName] = useState("");
 
   const sellers = sellersPage?.list ?? [];
@@ -105,7 +103,6 @@ export function ProductCreatePage() {
 
   const brandOptions = attrBundle?.brand ?? [];
   const materialOptions = attrBundle?.material ?? [];
-  const fitOptions = attrBundle?.fit ?? [];
   const styleOptions = attrBundle?.style ?? [];
   const colorOptions = attrBundle?.color ?? [];
   const sizeOptions = attrBundle?.size ?? [];
@@ -259,7 +256,6 @@ export function ProductCreatePage() {
       variantStock: variantStockPayload,
       brand: brandId || undefined,
       material: materialId || undefined,
-      fit: fitId || undefined,
       style: styleId || undefined,
       homeShowcaseNewArrivals: homeShowcaseNewArrivals || undefined,
       homeShowcaseMostPurchased: homeShowcaseMostPurchased || undefined,
@@ -730,54 +726,6 @@ export function ProductCreatePage() {
                         {},
                         (id) => setMaterialId(id),
                         () => setNewMaterialName(""),
-                      )
-                    }
-                  >
-                    {t("common.adminProductQuickAddButton")}
-                  </Button>
-                </div>
-              </div>
-              <div>
-                <label htmlFor="admin-product-fit" className="mb-1 block text-sm font-medium text-slate-700">
-                  {t("common.adminProductFieldFit")}
-                </label>
-                <select
-                  id="admin-product-fit"
-                  value={fitId}
-                  onChange={(ev) => setFitId(ev.target.value)}
-                  className={selectClass}
-                >
-                  <option value="">{t("common.adminProductPhOptional")}</option>
-                  {fitOptions.map((f) => (
-                    <option key={f._id} value={f._id}>
-                      {f.name}
-                    </option>
-                  ))}
-                </select>
-                <p className="mt-2 text-xs font-medium text-slate-600">
-                  {t("common.adminProductQuickAddFitLabel")}
-                </p>
-                <div className="mt-1 flex flex-wrap gap-2">
-                  <input
-                    type="text"
-                    value={newFitName}
-                    onChange={(ev) => setNewFitName(ev.target.value)}
-                    className={`${adminInputClass} min-w-[140px] flex-1`}
-                    placeholder={t("common.adminProductQuickAddFitPh")}
-                    disabled={addAttribute.isPending}
-                  />
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    disabled={addAttribute.isPending}
-                    onClick={() =>
-                      runQuickAttributeCreate(
-                        "fit",
-                        newFitName,
-                        {},
-                        (id) => setFitId(id),
-                        () => setNewFitName(""),
                       )
                     }
                   >

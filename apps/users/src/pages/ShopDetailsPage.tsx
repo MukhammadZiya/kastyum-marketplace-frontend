@@ -156,12 +156,6 @@ function buildDetailSpecs(
       value: apiProduct.material.name,
     });
   }
-  if (apiProduct?.fit?.name) {
-    specs.push({
-      label: t("productDetailFit"),
-      value: apiProduct.fit.name,
-    });
-  }
   if (apiProduct?.style?.name || category) {
     specs.push({
       label: t("productDetailStyle"),

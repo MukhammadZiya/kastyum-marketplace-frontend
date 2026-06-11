@@ -1,17 +1,18 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Breadcrumb from "../components/Common/Breadcrumb";
 import { cartLineKey, useCart } from "../context/cart";
 import { useCreateOrder } from "../hooks/orders";
+import { usePreparePayment } from "../hooks/payments";
 import { getAuthToken } from "@repo/api";
 import { useT } from "../i18n";
 import { productDisplayTitle } from "../lib/productDisplayTitle";
 
 export function CheckoutPage() {
   const t = useT();
-  const navigate = useNavigate();
   const { items, totalPrice, clear } = useCart();
   const createOrder = useCreateOrder();
+  const preparePayment = usePreparePayment();
   const [address, setAddress] = useState("");
   const [formError, setFormError] = useState("");
 
@@ -46,24 +47,17 @@ export function CheckoutPage() {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <input className="rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white" placeholder={t("common.firstName")} />
                   <input className="rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white" placeholder={t("common.lastName")} />
-                  <input className="rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white sm:col-span-2" placeholder={t("common.email")} />
+                  <input className="rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white" placeholder={t("common.email")} />
+                  <input className="rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white" placeholder={t("common.phone")} />
                   <input
                     className="rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white sm:col-span-2"
-                    placeholder={t("checkoutShippingPayment")}
+                    placeholder={t("common.accountTabAddress")}
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                   />
                 </div>
-              </div>
-              <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-[0_22px_80px_-62px_rgba(15,23,42,0.75)] sm:p-6">
-                <h3 className="mb-5 text-xl font-black tracking-tight text-neutral-950">
-                  {t("checkoutShippingPayment")}
-                </h3>
-                <div className="grid gap-3 text-sm font-bold text-neutral-700 sm:grid-cols-2">
-                  <label className="flex items-center gap-3 rounded-2xl bg-[#FAFAFA] p-4"><input className="text-[#E11D48] focus:ring-[#FDA4AF]" type="radio" name="ship" defaultChecked /> {t("common.freeShipping")}</label>
-                  <label className="flex items-center gap-3 rounded-2xl bg-[#FAFAFA] p-4"><input className="text-[#E11D48] focus:ring-[#FDA4AF]" type="radio" name="ship" /> {t("common.flatRate")}</label>
-                  <label className="flex items-center gap-3 rounded-2xl bg-[#FAFAFA] p-4"><input className="text-[#E11D48] focus:ring-[#FDA4AF]" type="radio" name="pay" defaultChecked /> {t("common.cashOnDelivery")}</label>
-                  <label className="flex items-center gap-3 rounded-2xl bg-[#FAFAFA] p-4"><input className="text-[#E11D48] focus:ring-[#FDA4AF]" type="radio" name="pay" /> {t("common.paypal")}</label>
+                <div className="mt-4 rounded-2xl border border-neutral-200 bg-[#FAFAFA] p-4 text-sm font-semibold text-neutral-600">
+                  {t("checkoutPaymentNote")}
                 </div>
               </div>
             </div>
@@ -141,6 +135,7 @@ export function CheckoutPage() {
                 type="button"
                 disabled={
                   createOrder.isPending ||
+                  preparePayment.isPending ||
                   items.length === 0 ||
                   !signedIn ||
                   !hasOnlyApiItems
@@ -161,9 +156,18 @@ export function CheckoutPage() {
                       shippingAddress: address.trim() || undefined,
                     },
                     {
-                      onSuccess: () => {
+                      onSuccess: (order) => {
                         clear();
-                        navigate("/my-account");
+                        preparePayment.mutate(order._id, {
+                          onSuccess: (res) => {
+                            window.location.href = res.octo_pay_url;
+                          },
+                          onError: (err) => {
+                            setFormError(
+                              err instanceof Error ? err.message : "Payment initialization failed.",
+                            );
+                          },
+                        });
                       },
                       onError: (err) => {
                         setFormError(
@@ -174,7 +178,9 @@ export function CheckoutPage() {
                   );
                 }}
               >
-                {createOrder.isPending ? `${t("checkoutPlaceOrder")}…` : t("checkoutPlaceOrder")}
+                {createOrder.isPending || preparePayment.isPending
+                  ? `${t("checkoutPlaceOrder")}…`
+                  : t("checkoutPlaceOrder")}
               </button>
             </div>
           </div>

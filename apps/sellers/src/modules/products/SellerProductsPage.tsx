@@ -1,24 +1,40 @@
 import type { FormEvent } from "react";
 import { useCallback, useEffect, useId, useMemo, useState } from "react";
-import { CheckCircle2, Circle, ImagePlus, PackageCheck, Shirt, Tags, Upload } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import {
+  CheckCircle2,
+  Circle,
+  ImagePlus,
+  PackageCheck,
+  Plus,
+  Shirt,
+  Tags,
+  Upload,
+} from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
+  AllAttributesBundle,
+  Brand,
+  Color,
   CreateProductBody,
+  Material,
   ProductStatus,
   ProductVariantStockLine,
+  Size,
+  Style,
   TargetAudience,
 } from "@repo/types";
 import { formatRequestFailureMessage, getAllAttributes } from "@repo/api";
 import { Button } from "@repo/ui";
 import { SellerPageFrame } from "../../components/seller/SellerPageFrame";
 import { SELLER_PAGE_COPY_KEYS } from "../../constants/sellerNavigation";
-import { useSellerProductCreate } from "../../hooks/seller-products";
+import { useSellerAttributeCreate, useSellerProductCreate } from "../../hooks/seller-products";
 import { useT } from "../../i18n";
 
 const copy = SELLER_PAGE_COPY_KEYS.productsManage;
 
 const audiences: TargetAudience[] = ["MEN", "WOMEN", "KIDS"];
 const productStatuses: ProductStatus[] = ["ACTIVE", "INACTIVE"];
+const ATTR_BUNDLE_QUERY_KEY = ["seller", "attributes", "bundle"] as const;
 
 const inputClass =
   "w-full rounded-xl border border-neutral-200 bg-[#FAFAFB] px-4 py-3 text-slate-950 outline-none transition focus:border-[#E11D48] focus:bg-white focus:ring-4 focus:ring-[#E11D48]/10";
@@ -58,9 +74,15 @@ export function SellerProductsPage() {
   const t = useT();
   const imageFieldId = useId();
   const create = useSellerProductCreate();
+  const queryClient = useQueryClient();
+  const addSizeAttribute = useSellerAttributeCreate();
+  const addColorAttribute = useSellerAttributeCreate();
+  const addBrandAttribute = useSellerAttributeCreate();
+  const addMaterialAttribute = useSellerAttributeCreate();
+  const addStyleAttribute = useSellerAttributeCreate();
 
   const { data: attrBundle, isError: attrError } = useQuery({
-    queryKey: ["seller", "attributes", "bundle"],
+    queryKey: ATTR_BUNDLE_QUERY_KEY,
     queryFn: () => getAllAttributes(),
     staleTime: 5 * 60_000,
   });
@@ -77,16 +99,24 @@ export function SellerProductsPage() {
   const [sizeIds, setSizeIds] = useState<string[]>([]);
   const [brandId, setBrandId] = useState("");
   const [materialId, setMaterialId] = useState("");
-  const [fitId, setFitId] = useState("");
   const [styleId, setStyleId] = useState("");
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [fileInputKey, setFileInputKey] = useState(0);
   const [variantQty, setVariantQty] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState("");
+  const [newSizeName, setNewSizeName] = useState("");
+  const [newColorName, setNewColorName] = useState("");
+  const [newBrandName, setNewBrandName] = useState("");
+  const [newMaterialName, setNewMaterialName] = useState("");
+  const [newStyleName, setNewStyleName] = useState("");
+  const [sizeAddError, setSizeAddError] = useState("");
+  const [colorAddError, setColorAddError] = useState("");
+  const [brandAddError, setBrandAddError] = useState("");
+  const [materialAddError, setMaterialAddError] = useState("");
+  const [styleAddError, setStyleAddError] = useState("");
 
   const brandOptions = attrBundle?.brand ?? [];
   const materialOptions = attrBundle?.material ?? [];
-  const fitOptions = attrBundle?.fit ?? [];
   const styleOptions = attrBundle?.style ?? [];
   const colorOptions = attrBundle?.color ?? [];
   const sizeOptions = attrBundle?.size ?? [];
@@ -151,12 +181,116 @@ export function SellerProductsPage() {
     setSizeIds([]);
     setBrandId("");
     setMaterialId("");
-    setFitId("");
     setStyleId("");
     setImageFiles([]);
     setFileInputKey((k) => k + 1);
     setVariantQty({});
     setFormError("");
+  }
+
+  function handleAddSize() {
+    const name = newSizeName.trim();
+    if (!name) return;
+    addSizeAttribute.mutate(
+      { type: "size", name },
+      {
+        onSuccess: (attr) => {
+          queryClient.setQueryData<AllAttributesBundle>(ATTR_BUNDLE_QUERY_KEY, (old) => {
+            if (!old) return old;
+            if (old.size.some((s) => s._id === attr._id)) return old;
+            return { ...old, size: [...old.size, attr as Size] };
+          });
+          setSizeIds((prev) => (prev.includes(attr._id) ? prev : [...prev, attr._id]));
+          setNewSizeName("");
+          setSizeAddError("");
+        },
+        onError: () => setSizeAddError(t("common.sellerProductAddAttributeError")),
+      },
+    );
+  }
+
+  function handleAddColor() {
+    const name = newColorName.trim();
+    if (!name) return;
+    addColorAttribute.mutate(
+      { type: "color", name },
+      {
+        onSuccess: (attr) => {
+          queryClient.setQueryData<AllAttributesBundle>(ATTR_BUNDLE_QUERY_KEY, (old) => {
+            if (!old) return old;
+            if (old.color.some((c) => c._id === attr._id)) return old;
+            return { ...old, color: [...old.color, attr as Color] };
+          });
+          setColorIds((prev) => (prev.includes(attr._id) ? prev : [...prev, attr._id]));
+          setNewColorName("");
+          setColorAddError("");
+        },
+        onError: () => setColorAddError(t("common.sellerProductAddAttributeError")),
+      },
+    );
+  }
+
+  function handleAddBrand() {
+    const name = newBrandName.trim();
+    if (!name) return;
+    addBrandAttribute.mutate(
+      { type: "brand", name },
+      {
+        onSuccess: (attr) => {
+          queryClient.setQueryData<AllAttributesBundle>(ATTR_BUNDLE_QUERY_KEY, (old) => {
+            if (!old) return old;
+            if (old.brand.some((b) => b._id === attr._id)) return old;
+            return { ...old, brand: [...old.brand, attr as Brand] };
+          });
+          setBrandId(attr._id);
+          setNewBrandName("");
+          setBrandAddError("");
+        },
+        onError: () => setBrandAddError(t("common.sellerProductAddAttributeError")),
+      },
+    );
+  }
+
+  function handleAddMaterial() {
+    const name = newMaterialName.trim();
+    if (!name) return;
+    addMaterialAttribute.mutate(
+      { type: "material", name },
+      {
+        onSuccess: (attr) => {
+          queryClient.setQueryData<AllAttributesBundle>(ATTR_BUNDLE_QUERY_KEY, (old) => {
+            if (!old) return old;
+            if (old.material.some((m) => m._id === attr._id)) return old;
+            return { ...old, material: [...old.material, attr as Material] };
+          });
+          setMaterialId(attr._id);
+          setNewMaterialName("");
+          setMaterialAddError("");
+        },
+        onError: () => setMaterialAddError(t("common.sellerProductAddAttributeError")),
+      },
+    );
+  }
+
+  function handleAddStyle() {
+    const name = newStyleName.trim();
+    if (!name) return;
+    addStyleAttribute.mutate(
+      { type: "style", name },
+      {
+        onSuccess: (attr) => {
+          queryClient.setQueryData<AllAttributesBundle>(ATTR_BUNDLE_QUERY_KEY, (old) => {
+            if (!old) return old;
+            if (old.style.some((s) => s._id === attr._id)) return old;
+            return { ...old, style: [...old.style, attr as Style] };
+          });
+          setStyleId(attr._id);
+          setNewStyleName("");
+          setStyleAddError("");
+        },
+        onError: () => setStyleAddError(t("common.sellerProductAddAttributeError")),
+      },
+    );
   }
 
   function handleSubmit(e: FormEvent) {
@@ -225,7 +359,6 @@ export function SellerProductsPage() {
       variantStock: variantStockPayload,
       brand: brandId || undefined,
       material: materialId || undefined,
-      fit: fitId || undefined,
       style: styleId || undefined,
       status,
     };
@@ -479,6 +612,34 @@ export function SellerProductsPage() {
                       })
                     )}
                   </div>
+                  <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+                    <input
+                      className={`${inputClass} sm:flex-1`}
+                      value={newSizeName}
+                      onChange={(e) => setNewSizeName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleAddSize();
+                        }
+                      }}
+                      placeholder={t("common.sellerProductAddSizePlaceholder")}
+                    />
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      className="w-full gap-1.5 whitespace-nowrap sm:w-auto sm:shrink-0"
+                      onClick={handleAddSize}
+                      disabled={addSizeAttribute.isPending || !newSizeName.trim()}
+                    >
+                      <Plus className="h-4 w-4" aria-hidden />
+                      {t("common.sellerProductAddAttributeButton")}
+                    </Button>
+                  </div>
+                  {sizeAddError ? (
+                    <p className="mt-1 text-xs font-semibold text-red-600">{sizeAddError}</p>
+                  ) : null}
                 </div>
                 <div>
                   <span className={labelClass}>{t("common.sellerProductFieldColors")}</span>
@@ -511,10 +672,38 @@ export function SellerProductsPage() {
                       })
                     )}
                   </div>
+                  <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+                    <input
+                      className={`${inputClass} sm:flex-1`}
+                      value={newColorName}
+                      onChange={(e) => setNewColorName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleAddColor();
+                        }
+                      }}
+                      placeholder={t("common.sellerProductAddColorPlaceholder")}
+                    />
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      className="w-full gap-1.5 whitespace-nowrap sm:w-auto sm:shrink-0"
+                      onClick={handleAddColor}
+                      disabled={addColorAttribute.isPending || !newColorName.trim()}
+                    >
+                      <Plus className="h-4 w-4" aria-hidden />
+                      {t("common.sellerProductAddAttributeButton")}
+                    </Button>
+                  </div>
+                  {colorAddError ? (
+                    <p className="mt-1 text-xs font-semibold text-red-600">{colorAddError}</p>
+                  ) : null}
                 </div>
               </div>
 
-              <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                 <div>
                   <label className={labelClass}>{t("common.sellerProductFieldBrand")}</label>
                   <select
@@ -529,6 +718,34 @@ export function SellerProductsPage() {
                       </option>
                     ))}
                   </select>
+                  <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+                    <input
+                      className={`${inputClass} sm:flex-1`}
+                      value={newBrandName}
+                      onChange={(e) => setNewBrandName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleAddBrand();
+                        }
+                      }}
+                      placeholder={t("common.sellerProductAddBrandPlaceholder")}
+                    />
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      className="w-full gap-1.5 whitespace-nowrap sm:w-auto sm:shrink-0"
+                      onClick={handleAddBrand}
+                      disabled={addBrandAttribute.isPending || !newBrandName.trim()}
+                    >
+                      <Plus className="h-4 w-4" aria-hidden />
+                      {t("common.sellerProductAddAttributeButton")}
+                    </Button>
+                  </div>
+                  {brandAddError ? (
+                    <p className="mt-1 text-xs font-semibold text-red-600">{brandAddError}</p>
+                  ) : null}
                 </div>
                 <div>
                   <label className={labelClass}>{t("common.sellerProductFieldMaterial")}</label>
@@ -544,21 +761,34 @@ export function SellerProductsPage() {
                       </option>
                     ))}
                   </select>
-                </div>
-                <div>
-                  <label className={labelClass}>{t("common.sellerProductFieldFit")}</label>
-                  <select
-                    className={inputClass}
-                    value={fitId}
-                    onChange={(e) => setFitId(e.target.value)}
-                  >
-                    <option value="">{t("common.sellerProductPhOptional")}</option>
-                    {fitOptions.map((f) => (
-                      <option key={f._id} value={f._id}>
-                        {f.name}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+                    <input
+                      className={`${inputClass} sm:flex-1`}
+                      value={newMaterialName}
+                      onChange={(e) => setNewMaterialName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleAddMaterial();
+                        }
+                      }}
+                      placeholder={t("common.sellerProductAddMaterialPlaceholder")}
+                    />
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      className="w-full gap-1.5 whitespace-nowrap sm:w-auto sm:shrink-0"
+                      onClick={handleAddMaterial}
+                      disabled={addMaterialAttribute.isPending || !newMaterialName.trim()}
+                    >
+                      <Plus className="h-4 w-4" aria-hidden />
+                      {t("common.sellerProductAddAttributeButton")}
+                    </Button>
+                  </div>
+                  {materialAddError ? (
+                    <p className="mt-1 text-xs font-semibold text-red-600">{materialAddError}</p>
+                  ) : null}
                 </div>
                 <div>
                   <label className={labelClass}>{t("common.sellerProductFieldStyle")}</label>
@@ -574,6 +804,34 @@ export function SellerProductsPage() {
                       </option>
                     ))}
                   </select>
+                  <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+                    <input
+                      className={`${inputClass} sm:flex-1`}
+                      value={newStyleName}
+                      onChange={(e) => setNewStyleName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleAddStyle();
+                        }
+                      }}
+                      placeholder={t("common.sellerProductAddStylePlaceholder")}
+                    />
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      className="w-full gap-1.5 whitespace-nowrap sm:w-auto sm:shrink-0"
+                      onClick={handleAddStyle}
+                      disabled={addStyleAttribute.isPending || !newStyleName.trim()}
+                    >
+                      <Plus className="h-4 w-4" aria-hidden />
+                      {t("common.sellerProductAddAttributeButton")}
+                    </Button>
+                  </div>
+                  {styleAddError ? (
+                    <p className="mt-1 text-xs font-semibold text-red-600">{styleAddError}</p>
+                  ) : null}
                 </div>
               </div>
 

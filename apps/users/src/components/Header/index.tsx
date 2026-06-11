@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuthToken } from "@repo/api";
 import { useQueryClient } from "@tanstack/react-query";
@@ -6,15 +6,19 @@ import {
   ChevronDown,
   Heart,
   LogOut,
+  Menu,
   Search,
   ShoppingCart,
+  Store,
   UserRound,
 } from "lucide-react";
+import { Drawer } from "@repo/ui";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useCart } from "../../context/cart";
 import { useCartModal } from "../../context/cartSidebarModal";
 import { useMemberMe } from "../../hooks/members";
 import { useT } from "../../i18n";
+import { getSellerSignInUrl, getSellerSignupUrl } from "../../lib/sellerAppUrl";
 import { clearMarketplaceSession } from "../../user-auth";
 
 const Header = () => {
@@ -22,12 +26,38 @@ const Header = () => {
   const queryClient = useQueryClient();
   const tokenPresent = Boolean(getAuthToken());
   const { data: me, isPending } = useMemberMe();
-  const { openCartModal } = useCartModal();
+  const { isCartModalOpen, openCartModal, closeCartModal } = useCartModal();
   const { items } = useCart();
   const t = useT();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+  const [signInMenuOpen, setSignInMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const accountMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!accountMenuOpen && !signInMenuOpen) return;
+
+    function handleClickOutside(event: MouseEvent) {
+      if (!accountMenuRef.current?.contains(event.target as Node)) {
+        setAccountMenuOpen(false);
+        setSignInMenuOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [accountMenuOpen, signInMenuOpen]);
+
+  const toggleCartModal = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (isCartModalOpen) {
+      closeCartModal();
+      return;
+    }
+    const { top, right, bottom, left } = event.currentTarget.getBoundingClientRect();
+    openCartModal({ top, right, bottom, left });
+  };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,9 +96,13 @@ const Header = () => {
             <button className="transition hover:text-[#E11D48]" type="button">
               News
             </button>
-            <Link className="transition hover:text-[#E11D48]" to="/contact">
-              Partnership
-            </Link>
+            <button
+              type="button"
+              className="transition hover:text-[#E11D48]"
+              onClick={() => window.open(getSellerSignupUrl(), "_blank", "noopener,noreferrer")}
+            >
+              {t("common.sellOnIberry")}
+            </button>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -77,9 +111,9 @@ const Header = () => {
             </div>
 
             <button
-              onClick={openCartModal}
+              onClick={toggleCartModal}
               type="button"
-              className="relative hidden items-center gap-2 rounded-2xl px-3 py-2 text-sm font-black text-neutral-950 transition hover:bg-[#FFF1F2] lg:flex"
+              className="cart-toggle relative hidden items-center gap-2 rounded-2xl px-3 py-2 text-sm font-black text-neutral-950 transition hover:bg-[#FFF1F2] lg:flex"
             >
               <ShoppingCart className="h-6 w-6" strokeWidth={2.2} />
               <span className="absolute left-6 top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#E11D48] px-1 text-[11px] text-white">
@@ -89,7 +123,7 @@ const Header = () => {
             </button>
 
             {tokenPresent ? (
-              <div className="relative hidden lg:block">
+              <div className="relative hidden lg:block" ref={accountMenuRef}>
                 <button
                   type="button"
                   onClick={() => setAccountMenuOpen((open) => !open)}
@@ -160,30 +194,78 @@ const Header = () => {
                 ) : null}
               </div>
             ) : (
-              <Link
-                to="/signin"
-                className="hidden items-center gap-3 rounded-full bg-[#FFF1F2] py-2 pl-2 pr-5 font-black text-[#BE123C] transition hover:bg-[#FFE4EA] lg:flex"
-              >
-                <span className="flex h-12 w-12 items-center justify-center rounded-full border-4 border-[#FFE4EA] bg-white text-neutral-400">
-                  <UserRound className="h-6 w-6" strokeWidth={2.1} />
-                </span>
-                {t("common.signIn")}
-              </Link>
+              <div className="relative hidden lg:block" ref={accountMenuRef}>
+                <button
+                  type="button"
+                  onClick={() => setSignInMenuOpen((open) => !open)}
+                  className="flex items-center gap-3 rounded-full bg-[#FFF1F2] py-2 pl-2 pr-5 font-black text-[#BE123C] transition hover:bg-[#FFE4EA]"
+                  aria-expanded={signInMenuOpen}
+                  aria-haspopup="menu"
+                >
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full border-4 border-[#FFE4EA] bg-white text-neutral-400">
+                    <UserRound className="h-6 w-6" strokeWidth={2.1} />
+                  </span>
+                  {t("common.signIn")}
+                  <ChevronDown
+                    className={`h-4 w-4 transition ${signInMenuOpen ? "rotate-180" : ""}`}
+                    strokeWidth={2.4}
+                  />
+                </button>
+
+                {signInMenuOpen ? (
+                  <div
+                    className="absolute right-0 top-[calc(100%+10px)] z-50 w-[220px] overflow-hidden rounded-2xl border border-neutral-100 bg-white p-2 shadow-[0_24px_90px_-42px_rgba(15,23,42,0.55)]"
+                    role="menu"
+                  >
+                    <Link
+                      to="/signin"
+                      onClick={() => setSignInMenuOpen(false)}
+                      className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+                      role="menuitem"
+                    >
+                      <UserRound className="h-5 w-5" strokeWidth={2.1} />
+                      {t("common.signInAsUser")}
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSignInMenuOpen(false);
+                        window.location.href = getSellerSignInUrl();
+                      }}
+                      className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+                      role="menuitem"
+                    >
+                      <Store className="h-5 w-5" strokeWidth={2.1} />
+                      {t("common.signInAsSeller")}
+                    </button>
+                  </div>
+                ) : null}
+              </div>
             )}
 
             <div className="lg:hidden">
               <LanguageSwitcher />
             </div>
             <button
-              onClick={openCartModal}
+              onClick={toggleCartModal}
               type="button"
-              className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-neutral-200 bg-white text-neutral-950 lg:hidden"
+              className="cart-toggle relative flex h-11 w-11 items-center justify-center rounded-2xl border border-neutral-200 bg-white text-neutral-950 lg:hidden"
               aria-label={t("common.cart")}
             >
               <ShoppingCart className="h-6 w-6" strokeWidth={2.2} />
               <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#E11D48] px-1 text-[11px] font-black text-white">
                 {items.length}
               </span>
+            </button>
+
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              type="button"
+              className="flex h-11 w-11 items-center justify-center rounded-2xl border border-neutral-200 bg-white text-neutral-950 lg:hidden"
+              aria-label={t("common.ariaToggler")}
+              aria-expanded={mobileMenuOpen}
+            >
+              <Menu className="h-6 w-6" strokeWidth={2.2} />
             </button>
           </div>
         </div>
@@ -221,6 +303,117 @@ const Header = () => {
 
         </div>
       </div>
+
+      <Drawer
+        open={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+        side="right"
+        title={t("common.ariaToggler")}
+      >
+        <div className="p-2">
+        <div className="flex flex-col gap-1">
+          <Link
+            to="/shop-with-sidebar"
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+          >
+            <Store className="h-5 w-5" strokeWidth={2.1} />
+            Shop
+          </Link>
+          <Link
+            to="/contact"
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+          >
+            About
+          </Link>
+          <button
+            type="button"
+            className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+          >
+            News
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setMobileMenuOpen(false);
+              window.open(getSellerSignupUrl(), "_blank", "noopener,noreferrer");
+            }}
+            className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+          >
+            {t("common.sellOnIberry")}
+          </button>
+        </div>
+
+        <div className="my-3 h-px bg-neutral-100" />
+
+        {tokenPresent ? (
+          <div className="flex flex-col gap-1">
+            <div className="truncate px-3 py-2 text-sm font-black text-[#BE123C]">
+              {accountName}
+            </div>
+            <Link
+              to="/my-account"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+            >
+              <UserRound className="h-5 w-5" strokeWidth={2.1} />
+              {t("common.myAccount")}
+            </Link>
+            <Link
+              to="/wishlist"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+            >
+              <Heart className="h-5 w-5" strokeWidth={2.1} />
+              {t("common.wishlist")}
+            </Link>
+            <Link
+              to="/cart"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+            >
+              <ShoppingCart className="h-5 w-5" strokeWidth={2.1} />
+              {t("common.cart")}
+            </Link>
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                clearMarketplaceSession(queryClient);
+                navigate("/", { replace: true });
+              }}
+              className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+            >
+              <LogOut className="h-5 w-5" strokeWidth={2.1} />
+              {t("common.logOut")}
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-1">
+            <Link
+              to="/signin"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+            >
+              <UserRound className="h-5 w-5" strokeWidth={2.1} />
+              {t("common.signInAsUser")}
+            </Link>
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                window.location.href = getSellerSignInUrl();
+              }}
+              className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+            >
+              <Store className="h-5 w-5" strokeWidth={2.1} />
+              {t("common.signInAsSeller")}
+            </button>
+          </div>
+        )}
+        </div>
+      </Drawer>
     </header>
   );
 };
