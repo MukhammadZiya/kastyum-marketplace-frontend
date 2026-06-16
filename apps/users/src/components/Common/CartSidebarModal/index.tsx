@@ -35,10 +35,15 @@ export default function CartSidebarModal() {
   if (!isCartModalOpen) return null;
 
   const anchoredStyle = anchorRect
-    ? {
-        top: Math.round(anchorRect.bottom + 8),
-        right: Math.round(Math.max(8, window.innerWidth - anchorRect.right)),
-      }
+    ? (() => {
+        const top = Math.round(anchorRect.bottom + 8);
+        const rawRight = Math.round(Math.max(8, window.innerWidth - anchorRect.right));
+        // Panel width mirrors the CSS: calc(100vw-2rem) on mobile, 380px on sm+.
+        const panelWidth = Math.min(380, window.innerWidth - 32);
+        // Clamp right so the panel's left edge stays at least 8px inside the viewport.
+        const right = Math.min(rawRight, Math.max(8, window.innerWidth - panelWidth - 8));
+        return { top, right };
+      })()
     : undefined;
 
   return (
