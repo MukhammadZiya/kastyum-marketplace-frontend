@@ -24,34 +24,33 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
+function storage(): Storage | null {
+  try {
+    return typeof localStorage !== "undefined" ? localStorage : null;
+  } catch {
+    return null;
+  }
+}
+
 export function getAuthToken(): string | null {
-  if (typeof localStorage === "undefined") return null;
-  return localStorage.getItem(AUTH_TOKEN_KEY);
+  return storage()?.getItem(AUTH_TOKEN_KEY) ?? null;
 }
 
 export function setAuthToken(token: string | null): void {
-  if (typeof localStorage === "undefined") {
-    if (token) {
-      apiClient.defaults.headers.common.Authorization = `Bearer ${token}`;
-    } else {
-      delete apiClient.defaults.headers.common.Authorization;
-    }
-    return;
-  }
+  const store = storage();
   if (token) {
-    localStorage.setItem(AUTH_TOKEN_KEY, token);
+    store?.setItem(AUTH_TOKEN_KEY, token);
     apiClient.defaults.headers.common.Authorization = `Bearer ${token}`;
   } else {
-    localStorage.removeItem(AUTH_TOKEN_KEY);
+    store?.removeItem(AUTH_TOKEN_KEY);
     delete apiClient.defaults.headers.common.Authorization;
   }
 }
 
-if (typeof localStorage !== "undefined") {
-  const stored = localStorage.getItem(AUTH_TOKEN_KEY);
-  if (stored) {
-    apiClient.defaults.headers.common.Authorization = `Bearer ${stored}`;
-  }
+// Restore token on page load
+const _stored = storage()?.getItem(AUTH_TOKEN_KEY);
+if (_stored) {
+  apiClient.defaults.headers.common.Authorization = `Bearer ${_stored}`;
 }
 
 apiClient.interceptors.response.use(
