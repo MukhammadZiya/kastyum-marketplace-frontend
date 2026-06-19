@@ -21,7 +21,7 @@ export default function ScrollToTop() {
   return (
     <button
       onClick={scrollToTop}
-      className="flex items-center justify-center w-10 h-10 rounded-[4px] shadow-lg bg-blue-600 ease-out duration-200 hover:bg-blue-700 fixed bottom-8 right-8 z-[999]"
+      className="flex items-center justify-center w-10 h-10 rounded-[4px] shadow-lg bg-[#E11D48] ease-out duration-200 hover:bg-[#BE123C] fixed bottom-8 right-8 z-[999]"
       aria-label="Scroll to top"
       type="button"
     >
@@ -35,4 +35,3 @@ export default function ScrollToTop() {
     </button>
   );
 }
-

@@ -18,3 +18,15 @@ export async function getAttributeListByType(
   );
   return data;
 }
+
+/** Sellers can add their own sizes/colors/brands/materials/styles to the shared catalog while creating a product. */
+export async function createSellerAttribute(
+  type: "size" | "color" | "brand" | "material" | "style",
+  name: string,
+): Promise<AttributeEntity> {
+  const { data } = await apiClient.post<AttributeEntity>(
+    `/attribute/seller/create/${type}`,
+    { name },
+  );
+  return data;
+}

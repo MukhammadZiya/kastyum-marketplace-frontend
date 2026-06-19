@@ -28,7 +28,7 @@ export function SellerShortcutNav({ links }: Props) {
             clsx(
               "rounded-lg border px-3 py-2 text-sm font-medium transition-colors",
               isActive
-                ? "border-[#00966d]/35 bg-emerald-50 text-[#006b4d]"
+                ? "border-[#E11D48]/35 bg-[#FFF1F2] text-[#BE123C]"
                 : "border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300 hover:bg-white",
             )
           }

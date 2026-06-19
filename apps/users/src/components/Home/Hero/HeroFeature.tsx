@@ -71,23 +71,23 @@ export default function HeroFeature() {
   const t = useT();
 
   return (
-    <div className="mx-auto w-full max-w-[1060px] px-4 sm:px-8 xl:px-0">
-      <div className="mt-10 flex w-full flex-nowrap items-stretch gap-2 sm:gap-4 lg:gap-6 xl:gap-8">
+    <div className="mx-auto w-full max-w-[1170px] px-4 sm:px-8 xl:px-0">
+      <div className="mt-6 grid w-full grid-cols-2 gap-2 rounded-3xl border border-neutral-200 bg-white p-2 shadow-[0_18px_60px_-48px_rgba(15,23,42,0.55)] sm:gap-3 sm:p-3 lg:grid-cols-4">
         {FEATURE_IDS.map((id) => {
           const copy = FEATURE_COPY[id];
           return (
             <div
-              className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3 lg:gap-4"
+              className="flex min-w-0 items-center gap-2 rounded-2xl px-2.5 py-3 transition hover:bg-neutral-50 sm:gap-3 sm:px-4 lg:gap-4"
               key={id}
             >
-              <span className="shrink-0 [&_svg]:h-9 [&_svg]:w-9 sm:[&_svg]:h-10 sm:[&_svg]:w-10">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#FFF1F2] text-[#BE123C] [&_svg]:h-6 [&_svg]:w-6 [&_svg_path]:fill-current sm:h-12 sm:w-12 sm:[&_svg]:h-7 sm:[&_svg]:w-7">
                 <FeatureIcon id={id} />
               </span>
               <div className="min-w-0">
-                <h3 className="text-sm font-medium leading-snug text-neutral-900 sm:text-base lg:text-lg">
+                <h3 className="text-sm font-bold leading-snug text-neutral-950 sm:text-base">
                   {t(copy.titleKey)}
                 </h3>
-                <p className="mt-0.5 text-xs leading-snug text-neutral-600 sm:text-sm">
+                <p className="mt-0.5 text-xs leading-snug text-neutral-500 sm:text-[13px]">
                   {t(copy.descKey)}
                 </p>
               </div>

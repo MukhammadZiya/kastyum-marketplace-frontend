@@ -1,8 +1,12 @@
 import type {
   CreateProductBody,
+  CreateProductReviewBody,
   HomeShowcasePublicResponse,
   PaginatedResult,
   ProductDocument,
+  ProductReview,
+  ProductReviewEligibility,
+  ProductReviewListResponse,
   ProductSellerListItem,
   ProductWithRelations,
   ProductsQueryParams,
@@ -32,6 +36,35 @@ export async function getProductDetail(
 ): Promise<ProductWithRelations> {
   const { data } = await apiClient.get<ProductWithRelations>(
     `/product/detail/${id}`,
+  );
+  return data;
+}
+
+export async function getProductReviews(
+  productId: string,
+): Promise<ProductReviewListResponse> {
+  const { data } = await apiClient.get<ProductReviewListResponse>(
+    `/product/reviews/${productId}`,
+  );
+  return data;
+}
+
+export async function getProductReviewEligibility(
+  productId: string,
+): Promise<ProductReviewEligibility> {
+  const { data } = await apiClient.get<ProductReviewEligibility>(
+    `/product/reviews/${productId}/me`,
+  );
+  return data;
+}
+
+export async function postProductReview(
+  productId: string,
+  body: CreateProductReviewBody,
+): Promise<ProductReview> {
+  const { data } = await apiClient.post<ProductReview>(
+    `/product/reviews/${productId}`,
+    body,
   );
   return data;
 }
@@ -72,9 +105,6 @@ export async function postProductCreate(
   }
   if (body.material?.trim()) {
     fd.append("material", body.material.trim());
-  }
-  if (body.fit?.trim()) {
-    fd.append("fit", body.fit.trim());
   }
   if (body.style?.trim()) {
     fd.append("style", body.style.trim());

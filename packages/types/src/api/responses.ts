@@ -1,9 +1,15 @@
-import type { MemberType } from "../enums";
+import type { MemberStatus, MemberType } from "../enums";
 import type { MemberAuthPayload } from "../entities/member";
 
 export type MemberAuthResponse = {
   member: MemberAuthPayload;
   accessToken: string;
+};
+
+export type SellerApplicationResponse = {
+  status: Extract<MemberStatus, "PENDING">;
+  message: string;
+  member: MemberAuthPayload;
 };
 
 export type TokenPayload = {

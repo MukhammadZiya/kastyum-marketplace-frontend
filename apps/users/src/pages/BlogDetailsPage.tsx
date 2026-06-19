@@ -24,7 +24,7 @@ export function BlogDetailsPage() {
                 cover try-ons at home, and imagery that shows drape from more than one angle—
                 especially for structured tailoring.
               </p>
-              <blockquote className="border-l-4 border-blue-600 pl-4 italic text-neutral-700">
+              <blockquote className="border-l-4 border-[#E11D48] pl-4 italic text-neutral-700">
                 Great fashion retail is part product, part guidance: honest fit notes, easy
                 exchanges, and edits that respect how people actually live.
               </blockquote>
@@ -35,4 +35,3 @@ export function BlogDetailsPage() {
     </>
   );
 }
-

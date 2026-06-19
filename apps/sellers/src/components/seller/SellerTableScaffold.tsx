@@ -12,12 +12,12 @@ export function SellerTableScaffold({
   children,
 }: Props) {
   return (
-    <div className="overflow-hidden rounded-xl border border-slate-200">
-      <table className="w-full text-left text-sm">
-        <thead className="border-b border-slate-200 bg-slate-50/80 text-xs font-medium uppercase tracking-wide text-slate-500">
+    <div className="overflow-x-auto rounded-2xl border border-neutral-200 bg-white">
+      <table className="min-w-full text-left text-sm">
+        <thead className="border-b border-neutral-200 bg-[#FAFAFB] text-xs font-black uppercase tracking-[0.14em] text-slate-500">
           <tr>
             {columns.map((col) => (
-              <th key={col} className="px-4 py-3 font-medium">
+              <th key={col} className="px-4 py-3 font-black">
                 {col}
               </th>
             ))}
@@ -28,7 +28,7 @@ export function SellerTableScaffold({
             <tr>
               <td
                 colSpan={columns.length}
-                className="px-4 py-14 text-center text-slate-500"
+                className="px-4 py-14 text-center text-sm font-medium text-slate-500"
               >
                 {emptyLabel}
               </td>

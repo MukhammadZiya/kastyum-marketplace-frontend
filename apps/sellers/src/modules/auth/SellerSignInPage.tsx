@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { MemberLoginBody } from "../../lib/marketplaceTypes";
-import { postMemberLogin } from "@repo/api";
+import { formatRequestFailureMessage, postMemberLogin } from "@repo/api";
 import { Button } from "@repo/ui";
 import { SellerAuthScaffold } from "../../components/seller/SellerAuthScaffold";
 import { useT } from "../../i18n";
@@ -50,8 +50,8 @@ export function SellerSignInPage() {
       writeSellerSessionToCache(queryClient, response.accessToken, response.member);
       navigate(redirectAfterLogin, { replace: true });
     },
-    onError: () => {
-      setFormError(t("common.sellerAuthErrorInvalidLogin"));
+    onError: (err) => {
+      setFormError(formatRequestFailureMessage(err) || t("common.sellerAuthErrorInvalidLogin"));
     },
   });
 
@@ -99,7 +99,7 @@ export function SellerSignInPage() {
             id="seller-signin-email"
             type="email"
             autoComplete="email"
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-[#00966d] focus:bg-white focus:ring-4 focus:ring-[#00966d]/15"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-[#E11D48] focus:bg-white focus:ring-4 focus:ring-[#E11D48]/15"
             placeholder={t("common.sellerAuthEmailPh")}
             value={emailPassword.email}
             onChange={(e) =>
@@ -119,7 +119,7 @@ export function SellerSignInPage() {
             id="seller-signin-password"
             type="password"
             autoComplete="current-password"
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-[#00966d] focus:bg-white focus:ring-4 focus:ring-[#00966d]/15"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-[#E11D48] focus:bg-white focus:ring-4 focus:ring-[#E11D48]/15"
             placeholder={t("common.sellerAuthPasswordPh")}
             value={emailPassword.password}
             onChange={(e) =>
@@ -132,15 +132,19 @@ export function SellerSignInPage() {
           type="submit"
           variant="primary"
           size="lg"
-          className="w-full bg-[#00966d] hover:bg-[#007a5a]"
+          className="w-full bg-[#E11D48] hover:bg-[#BE123C]"
           disabled={login.isPending}
         >
           {login.isPending ? t("common.sellerAuthSigningIn") : t("common.sellerAuthSignInSubmit")}
         </Button>
 
+        <div className="rounded-2xl border border-[#E11D48]/15 bg-[#FFF1F4] px-4 py-3 text-sm text-[#9F1239]">
+          {t("common.sellerAuthApprovalNotice")}
+        </div>
+
         <p className="text-center text-sm text-slate-600">
           {t("common.sellerAuthNoAccount")}{" "}
-          <Link to="/signup" className="font-medium text-[#006b4d] hover:underline">
+          <Link to="/signup" className="font-medium text-[#BE123C] hover:underline">
             {t("common.sellerAuthCreateSellerAccount")}
           </Link>
         </p>
@@ -151,7 +155,7 @@ export function SellerSignInPage() {
             href={marketplaceSignupUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-[#006b4d] hover:underline"
+            className="font-medium text-[#BE123C] hover:underline"
           >
             {t("common.sellerAuthOpenMarketplaceSignup")}
           </a>

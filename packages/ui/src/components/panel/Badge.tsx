@@ -11,7 +11,7 @@ type BadgeProps = {
 
 const variantClass: Record<BadgeVariant, string> = {
   neutral: "border-slate-200 bg-slate-100 text-slate-600",
-  accent: "border-blue-100 bg-blue-50 text-blue-800",
+  accent: "border-[#FFE4EA] bg-[#FFF1F2] text-[#BE123C]",
 };
 
 export function Badge({

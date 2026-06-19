@@ -34,7 +34,7 @@ export default function CustomSelect({ options, value, onChange }: Props) {
       <button
         type="button"
         className={`w-full whitespace-nowrap rounded-l-[5px] border border-neutral-200 bg-neutral-50 py-2.5 pl-4 pr-10 text-left ${
-          isOpen ? "ring-1 ring-blue-600" : ""
+          isOpen ? "ring-1 ring-[#E11D48]" : ""
         }`}
         onClick={toggleDropdown}
       >
@@ -53,7 +53,7 @@ export default function CustomSelect({ options, value, onChange }: Props) {
             onClick={() => handleOptionClick(option)}
             className={`block w-full px-4 py-2 text-left text-[14px] hover:bg-neutral-50 ${
               selectedOption.value === option.value
-                ? "text-blue-600"
+                ? "text-[#BE123C]"
                 : "text-neutral-900"
             }`}
           >

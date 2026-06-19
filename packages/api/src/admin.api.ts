@@ -115,7 +115,6 @@ export async function postAdminProductCreate(
   }
   if (payload.brand) fd.append("brand", payload.brand);
   if (payload.material) fd.append("material", payload.material);
-  if (payload.fit) fd.append("fit", payload.fit);
   if (payload.style) fd.append("style", payload.style);
   if (payload.status) fd.append("status", payload.status);
   if (payload.homeShowcaseNewArrivals) {

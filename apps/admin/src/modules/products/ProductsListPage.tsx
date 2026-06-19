@@ -12,6 +12,17 @@ import { getAuthToken } from "@repo/api";
 import { getAdminListEmptyMessage } from "../../lib/adminListEmptyMessage";
 import { useT } from "../../i18n";
 
+function statusClass(status: string) {
+  const normalized = status.toUpperCase();
+  if (normalized === "ACTIVE") {
+    return "bg-[#FFF1F2] text-[#BE123C]";
+  }
+  if (normalized === "DELETE" || normalized === "DELETED") {
+    return "bg-red-50 text-red-700";
+  }
+  return "bg-slate-100 text-slate-600";
+}
+
 export function ProductsListPage() {
   const t = useT();
   const signedIn = !!getAuthToken();
@@ -45,15 +56,24 @@ export function ProductsListPage() {
   const rowEls =
     data?.list.length ?
       data.list.map((p: ProductAdminListItem) => (
-        <tr key={p._id} className="border-t border-slate-100">
-          <td className="px-4 py-3 font-medium text-slate-900">{p.title}</td>
+        <tr
+          key={p._id}
+          className="border-t border-neutral-100 transition hover:bg-[#FAFAFB]"
+        >
+          <td className="px-4 py-3 font-black text-slate-950">{p.title}</td>
           <td className="px-4 py-3 text-slate-600">{p.modelNumber}</td>
-          <td className="px-4 py-3">{p.sellerId.nick}</td>
-          <td className="px-4 py-3">{p.status}</td>
+          <td className="px-4 py-3 font-medium text-slate-800">
+            {p.sellerId.nick}
+          </td>
+          <td className="px-4 py-3">
+            <span
+              className={`inline-flex rounded-full px-2.5 py-1 text-xs font-black ${statusClass(p.status)}`}
+            >
+              {p.status}
+            </span>
+          </td>
           <td className="px-4 py-3 text-slate-600">
-            {p.updatedAt
-              ? new Date(p.updatedAt).toLocaleDateString()
-              : "—"}
+            {p.updatedAt ? new Date(p.updatedAt).toLocaleDateString() : "—"}
           </td>
           <td className="px-4 py-3">
             <button
@@ -88,7 +108,11 @@ export function ProductsListPage() {
         </p>
       }
     >
-      <TableCard title={t("common.adminProductsListTitle")} description={tableDescription}>
+      <TableCard
+        title={t("common.adminProductsListTitle")}
+        description={tableDescription}
+        className="rounded-3xl border-neutral-200 shadow-[0_18px_50px_rgba(15,23,42,0.05)]"
+      >
         <DataTablePlaceholder columns={columns} emptyMessage={emptyMessage}>
           {rowEls}
         </DataTablePlaceholder>

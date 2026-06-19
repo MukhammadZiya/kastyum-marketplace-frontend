@@ -21,7 +21,7 @@ export default function PromoBanner() {
 
             <a
               href="/shop-with-sidebar"
-              className="inline-flex font-medium text-[14px] text-white bg-blue-600 py-[11px] px-[38px] rounded-md ease-out duration-200 hover:bg-blue-700 mt-[30px]"
+              className="inline-flex font-medium text-[14px] text-white bg-[#E11D48] py-[11px] px-[38px] rounded-md ease-out duration-200 hover:bg-[#BE123C] mt-[30px]"
             >
               {t("promoMainCta")}
             </a>
@@ -68,7 +68,7 @@ export default function PromoBanner() {
             </div>
           </div>
 
-          <div className="relative z-[1] overflow-hidden rounded-lg bg-[#FFECE1] py-10 xl:py-16 px-4 sm:px-[30px] xl:px-10">
+          <div className="relative z-[1] overflow-hidden rounded-lg bg-[#FFF1F2] py-10 xl:py-16 px-4 sm:px-[30px] xl:px-10">
             <img
               src={primaryImageForGroup(4)}
               alt={t("promoSecondaryRightImageAlt")}
@@ -84,7 +84,7 @@ export default function PromoBanner() {
 
               <h2 className="font-bold text-xl lg:text-[32px] text-neutral-900 mb-[10px]">
                 {t("promoSecondaryRightTitlePrefix")}{" "}
-                <span className="text-orange-500">
+                <span className="text-[#E11D48]">
                   {t("promoSecondaryRightDiscountHighlight")}
                 </span>{" "}
                 {t("promoSecondaryRightTitleSuffix")}
@@ -94,7 +94,7 @@ export default function PromoBanner() {
 
               <a
                 href="/shop-with-sidebar?q=Tuxedo"
-                className="inline-flex font-medium text-[14px] text-white bg-orange-500 py-2.5 px-[34px] rounded-md ease-out duration-200 hover:bg-orange-600 mt-[30px]"
+                className="inline-flex font-medium text-[14px] text-white bg-[#E11D48] py-2.5 px-[34px] rounded-md ease-out duration-200 hover:bg-[#BE123C] mt-[30px]"
               >
                 {t("promoSecondaryRightCta")}
               </a>

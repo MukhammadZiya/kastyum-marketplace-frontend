@@ -28,6 +28,7 @@ export function SellerCreatePage() {
       <Card
         title={t("common.adminSellerCreateCardTitle")}
         description={t("common.adminSellerCreateCardDesc")}
+        className="rounded-3xl border-neutral-200 shadow-[0_18px_50px_rgba(15,23,42,0.05)]"
       >
         <form onSubmit={handleSubmit} className="max-w-lg space-y-4">
           <div>
@@ -59,7 +60,12 @@ export function SellerCreatePage() {
               placeholder={t("common.adminPhOwnerEmail")}
             />
           </div>
-          <Button type="submit" variant="accent" size="md">
+          <Button
+            type="submit"
+            variant="accent"
+            size="md"
+            className="!border-[#E11D48] !bg-[#E11D48] hover:!bg-[#BE123C]"
+          >
             {t("common.adminCreateSeller")}
           </Button>
         </form>

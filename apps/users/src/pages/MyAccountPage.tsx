@@ -1,8 +1,17 @@
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  ClipboardList,
+  CreditCard,
+  LogOut,
+  MapPin,
+  ShieldCheck,
+  UserRound,
+} from "lucide-react";
 import Breadcrumb from "../components/Common/Breadcrumb";
 import { useMyOrders } from "../hooks/orders";
+import { usePreparePayment } from "../hooks/payments";
 import { useMemberMe, useMemberUpdate } from "../hooks/members";
 import { getAuthToken } from "@repo/api";
 import { useT } from "../i18n";
@@ -10,7 +19,62 @@ import { clearMarketplaceSession } from "../user-auth";
 
 const tabs = ["Profile", "Address", "Orders", "Security"] as const;
 
+const tabIcons = {
+  Profile: UserRound,
+  Address: MapPin,
+  Orders: ClipboardList,
+  Security: ShieldCheck,
+} as const;
+
+function accountTabLabel(tab: (typeof tabs)[number], t: ReturnType<typeof useT>) {
+  switch (tab) {
+    case "Profile":
+      return t("accountTabProfile");
+    case "Address":
+      return t("accountTabAddress");
+    case "Orders":
+      return t("accountTabOrders");
+    case "Security":
+      return t("accountTabSecurity");
+  }
+}
+
+function PayNowButton({ orderId }: { orderId: string }) {
+  const t = useT();
+  const preparePayment = usePreparePayment();
+  const [error, setError] = useState("");
+
+  return (
+    <div className="mt-3">
+      {error ? (
+        <p className="mb-1 text-xs text-red-600" role="alert">
+          {error}
+        </p>
+      ) : null}
+      <button
+        type="button"
+        disabled={preparePayment.isPending}
+        onClick={() => {
+          setError("");
+          preparePayment.mutate(orderId, {
+            onSuccess: (res) => {
+              window.location.href = res.octo_pay_url;
+            },
+            onError: (err) => {
+              setError(err instanceof Error ? err.message : "Payment initialization failed.");
+            },
+          });
+        }}
+        className="rounded-xl bg-[#E11D48] px-4 py-2 text-sm font-black text-white transition hover:bg-[#BE123C] disabled:opacity-60"
+      >
+        {preparePayment.isPending ? `${t("payNow")}…` : t("payNow")}
+      </button>
+    </div>
+  );
+}
+
 function OrdersPanel() {
+  const t = useT();
   const signedIn = !!getAuthToken();
   const { data, isPending, isError, error } = useMyOrders({
     page: 1,
@@ -20,8 +84,8 @@ function OrdersPanel() {
   if (!signedIn) {
     return (
       <p className="text-neutral-700">
-        <Link to="/signin" className="font-medium text-blue-600">
-          Sign in
+        <Link to="/signin" className="font-black text-[#BE123C]">
+          {t("common.signIn")}
         </Link>{" "}
         to see your orders.
       </p>
@@ -47,7 +111,7 @@ function OrdersPanel() {
   return (
     <ul className="space-y-4">
       {data.list.map((o) => (
-        <li key={o._id} className="rounded-lg border border-neutral-200 p-4">
+        <li key={o._id} className="rounded-2xl border border-neutral-200 bg-[#FAFAFA] p-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="font-medium text-neutral-900">{o.status}</span>
             <span className="font-semibold text-neutral-900">
@@ -72,6 +136,7 @@ function OrdersPanel() {
               </li>
             ))}
           </ul>
+          {o.paymentStatus !== "PAID" ? <PayNowButton orderId={o._id} /> : null}
         </li>
       ))}
     </ul>
@@ -99,7 +164,7 @@ function ProfilePanel() {
   if (!getAuthToken()) {
     return (
       <p className="text-neutral-700">
-        <Link to="/signin" className="font-medium text-blue-600">
+        <Link to="/signin" className="font-black text-[#BE123C]">
           Sign in
         </Link>{" "}
         {t("common.profileSignInToEdit")}
@@ -122,7 +187,9 @@ function ProfilePanel() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-semibold text-neutral-900">Profile</h2>
+      <h2 className="text-2xl font-black tracking-tight text-neutral-950">
+        {t("accountTabProfile")}
+      </h2>
 
       <form
         className="max-w-lg space-y-4"
@@ -169,7 +236,7 @@ function ProfilePanel() {
             {t("common.email")}
           </label>
           <input
-            className="w-full rounded-md border border-neutral-200 bg-neutral-100 py-2.5 px-4 text-neutral-600"
+            className="w-full rounded-2xl border border-neutral-200 bg-neutral-100 px-4 py-3 font-semibold text-neutral-600"
             readOnly
             value={me.email}
           />
@@ -180,7 +247,7 @@ function ProfilePanel() {
             {t("common.profileNickLabel")}
           </label>
           <input
-            className="w-full rounded-md border border-neutral-200 bg-neutral-50 py-2.5 px-4"
+            className="w-full rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white"
             value={nick}
             onChange={(e) => setNick(e.target.value)}
           />
@@ -191,7 +258,7 @@ function ProfilePanel() {
             {t("common.profilePhoneLabel")}
           </label>
           <input
-            className="w-full rounded-md border border-neutral-200 bg-neutral-50 py-2.5 px-4"
+            className="w-full rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
           />
@@ -203,7 +270,7 @@ function ProfilePanel() {
           </label>
           <input
             type="password"
-            className="w-full rounded-md border border-neutral-200 bg-neutral-50 py-2.5 px-4"
+            className="w-full rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="new-password"
@@ -213,7 +280,7 @@ function ProfilePanel() {
         <button
           type="submit"
           disabled={update.isPending || !hasChanges}
-          className="rounded-lg bg-neutral-900 px-6 py-2.5 text-white hover:bg-blue-600 disabled:opacity-60"
+          className="rounded-2xl bg-[#E11D48] px-6 py-3 font-black text-white shadow-[0_18px_40px_-22px_rgba(225,29,72,0.7)] transition hover:-translate-y-px hover:bg-[#BE123C] disabled:translate-y-0 disabled:opacity-60"
         >
           {update.isPending ? t("common.profileSaving") : t("common.profileSave")}
         </button>
@@ -226,63 +293,108 @@ export function MyAccountPage() {
   const t = useT();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { data: me } = useMemberMe();
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>("Profile");
   const memberSessionActive = Boolean(getAuthToken());
+  const displayName = me?.nick?.trim() || me?.email || t("common.myAccount");
 
   return (
     <>
-      <Breadcrumb title="My Account" pages={["my account"]} />
-      <section className="bg-neutral-100 py-10">
-        <div className="mx-auto grid max-w-[1170px] gap-8 px-4 sm:px-8 lg:grid-cols-[260px_1fr] xl:px-0">
-          <aside className="rounded-xl border border-neutral-200 bg-white p-4">
-            <div className="space-y-2">
-              {tabs.map((tab) => (
-                <button
-                  key={tab}
-                  type="button"
-                  onClick={() => setActiveTab(tab)}
-                  className={`w-full rounded-md px-4 py-2.5 text-left ${
-                    activeTab === tab
-                      ? "bg-blue-600 text-white"
-                      : "text-neutral-700 hover:bg-neutral-100"
-                  }`}
-                >
-                  {tab}
-                </button>
-              ))}
+      <Breadcrumb title={t("myAccountBreadcrumb")} pages={["my account"]} />
+      <section className="bg-white py-8 sm:py-12">
+        <div className="mx-auto grid max-w-[1280px] gap-10 px-4 sm:px-8 lg:grid-cols-[minmax(0,1fr)_320px] xl:px-0">
+          <div className="min-h-[520px] rounded-[2px] bg-white p-0 sm:p-2">
+            {activeTab === "Profile" && <ProfilePanel />}
+            {activeTab === "Address" && (
+              <div className="rounded-xl bg-white p-6 shadow-[0_24px_80px_-70px_rgba(15,23,42,0.75)]">
+                <p className="text-neutral-700">{t("accountAddressPlaceholder")}</p>
+              </div>
+            )}
+            {activeTab === "Orders" && (
+              <div className="space-y-4">
+                <h2 className="text-3xl font-black tracking-tight text-neutral-950">{t("accountYourOrders")}</h2>
+                <OrdersPanel />
+              </div>
+            )}
+            {activeTab === "Security" && (
+              <div className="rounded-xl bg-white p-6 shadow-[0_24px_80px_-70px_rgba(15,23,42,0.75)]">
+                <p className="text-neutral-700">{t("accountSecurityPlaceholder")}</p>
+              </div>
+            )}
+          </div>
+
+          <aside className="h-fit bg-white p-6 shadow-[0_28px_90px_-60px_rgba(15,23,42,0.55)]">
+            <div className="flex flex-col items-center border-b border-neutral-100 pb-7 text-center">
+              <span className="flex h-32 w-32 items-center justify-center rounded-full border-[8px] border-[#FFE4EA] bg-neutral-100 text-neutral-400">
+                <UserRound className="h-16 w-16" strokeWidth={1.6} />
+              </span>
+              <p className="mt-4 max-w-[220px] text-sm font-black leading-5 text-[#BE123C]">
+                {displayName}
+              </p>
             </div>
-            {memberSessionActive ?
-              <div className="mt-3 border-t border-neutral-200 pt-3">
+
+            <div className="space-y-1 pt-4">
+              <Link
+                to="/cart"
+                className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+              >
+                <CreditCard className="h-5 w-5" strokeWidth={2.1} />
+                {t("common.cart")}
+              </Link>
+              {tabs.map((tab) => (
+                <AccountTabButton
+                  key={tab}
+                  tab={tab}
+                  active={activeTab === tab}
+                  onClick={() => setActiveTab(tab)}
+                  label={accountTabLabel(tab, t)}
+                />
+              ))}
+              {memberSessionActive ?
                 <button
                   type="button"
                   onClick={() => {
                     clearMarketplaceSession(queryClient);
                     navigate("/", { replace: true });
                   }}
-                  className="w-full rounded-md px-4 py-2.5 text-left text-sm font-medium text-neutral-700 transition hover:bg-neutral-100"
+                  className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-black text-neutral-800 transition hover:bg-[#FFF1F2] hover:text-[#BE123C]"
                 >
+                  <LogOut className="h-5 w-5" strokeWidth={2.1} />
                   {t("common.logOut")}
                 </button>
-              </div>
-            : null}
+              : null}
+            </div>
           </aside>
-          <div className="rounded-xl border border-neutral-200 bg-white p-6 sm:p-8">
-            {activeTab === "Profile" && <ProfilePanel />}
-            {activeTab === "Address" && (
-              <p className="text-neutral-700">Manage your shipping and billing addresses.</p>
-            )}
-            {activeTab === "Orders" && (
-              <div className="space-y-4">
-                <h2 className="text-2xl font-semibold text-neutral-900">Your orders</h2>
-                <OrdersPanel />
-              </div>
-            )}
-            {activeTab === "Security" && (
-              <p className="text-neutral-700">Update password and security settings.</p>
-            )}
-          </div>
         </div>
       </section>
     </>
+  );
+}
+
+function AccountTabButton({
+  tab,
+  active,
+  onClick,
+  label,
+}: {
+  tab: (typeof tabs)[number];
+  active: boolean;
+  onClick: () => void;
+  label: string;
+}) {
+  const Icon = tabIcons[tab];
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-black transition ${
+        active
+          ? "bg-[#FFF1F2] text-[#BE123C]"
+          : "text-neutral-800 hover:bg-[#FFF1F2] hover:text-[#BE123C]"
+      }`}
+    >
+      <Icon className="h-5 w-5" strokeWidth={2.1} />
+      {label}
+    </button>
   );
 }

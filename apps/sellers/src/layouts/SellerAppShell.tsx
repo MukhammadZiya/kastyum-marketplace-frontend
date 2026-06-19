@@ -145,9 +145,9 @@ export function SellerAppShell() {
   return (
     <SellerMobileNavContext.Provider value={{ openMobileNav }}>
       <>
-        <div className="min-h-screen bg-[#f4f6f8] text-slate-900">
+        <div className="min-h-screen bg-[#f6f6f7] text-slate-900">
           <PageLayout
-            className="!bg-[#f4f6f8]"
+            className="!bg-[#f6f6f7]"
             sidebar={
               <Sidebar
                 {...sidebarShared}
@@ -157,7 +157,7 @@ export function SellerAppShell() {
               />
             }
           >
-            <div className="mx-auto max-w-[1440px] px-4 pb-10 pt-4 lg:px-8 lg:pt-6">
+            <div className="mx-auto max-w-[1360px] px-4 pb-10 pt-4 lg:px-8 lg:pt-6">
               <SellerTopbar />
               <Outlet />
             </div>

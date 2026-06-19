@@ -18,7 +18,7 @@ const ORDER_STATUSES: OrderStatus[] = [
 ];
 
 const selectClass =
-  "min-w-[140px] rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm text-slate-900 outline-none focus:border-[#00966d] focus:ring-2 focus:ring-[#00966d]/20";
+  "min-w-[140px] rounded-xl border border-neutral-200 bg-[#FAFAFB] px-3 py-2 text-sm font-semibold text-slate-900 outline-none transition focus:border-[#E11D48] focus:bg-white focus:ring-4 focus:ring-[#E11D48]/10";
 
 function orderStatusLabelKey(status: OrderStatus): string {
   switch (status) {
@@ -122,29 +122,29 @@ export function SellerOrdersPage() {
         const frozen = row.status === "CANCELLED";
 
         return (
-          <tr key={row._id} className="border-t border-slate-100 align-top">
-            <td className="px-4 py-3 font-mono text-xs text-slate-600">
+          <tr key={row._id} className="border-t border-neutral-100 align-top transition hover:bg-[#FAFAFB]">
+            <td className="px-4 py-4 font-mono text-xs text-slate-600">
               {row._id.slice(-8)}
             </td>
-            <td className="px-4 py-3">
-              <div className="font-medium text-slate-900">{buyerLabel(row)}</div>
+            <td className="px-4 py-4">
+              <div className="font-black text-slate-950">{buyerLabel(row)}</div>
               {sub ? (
                 <div className="text-xs text-slate-500">{sub}</div>
               ) : null}
             </td>
-            <td className="max-w-[min(280px,32vw)] px-4 py-3 text-sm text-slate-700">
+            <td className="max-w-[min(280px,32vw)] px-4 py-4 text-sm text-slate-700">
               <span className="line-clamp-3 break-words">
                 {row.shippingAddress?.trim() || t("common.sellerEmDash")}
               </span>
             </td>
-            <td className="max-w-[280px] px-4 py-3 text-sm text-slate-700">
+            <td className="max-w-[280px] px-4 py-4 text-sm text-slate-700">
               <span className="line-clamp-2">{itemsSummary(row)}</span>
             </td>
-            <td className="px-4 py-3 tabular-nums text-slate-900">
+            <td className="px-4 py-4 font-black tabular-nums text-slate-950">
               ${Number(row.totalAmount).toFixed(2)}
             </td>
-            <td className="px-4 py-3 text-sm text-slate-600">{placed}</td>
-            <td className="px-4 py-3">
+            <td className="px-4 py-4 text-sm text-slate-600">{placed}</td>
+            <td className="px-4 py-4">
               <select
                 className={selectClass}
                 aria-label={t("common.sellerColStatus")}
@@ -186,10 +186,11 @@ export function SellerOrdersPage() {
         <Card
           title={t("common.sellerOrdersListCardTitle")}
           description={t("common.sellerOrdersListCardDesc")}
+          className="rounded-3xl border-neutral-200 shadow-[0_20px_60px_-52px_rgba(15,23,42,0.8)]"
         >
-          <div className="mb-4 flex flex-wrap items-end gap-3">
+          <div className="mb-4 flex flex-wrap items-end gap-3 rounded-2xl border border-neutral-200 bg-[#FAFAFB] p-3">
             <div>
-              <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-500">
+              <label className="mb-1 block text-xs font-black uppercase tracking-[0.14em] text-slate-500">
                 {t("common.sellerOrdersFilterLabel")}
               </label>
               <select

@@ -31,9 +31,9 @@ export function SellerPageFrame({ title, addon, children }: Props) {
           ) : null
         }
         addon={addon}
-        className="border-b border-slate-200/90 bg-white/90 shadow-sm shadow-slate-200/30 backdrop-blur-sm supports-[backdrop-filter]:bg-white/80"
+        className="mb-6 rounded-3xl border border-neutral-200 bg-white px-5 shadow-[0_18px_60px_-50px_rgba(15,23,42,0.75)] backdrop-blur-sm supports-[backdrop-filter]:bg-white/90"
       />
-      <div className="space-y-6 pt-1">{children}</div>
+      <div className="space-y-6">{children}</div>
     </>
   );
 }

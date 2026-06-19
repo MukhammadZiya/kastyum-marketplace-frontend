@@ -3,6 +3,7 @@ export type {
   MemberType,
   NotificationType,
   OrderStatus,
+  PaymentStatus,
   ProductStatus,
   TargetAudience,
 } from "./enums";
@@ -13,7 +14,6 @@ export type {
   AttributeKind,
   Brand,
   Color,
-  Fit,
   Material,
   Size,
   Style,
@@ -39,17 +39,28 @@ export type {
 
 export type { Order, OrderItem, OrderListRow } from "./entities/order";
 
+export type { OctoPrepareResponse, PaymentStatusResponse } from "./entities/payment";
+
 export type { Notification, NotificationAdminListItem } from "./entities/notification";
+
+export type {
+  ProductReview,
+  ProductReviewEligibility,
+  ProductReviewListResponse,
+  ProductReviewStats,
+} from "./entities/review";
 
 export type {
   AdminCreateProductPayload,
   CreateAttributeBody,
   CreateOrderBody,
   CreateOrderItemBody,
+  CreateProductReviewBody,
   CreateProductBody,
   MemberAdminUpdateBody,
   MemberListQuery,
   MemberLoginBody,
+  SellerApplicationBody,
   MemberSignupBody,
   MemberUpdateBody,
   NotificationListQuery,
@@ -62,5 +73,6 @@ export type {
   ApiErrorBody,
   MemberAuthResponse,
   PaginatedResult,
+  SellerApplicationResponse,
   TokenPayload,
 } from "./api/responses";

@@ -1,12 +1,16 @@
-/**
- * Base URL of the **sellers** Vite app only (no trailing slash).
- * Default matches `apps/sellers` fixed dev port — not admin (`5175`) or users (`5173`).
- * Override with `VITE_SELLER_APP_ORIGIN` in repo root `.env` if your setup differs.
- */
 export function getSellerAppOrigin(): string {
   const raw = import.meta.env.VITE_SELLER_APP_ORIGIN as string | undefined;
   const trimmed = raw?.replace(/\/$/, "").trim();
-  return trimmed || "http://localhost:5174";
+
+  if (trimmed) {
+    return trimmed;
+  }
+
+  if (typeof window !== "undefined") {
+    return `${window.location.origin}/seller`;
+  }
+
+  return "/seller";
 }
 
 export function getSellerSignupUrl(): string {

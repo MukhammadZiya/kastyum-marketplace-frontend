@@ -41,7 +41,7 @@ export default function Countdown() {
       <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
         <div className="relative overflow-hidden z-[1] rounded-lg bg-[#D0E9F3] p-4 sm:p-[30px] lg:p-10 xl:p-[60px]">
           <div className="max-w-[422px] w-full">
-            <span className="block font-medium text-[20px] text-blue-600 mb-[10px]">
+            <span className="block font-medium text-[20px] text-[#BE123C] mb-[10px]">
               {t("countdownEyebrow")}
             </span>
 
@@ -66,7 +66,7 @@ export default function Countdown() {
 
             <a
               href="#"
-              className="inline-flex font-medium text-[14px] text-white bg-blue-600 py-3 px-[38px] rounded-md ease-out duration-200 hover:bg-blue-700 mt-[30px]"
+              className="inline-flex font-medium text-[14px] text-white bg-[#E11D48] py-3 px-[38px] rounded-md ease-out duration-200 hover:bg-[#BE123C] mt-[30px]"
             >
               {t("countdownCta")}
             </a>

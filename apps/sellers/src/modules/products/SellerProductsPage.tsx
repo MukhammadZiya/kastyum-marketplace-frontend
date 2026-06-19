@@ -1,27 +1,52 @@
 import type { FormEvent } from "react";
 import { useCallback, useEffect, useId, useMemo, useState } from "react";
-import { Upload } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import {
+  CheckCircle2,
+  Circle,
+  ImagePlus,
+  PackageCheck,
+  Plus,
+  Shirt,
+  Tags,
+  Upload,
+} from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
+  AllAttributesBundle,
+  Brand,
+  Color,
   CreateProductBody,
+  Material,
   ProductStatus,
   ProductVariantStockLine,
+  Size,
+  Style,
   TargetAudience,
 } from "@repo/types";
 import { formatRequestFailureMessage, getAllAttributes } from "@repo/api";
-import { Button, Card } from "@repo/ui";
+import { Button } from "@repo/ui";
 import { SellerPageFrame } from "../../components/seller/SellerPageFrame";
 import { SELLER_PAGE_COPY_KEYS } from "../../constants/sellerNavigation";
-import { useSellerProductCreate } from "../../hooks/seller-products";
+import { useSellerAttributeCreate, useSellerProductCreate } from "../../hooks/seller-products";
 import { useT } from "../../i18n";
 
 const copy = SELLER_PAGE_COPY_KEYS.productsManage;
 
 const audiences: TargetAudience[] = ["MEN", "WOMEN", "KIDS"];
 const productStatuses: ProductStatus[] = ["ACTIVE", "INACTIVE"];
+const ATTR_BUNDLE_QUERY_KEY = ["seller", "attributes", "bundle"] as const;
 
 const inputClass =
-  "w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-slate-900 outline-none transition focus:border-[#00966d] focus:bg-white focus:ring-4 focus:ring-[#00966d]/15";
+  "w-full rounded-xl border border-neutral-200 bg-[#FAFAFB] px-4 py-3 text-slate-950 outline-none transition focus:border-[#E11D48] focus:bg-white focus:ring-4 focus:ring-[#E11D48]/10";
+
+const sectionClass =
+  "rounded-3xl border border-neutral-200 bg-white p-5 shadow-[0_20px_60px_-52px_rgba(15,23,42,0.8)]";
+
+const sectionTitleClass = "text-base font-black text-slate-950";
+
+const sectionDescClass = "mt-1 text-sm font-medium leading-6 text-slate-500";
+
+const labelClass = "mb-2 block text-sm font-black text-slate-800";
 
 function toggleInList(list: string[], id: string): string[] {
   if (list.includes(id)) return list.filter((x) => x !== id);
@@ -49,9 +74,15 @@ export function SellerProductsPage() {
   const t = useT();
   const imageFieldId = useId();
   const create = useSellerProductCreate();
+  const queryClient = useQueryClient();
+  const addSizeAttribute = useSellerAttributeCreate();
+  const addColorAttribute = useSellerAttributeCreate();
+  const addBrandAttribute = useSellerAttributeCreate();
+  const addMaterialAttribute = useSellerAttributeCreate();
+  const addStyleAttribute = useSellerAttributeCreate();
 
   const { data: attrBundle, isError: attrError } = useQuery({
-    queryKey: ["seller", "attributes", "bundle"],
+    queryKey: ATTR_BUNDLE_QUERY_KEY,
     queryFn: () => getAllAttributes(),
     staleTime: 5 * 60_000,
   });
@@ -68,16 +99,24 @@ export function SellerProductsPage() {
   const [sizeIds, setSizeIds] = useState<string[]>([]);
   const [brandId, setBrandId] = useState("");
   const [materialId, setMaterialId] = useState("");
-  const [fitId, setFitId] = useState("");
   const [styleId, setStyleId] = useState("");
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [fileInputKey, setFileInputKey] = useState(0);
   const [variantQty, setVariantQty] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState("");
+  const [newSizeName, setNewSizeName] = useState("");
+  const [newColorName, setNewColorName] = useState("");
+  const [newBrandName, setNewBrandName] = useState("");
+  const [newMaterialName, setNewMaterialName] = useState("");
+  const [newStyleName, setNewStyleName] = useState("");
+  const [sizeAddError, setSizeAddError] = useState("");
+  const [colorAddError, setColorAddError] = useState("");
+  const [brandAddError, setBrandAddError] = useState("");
+  const [materialAddError, setMaterialAddError] = useState("");
+  const [styleAddError, setStyleAddError] = useState("");
 
   const brandOptions = attrBundle?.brand ?? [];
   const materialOptions = attrBundle?.material ?? [];
-  const fitOptions = attrBundle?.fit ?? [];
   const styleOptions = attrBundle?.style ?? [];
   const colorOptions = attrBundle?.color ?? [];
   const sizeOptions = attrBundle?.size ?? [];
@@ -142,12 +181,116 @@ export function SellerProductsPage() {
     setSizeIds([]);
     setBrandId("");
     setMaterialId("");
-    setFitId("");
     setStyleId("");
     setImageFiles([]);
     setFileInputKey((k) => k + 1);
     setVariantQty({});
     setFormError("");
+  }
+
+  function handleAddSize() {
+    const name = newSizeName.trim();
+    if (!name) return;
+    addSizeAttribute.mutate(
+      { type: "size", name },
+      {
+        onSuccess: (attr) => {
+          queryClient.setQueryData<AllAttributesBundle>(ATTR_BUNDLE_QUERY_KEY, (old) => {
+            if (!old) return old;
+            if (old.size.some((s) => s._id === attr._id)) return old;
+            return { ...old, size: [...old.size, attr as Size] };
+          });
+          setSizeIds((prev) => (prev.includes(attr._id) ? prev : [...prev, attr._id]));
+          setNewSizeName("");
+          setSizeAddError("");
+        },
+        onError: () => setSizeAddError(t("common.sellerProductAddAttributeError")),
+      },
+    );
+  }
+
+  function handleAddColor() {
+    const name = newColorName.trim();
+    if (!name) return;
+    addColorAttribute.mutate(
+      { type: "color", name },
+      {
+        onSuccess: (attr) => {
+          queryClient.setQueryData<AllAttributesBundle>(ATTR_BUNDLE_QUERY_KEY, (old) => {
+            if (!old) return old;
+            if (old.color.some((c) => c._id === attr._id)) return old;
+            return { ...old, color: [...old.color, attr as Color] };
+          });
+          setColorIds((prev) => (prev.includes(attr._id) ? prev : [...prev, attr._id]));
+          setNewColorName("");
+          setColorAddError("");
+        },
+        onError: () => setColorAddError(t("common.sellerProductAddAttributeError")),
+      },
+    );
+  }
+
+  function handleAddBrand() {
+    const name = newBrandName.trim();
+    if (!name) return;
+    addBrandAttribute.mutate(
+      { type: "brand", name },
+      {
+        onSuccess: (attr) => {
+          queryClient.setQueryData<AllAttributesBundle>(ATTR_BUNDLE_QUERY_KEY, (old) => {
+            if (!old) return old;
+            if (old.brand.some((b) => b._id === attr._id)) return old;
+            return { ...old, brand: [...old.brand, attr as Brand] };
+          });
+          setBrandId(attr._id);
+          setNewBrandName("");
+          setBrandAddError("");
+        },
+        onError: () => setBrandAddError(t("common.sellerProductAddAttributeError")),
+      },
+    );
+  }
+
+  function handleAddMaterial() {
+    const name = newMaterialName.trim();
+    if (!name) return;
+    addMaterialAttribute.mutate(
+      { type: "material", name },
+      {
+        onSuccess: (attr) => {
+          queryClient.setQueryData<AllAttributesBundle>(ATTR_BUNDLE_QUERY_KEY, (old) => {
+            if (!old) return old;
+            if (old.material.some((m) => m._id === attr._id)) return old;
+            return { ...old, material: [...old.material, attr as Material] };
+          });
+          setMaterialId(attr._id);
+          setNewMaterialName("");
+          setMaterialAddError("");
+        },
+        onError: () => setMaterialAddError(t("common.sellerProductAddAttributeError")),
+      },
+    );
+  }
+
+  function handleAddStyle() {
+    const name = newStyleName.trim();
+    if (!name) return;
+    addStyleAttribute.mutate(
+      { type: "style", name },
+      {
+        onSuccess: (attr) => {
+          queryClient.setQueryData<AllAttributesBundle>(ATTR_BUNDLE_QUERY_KEY, (old) => {
+            if (!old) return old;
+            if (old.style.some((s) => s._id === attr._id)) return old;
+            return { ...old, style: [...old.style, attr as Style] };
+          });
+          setStyleId(attr._id);
+          setNewStyleName("");
+          setStyleAddError("");
+        },
+        onError: () => setStyleAddError(t("common.sellerProductAddAttributeError")),
+      },
+    );
   }
 
   function handleSubmit(e: FormEvent) {
@@ -216,7 +359,6 @@ export function SellerProductsPage() {
       variantStock: variantStockPayload,
       brand: brandId || undefined,
       material: materialId || undefined,
-      fit: fitId || undefined,
       style: styleId || undefined,
       status,
     };
@@ -234,186 +376,469 @@ export function SellerProductsPage() {
     );
   }
 
+  const readinessItems = [
+    {
+      label: t("common.sellerProductFormTitle"),
+      complete: Boolean(title.trim()),
+    },
+    {
+      label: t("common.sellerProductFormPrice"),
+      complete: Boolean(price.trim()),
+    },
+    {
+      label: t("common.sellerProductFormImages"),
+      complete: imageFiles.length > 0,
+    },
+    {
+      label: t("common.sellerProductFormStock"),
+      complete: variantRows.length > 0 || Number(stockCount) > 0,
+    },
+  ];
+
+  const completedReadiness = readinessItems.filter((item) => item.complete).length;
+
   return (
     <SellerPageFrame
       title={t(copy.titleKey)}
       addon={<p className="text-sm text-slate-500">{t(copy.descriptionKey)}</p>}
     >
-      <div className="space-y-8">
-        <Card
-          title={t("common.sellerProductsManageFormTitle")}
-          description={t("common.sellerProductsManageFormDesc")}
+      <div className="space-y-6">
+        <div className="rounded-3xl border border-neutral-200 bg-white px-5 py-4 shadow-[0_20px_60px_-52px_rgba(15,23,42,0.8)]">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.22em] text-[#BE123C]">
+                iBerry seller
+              </p>
+              <h2 className="mt-1 text-2xl font-black text-slate-950">
+                {t("common.sellerProductsManageFormTitle")}
+              </h2>
+              <p className="mt-2 max-w-3xl text-sm font-medium leading-6 text-slate-500">
+                {t("common.sellerProductsManageFormDesc")}
+              </p>
+            </div>
+            <div className="rounded-2xl bg-[#FFF1F2] px-4 py-3 text-right">
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#BE123C]">
+                {t("common.sellerProductGuideReadyLabel")}
+              </p>
+              <p className="text-2xl font-black text-slate-950">
+                {completedReadiness}/{readinessItems.length}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <form
+          onSubmit={handleSubmit}
+          className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_330px]"
         >
-          <form onSubmit={handleSubmit} className="max-w-3xl space-y-5">
+          <div className="space-y-6">
             {formError ? (
-              <p className="text-sm text-red-600" role="alert">
+              <p
+                className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700"
+                role="alert"
+              >
                 {formError}
               </p>
             ) : null}
 
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">
-                {t("common.sellerProductFormTitle")}
-              </label>
-              <input
-                className={inputClass}
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">
-                {t("common.sellerProductFormDescription")}
-              </label>
-              <textarea
-                rows={4}
-                className={inputClass}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                required
-              />
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">
-                  {t("common.sellerProductFormSku")}
-                </label>
-                <input
-                  className={inputClass}
-                  value={modelNumber}
-                  onChange={(e) => setModelNumber(e.target.value)}
-                  required
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">
-                  {t("common.sellerProductFormAudience")}
-                </label>
-                <select
-                  className={inputClass}
-                  value={audience}
-                  onChange={(e) => setAudience(e.target.value as TargetAudience)}
-                >
-                  {audiences.map((a) => (
-                    <option key={a} value={a}>
-                      {audienceLabel(t, a)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-3">
-              <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">
-                  {t("common.sellerProductFormPrice")}
-                </label>
-                <input
-                  type="number"
-                  min={0}
-                  step="0.01"
-                  className={inputClass}
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                  required
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">
-                  {t("common.sellerProductFieldListPrice")}
-                </label>
-                <input
-                  type="number"
-                  min={0}
-                  step="0.01"
-                  className={inputClass}
-                  value={listPrice}
-                  onChange={(e) => setListPrice(e.target.value)}
-                  placeholder={t("common.sellerProductPhListPrice")}
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">
-                  {t("common.sellerProductFieldStatus")}
-                </label>
-                <select
-                  className={inputClass}
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value as ProductStatus)}
-                >
-                  {productStatuses.map((s) => (
-                    <option key={s} value={s}>
-                      {s === "ACTIVE" ?
-                        t("common.sellerProductStatusActive")
-                      : t("common.sellerProductStatusInactive")}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className="border-t border-slate-100 pt-4">
-              <h3 className="mb-1 text-sm font-semibold text-slate-900">
-                {t("common.sellerProductSectionAttributes")}
-              </h3>
-              <p className="mb-4 text-xs text-slate-500">
-                {t("common.sellerProductHintAttributes")}
-              </p>
-
-              <div className="grid gap-4 sm:grid-cols-2">
+            <section className={sectionClass}>
+              <div className="mb-5 flex items-start gap-3">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#FFF1F2] text-[#BE123C]">
+                  <Shirt className="h-5 w-5" aria-hidden />
+                </span>
                 <div>
-                  <span className="mb-2 block text-sm font-medium text-slate-700">
-                    {t("common.sellerProductFieldSizes")}
-                  </span>
-                  <div className="max-h-36 space-y-2 overflow-y-auto rounded-lg border border-slate-200 bg-white p-3">
+                  <h3 className={sectionTitleClass}>
+                    1. {t("common.sellerProductStepBasicsTitle")}
+                  </h3>
+                  <p className={sectionDescClass}>
+                    {t("common.sellerProductStepBasicsDesc")}
+                  </p>
+                </div>
+              </div>
+              <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_260px]">
+                <div>
+                  <label className={labelClass}>{t("common.sellerProductFormTitle")}</label>
+                  <input
+                    className={inputClass}
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className={labelClass}>
+                    {t("common.sellerProductFormAudience")}
+                  </label>
+                  <select
+                    className={inputClass}
+                    value={audience}
+                    onChange={(e) => setAudience(e.target.value as TargetAudience)}
+                  >
+                    {audiences.map((a) => (
+                      <option key={a} value={a}>
+                        {audienceLabel(t, a)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="lg:col-span-2">
+                  <label className={labelClass}>
+                    {t("common.sellerProductFormDescription")}
+                  </label>
+                  <textarea
+                    rows={5}
+                    className={inputClass}
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="lg:col-span-2">
+                  <label className={labelClass}>{t("common.sellerProductFormSku")}</label>
+                  <input
+                    className={`${inputClass} max-w-md`}
+                    value={modelNumber}
+                    onChange={(e) => setModelNumber(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+            </section>
+
+            <section className={sectionClass}>
+              <div className="mb-5 flex items-start gap-3">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#FFF1F2] text-[#BE123C]">
+                  <Tags className="h-5 w-5" aria-hidden />
+                </span>
+                <div>
+                  <h3 className={sectionTitleClass}>
+                    2. {t("common.sellerProductStepPricingTitle")}
+                  </h3>
+                  <p className={sectionDescClass}>
+                    {t("common.sellerProductStepPricingDesc")}
+                  </p>
+                </div>
+              </div>
+              <div className="grid gap-4 md:grid-cols-3">
+                <div>
+                  <label className={labelClass}>{t("common.sellerProductFormPrice")}</label>
+                  <input
+                    type="number"
+                    min={0}
+                    step="0.01"
+                    className={inputClass}
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className={labelClass}>
+                    {t("common.sellerProductFieldListPrice")}
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    step="0.01"
+                    className={inputClass}
+                    value={listPrice}
+                    onChange={(e) => setListPrice(e.target.value)}
+                    placeholder={t("common.sellerProductPhListPrice")}
+                  />
+                </div>
+                <div>
+                  <label className={labelClass}>
+                    {t("common.sellerProductFieldStatus")}
+                  </label>
+                  <select
+                    className={inputClass}
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value as ProductStatus)}
+                  >
+                    {productStatuses.map((s) => (
+                      <option key={s} value={s}>
+                        {s === "ACTIVE" ?
+                          t("common.sellerProductStatusActive")
+                        : t("common.sellerProductStatusInactive")}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </section>
+
+            <section className={sectionClass}>
+              <div className="mb-5 flex items-start gap-3">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#FFF1F2] text-[#BE123C]">
+                  <PackageCheck className="h-5 w-5" aria-hidden />
+                </span>
+                <div>
+                  <h3 className={sectionTitleClass}>
+                    3. {t("common.sellerProductSectionAttributes")}
+                  </h3>
+                  <p className={sectionDescClass}>{t("common.sellerProductHintAttributes")}</p>
+                </div>
+              </div>
+
+              <div className="grid gap-5 lg:grid-cols-2">
+                <div>
+                  <span className={labelClass}>{t("common.sellerProductFieldSizes")}</span>
+                  <div className="flex min-h-16 flex-wrap gap-2 rounded-2xl border border-neutral-200 bg-[#FAFAFB] p-3">
                     {sizeOptions.length === 0 ? (
-                      <span className="text-xs text-slate-500">
+                      <span className="text-sm font-medium text-slate-500">
                         {t("common.sellerProductNoSizes")}
                       </span>
                     ) : (
-                      sizeOptions.map((s) => (
-                        <label key={s._id} className="flex cursor-pointer items-center gap-2 text-sm">
-                          <input
-                            type="checkbox"
-                            checked={sizeIds.includes(s._id)}
-                            onChange={() => setSizeIds((prev) => toggleInList(prev, s._id))}
-                          />
-                          {s.name}
-                        </label>
-                      ))
+                      sizeOptions.map((s) => {
+                        const checked = sizeIds.includes(s._id);
+                        return (
+                          <label
+                            key={s._id}
+                            className={`cursor-pointer rounded-xl border px-3 py-2 text-sm font-black transition ${
+                              checked
+                                ? "border-[#E11D48] bg-[#FFF1F2] text-[#BE123C]"
+                                : "border-neutral-200 bg-white text-slate-700 hover:border-[#E11D48]/40"
+                            }`}
+                          >
+                            <input
+                              type="checkbox"
+                              className="sr-only"
+                              checked={checked}
+                              onChange={() => setSizeIds((prev) => toggleInList(prev, s._id))}
+                            />
+                            {s.name}
+                          </label>
+                        );
+                      })
                     )}
                   </div>
+                  <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+                    <input
+                      className={`${inputClass} sm:flex-1`}
+                      value={newSizeName}
+                      onChange={(e) => setNewSizeName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleAddSize();
+                        }
+                      }}
+                      placeholder={t("common.sellerProductAddSizePlaceholder")}
+                    />
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      className="w-full gap-1.5 whitespace-nowrap sm:w-auto sm:shrink-0"
+                      onClick={handleAddSize}
+                      disabled={addSizeAttribute.isPending || !newSizeName.trim()}
+                    >
+                      <Plus className="h-4 w-4" aria-hidden />
+                      {t("common.sellerProductAddAttributeButton")}
+                    </Button>
+                  </div>
+                  {sizeAddError ? (
+                    <p className="mt-1 text-xs font-semibold text-red-600">{sizeAddError}</p>
+                  ) : null}
                 </div>
                 <div>
-                  <span className="mb-2 block text-sm font-medium text-slate-700">
-                    {t("common.sellerProductFieldColors")}
-                  </span>
-                  <div className="max-h-36 space-y-2 overflow-y-auto rounded-lg border border-slate-200 bg-white p-3">
+                  <span className={labelClass}>{t("common.sellerProductFieldColors")}</span>
+                  <div className="flex min-h-16 flex-wrap gap-2 rounded-2xl border border-neutral-200 bg-[#FAFAFB] p-3">
                     {colorOptions.length === 0 ? (
-                      <span className="text-xs text-slate-500">
+                      <span className="text-sm font-medium text-slate-500">
                         {t("common.sellerProductNoColors")}
                       </span>
                     ) : (
-                      colorOptions.map((c) => (
-                        <label key={c._id} className="flex cursor-pointer items-center gap-2 text-sm">
-                          <input
-                            type="checkbox"
-                            checked={colorIds.includes(c._id)}
-                            onChange={() => setColorIds((prev) => toggleInList(prev, c._id))}
-                          />
-                          {c.name}
-                        </label>
-                      ))
+                      colorOptions.map((c) => {
+                        const checked = colorIds.includes(c._id);
+                        return (
+                          <label
+                            key={c._id}
+                            className={`cursor-pointer rounded-xl border px-3 py-2 text-sm font-black transition ${
+                              checked
+                                ? "border-[#E11D48] bg-[#FFF1F2] text-[#BE123C]"
+                                : "border-neutral-200 bg-white text-slate-700 hover:border-[#E11D48]/40"
+                            }`}
+                          >
+                            <input
+                              type="checkbox"
+                              className="sr-only"
+                              checked={checked}
+                              onChange={() => setColorIds((prev) => toggleInList(prev, c._id))}
+                            />
+                            {c.name}
+                          </label>
+                        );
+                      })
                     )}
                   </div>
+                  <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+                    <input
+                      className={`${inputClass} sm:flex-1`}
+                      value={newColorName}
+                      onChange={(e) => setNewColorName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleAddColor();
+                        }
+                      }}
+                      placeholder={t("common.sellerProductAddColorPlaceholder")}
+                    />
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      className="w-full gap-1.5 whitespace-nowrap sm:w-auto sm:shrink-0"
+                      onClick={handleAddColor}
+                      disabled={addColorAttribute.isPending || !newColorName.trim()}
+                    >
+                      <Plus className="h-4 w-4" aria-hidden />
+                      {t("common.sellerProductAddAttributeButton")}
+                    </Button>
+                  </div>
+                  {colorAddError ? (
+                    <p className="mt-1 text-xs font-semibold text-red-600">{colorAddError}</p>
+                  ) : null}
                 </div>
               </div>
 
-              <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50/80 p-4">
+              <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                <div>
+                  <label className={labelClass}>{t("common.sellerProductFieldBrand")}</label>
+                  <select
+                    className={inputClass}
+                    value={brandId}
+                    onChange={(e) => setBrandId(e.target.value)}
+                  >
+                    <option value="">{t("common.sellerProductPhOptional")}</option>
+                    {brandOptions.map((b) => (
+                      <option key={b._id} value={b._id}>
+                        {b.name}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+                    <input
+                      className={`${inputClass} sm:flex-1`}
+                      value={newBrandName}
+                      onChange={(e) => setNewBrandName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleAddBrand();
+                        }
+                      }}
+                      placeholder={t("common.sellerProductAddBrandPlaceholder")}
+                    />
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      className="w-full gap-1.5 whitespace-nowrap sm:w-auto sm:shrink-0"
+                      onClick={handleAddBrand}
+                      disabled={addBrandAttribute.isPending || !newBrandName.trim()}
+                    >
+                      <Plus className="h-4 w-4" aria-hidden />
+                      {t("common.sellerProductAddAttributeButton")}
+                    </Button>
+                  </div>
+                  {brandAddError ? (
+                    <p className="mt-1 text-xs font-semibold text-red-600">{brandAddError}</p>
+                  ) : null}
+                </div>
+                <div>
+                  <label className={labelClass}>{t("common.sellerProductFieldMaterial")}</label>
+                  <select
+                    className={inputClass}
+                    value={materialId}
+                    onChange={(e) => setMaterialId(e.target.value)}
+                  >
+                    <option value="">{t("common.sellerProductPhOptional")}</option>
+                    {materialOptions.map((m) => (
+                      <option key={m._id} value={m._id}>
+                        {m.name}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+                    <input
+                      className={`${inputClass} sm:flex-1`}
+                      value={newMaterialName}
+                      onChange={(e) => setNewMaterialName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleAddMaterial();
+                        }
+                      }}
+                      placeholder={t("common.sellerProductAddMaterialPlaceholder")}
+                    />
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      className="w-full gap-1.5 whitespace-nowrap sm:w-auto sm:shrink-0"
+                      onClick={handleAddMaterial}
+                      disabled={addMaterialAttribute.isPending || !newMaterialName.trim()}
+                    >
+                      <Plus className="h-4 w-4" aria-hidden />
+                      {t("common.sellerProductAddAttributeButton")}
+                    </Button>
+                  </div>
+                  {materialAddError ? (
+                    <p className="mt-1 text-xs font-semibold text-red-600">{materialAddError}</p>
+                  ) : null}
+                </div>
+                <div>
+                  <label className={labelClass}>{t("common.sellerProductFieldStyle")}</label>
+                  <select
+                    className={inputClass}
+                    value={styleId}
+                    onChange={(e) => setStyleId(e.target.value)}
+                  >
+                    <option value="">{t("common.sellerProductPhOptional")}</option>
+                    {styleOptions.map((s) => (
+                      <option key={s._id} value={s._id}>
+                        {s.name}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+                    <input
+                      className={`${inputClass} sm:flex-1`}
+                      value={newStyleName}
+                      onChange={(e) => setNewStyleName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleAddStyle();
+                        }
+                      }}
+                      placeholder={t("common.sellerProductAddStylePlaceholder")}
+                    />
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      className="w-full gap-1.5 whitespace-nowrap sm:w-auto sm:shrink-0"
+                      onClick={handleAddStyle}
+                      disabled={addStyleAttribute.isPending || !newStyleName.trim()}
+                    >
+                      <Plus className="h-4 w-4" aria-hidden />
+                      {t("common.sellerProductAddAttributeButton")}
+                    </Button>
+                  </div>
+                  {styleAddError ? (
+                    <p className="mt-1 text-xs font-semibold text-red-600">{styleAddError}</p>
+                  ) : null}
+                </div>
+              </div>
+
+              <div className="mt-5 rounded-2xl border border-neutral-200 bg-[#FAFAFB] p-4">
                 {variantRows.length === 0 ? (
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">
+                    <label className={labelClass}>
                       {t("common.sellerProductFormStock")}
                     </label>
                     <input
@@ -424,37 +849,37 @@ export function SellerProductsPage() {
                       value={stockCount}
                       onChange={(e) => setStockCount(e.target.value)}
                     />
-                    <p className="mt-1 text-xs text-slate-500">
+                    <p className="mt-2 text-sm font-medium text-slate-500">
                       {t("common.sellerProductHintStockSimple")}
                     </p>
                   </div>
                 ) : (
                   <div>
-                    <h3 className="mb-1 text-sm font-semibold text-slate-900">
+                    <h3 className={sectionTitleClass}>
                       {t("common.sellerProductSectionVariantStock")}
                     </h3>
-                    <p className="mb-3 text-xs text-slate-600">
+                    <p className="mb-4 mt-1 text-sm font-medium text-slate-500">
                       {t("common.sellerProductHintVariantStock")}
                     </p>
-                    <div className="overflow-x-auto rounded-md border border-slate-200 bg-white">
+                    <div className="overflow-x-auto rounded-2xl border border-neutral-200 bg-white">
                       <table className="w-full min-w-[320px] text-left text-sm">
                         <thead>
-                          <tr className="border-b border-slate-200 bg-slate-50 text-slate-600">
-                            <th className="px-3 py-2 font-medium">
+                          <tr className="border-b border-neutral-200 bg-[#FFF1F2] text-[#BE123C]">
+                            <th className="px-4 py-3 font-black">
                               {t("common.sellerProductVariantColCombo")}
                             </th>
-                            <th className="px-3 py-2 font-medium">
+                            <th className="px-4 py-3 font-black">
                               {t("common.sellerProductVariantColQty")}
                             </th>
                           </tr>
                         </thead>
                         <tbody>
                           {variantRows.map((row) => (
-                            <tr key={row.key} className="border-t border-slate-100">
-                              <td className="px-3 py-2 text-slate-800">
+                            <tr key={row.key} className="border-t border-neutral-100">
+                              <td className="px-4 py-3 font-semibold text-slate-800">
                                 {variantRowLabel(row)}
                               </td>
-                              <td className="px-3 py-2">
+                              <td className="px-4 py-3">
                                 <input
                                   type="number"
                                   min={0}
@@ -478,90 +903,27 @@ export function SellerProductsPage() {
                   </div>
                 )}
               </div>
+            </section>
 
-              <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <section className={sectionClass}>
+              <div className="mb-5 flex items-start gap-3">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#FFF1F2] text-[#BE123C]">
+                  <ImagePlus className="h-5 w-5" aria-hidden />
+                </span>
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-slate-700">
-                    {t("common.sellerProductFieldBrand")}
-                  </label>
-                  <select
-                    className={inputClass}
-                    value={brandId}
-                    onChange={(e) => setBrandId(e.target.value)}
-                  >
-                    <option value="">{t("common.sellerProductPhOptional")}</option>
-                    {brandOptions.map((b) => (
-                      <option key={b._id} value={b._id}>
-                        {b.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-slate-700">
-                    {t("common.sellerProductFieldMaterial")}
-                  </label>
-                  <select
-                    className={inputClass}
-                    value={materialId}
-                    onChange={(e) => setMaterialId(e.target.value)}
-                  >
-                    <option value="">{t("common.sellerProductPhOptional")}</option>
-                    {materialOptions.map((m) => (
-                      <option key={m._id} value={m._id}>
-                        {m.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-slate-700">
-                    {t("common.sellerProductFieldFit")}
-                  </label>
-                  <select
-                    className={inputClass}
-                    value={fitId}
-                    onChange={(e) => setFitId(e.target.value)}
-                  >
-                    <option value="">{t("common.sellerProductPhOptional")}</option>
-                    {fitOptions.map((f) => (
-                      <option key={f._id} value={f._id}>
-                        {f.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-slate-700">
-                    {t("common.sellerProductFieldStyle")}
-                  </label>
-                  <select
-                    className={inputClass}
-                    value={styleId}
-                    onChange={(e) => setStyleId(e.target.value)}
-                  >
-                    <option value="">{t("common.sellerProductPhOptional")}</option>
-                    {styleOptions.map((s) => (
-                      <option key={s._id} value={s._id}>
-                        {s.name}
-                      </option>
-                    ))}
-                  </select>
+                  <h3 className={sectionTitleClass}>
+                    4. {t("common.sellerProductFormImages")}
+                  </h3>
+                  <p className={sectionDescClass}>{t("common.sellerProductFormImagesHelp")}</p>
                 </div>
               </div>
-            </div>
-
-            <div className="border-t border-slate-100 pt-4">
               <label
-                className="mb-1 block text-sm font-medium text-slate-700"
+                className={labelClass}
                 htmlFor={imageFieldId}
               >
                 {t("common.sellerProductFormImages")}
               </label>
-              <p className="mb-3 text-xs text-slate-500">
-                {t("common.sellerProductFormImagesHelp")}
-              </p>
-              <div className="relative min-h-[152px] overflow-hidden rounded-xl border-2 border-dashed border-slate-300 bg-slate-50/90 transition hover:border-[#00966d]/50 hover:bg-emerald-50/40 focus-within:border-[#00966d] focus-within:ring-4 focus-within:ring-[#00966d]/15">
+              <div className="relative min-h-[170px] overflow-hidden rounded-3xl border-2 border-dashed border-[#FBCFE8] bg-[#FFF8FA] transition hover:border-[#E11D48]/50 hover:bg-[#FFF1F2] focus-within:border-[#E11D48] focus-within:ring-4 focus-within:ring-[#E11D48]/15">
                 <input
                   key={fileInputKey}
                   id={imageFieldId}
@@ -574,9 +936,9 @@ export function SellerProductsPage() {
                     setImageFiles(list.slice(0, 5));
                   }}
                 />
-                <div className="pointer-events-none flex min-h-[152px] flex-col items-center justify-center gap-2 px-4 py-6 text-center">
+                <div className="pointer-events-none flex min-h-[170px] flex-col items-center justify-center gap-2 px-4 py-6 text-center">
                   <Upload
-                    className="h-9 w-9 text-slate-400"
+                    className="h-9 w-9 text-[#BE123C]"
                     strokeWidth={1.75}
                     aria-hidden
                   />
@@ -587,7 +949,7 @@ export function SellerProductsPage() {
                     {t("common.sellerProductFormImagesBoxFormats")}
                   </span>
                   {imageFiles.length > 0 ? (
-                    <span className="text-xs font-semibold text-[#006b4d]">
+                    <span className="rounded-full bg-white px-3 py-1 text-xs font-black text-[#BE123C]">
                       {t("common.sellerProductFormImagesSelected").replace(
                         "{{n}}",
                         String(imageFiles.length),
@@ -596,21 +958,53 @@ export function SellerProductsPage() {
                   ) : null}
                 </div>
               </div>
-            </div>
+            </section>
+          </div>
 
-            <Button
-              type="submit"
-              variant="primary"
-              size="lg"
-              className="bg-[#00966d] hover:bg-[#007a5a]"
-              disabled={create.isPending}
-            >
-              {create.isPending
-                ? t("common.sellerProductFormSubmitting")
-                : t("common.sellerProductFormSubmit")}
-            </Button>
-          </form>
-        </Card>
+          <aside className="xl:sticky xl:top-6">
+            <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-[0_24px_70px_-50px_rgba(15,23,42,0.9)]">
+              <div className="rounded-2xl bg-slate-950 p-4 text-white">
+                <p className="text-xs font-black uppercase tracking-[0.18em] text-[#FDA4AF]">
+                  {t("common.sellerProductPublishStatusTitle")}
+                </p>
+                <p className="mt-2 text-3xl font-black">
+                  {completedReadiness}/{readinessItems.length}
+                </p>
+                <p className="mt-1 text-sm font-medium text-slate-300">
+                  {t("common.sellerProductPublishStatusDesc")}
+                </p>
+              </div>
+
+              <div className="mt-4 space-y-3">
+                {readinessItems.map((item) => (
+                  <div
+                    key={item.label}
+                    className="flex items-center gap-3 rounded-2xl border border-neutral-100 bg-[#FAFAFB] px-3 py-3"
+                  >
+                    {item.complete ? (
+                      <CheckCircle2 className="h-5 w-5 shrink-0 text-[#E11D48]" aria-hidden />
+                    ) : (
+                      <Circle className="h-5 w-5 shrink-0 text-slate-300" aria-hidden />
+                    )}
+                    <span className="text-sm font-black text-slate-800">{item.label}</span>
+                  </div>
+                ))}
+              </div>
+
+              <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                className="mt-5 w-full !border-[#E11D48] !bg-[#E11D48] shadow-lg shadow-[#E11D48]/20 hover:!bg-[#BE123C]"
+                disabled={create.isPending}
+              >
+                {create.isPending
+                  ? t("common.sellerProductFormSubmitting")
+                  : t("common.sellerProductFormSubmit")}
+              </Button>
+            </div>
+          </aside>
+        </form>
       </div>
     </SellerPageFrame>
   );

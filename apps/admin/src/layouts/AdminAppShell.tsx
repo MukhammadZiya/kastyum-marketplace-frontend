@@ -27,14 +27,14 @@ function AdminBrand() {
   const t = useT();
   return (
     <div className="flex items-center gap-3">
-      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-sm font-bold text-white">
-        K
+      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#E11D48] text-sm font-black text-white shadow-sm shadow-[#E11D48]/20">
+        iB
       </div>
       <div>
-        <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
+        <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">
           {t("common.adminBrandName")}
         </p>
-        <p className="text-sm font-semibold text-slate-900">
+        <p className="text-sm font-black text-slate-950">
           {t("common.adminBrandTitle")}
         </p>
       </div>
@@ -45,15 +45,15 @@ function AdminBrand() {
 function AdminSidebarProfile({ onLogout }: { onLogout: () => void }) {
   const t = useT();
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/80 p-3">
+    <div className="flex items-center gap-3 rounded-2xl border border-[#FFE4EA] bg-[#FFF1F2] p-3">
       <div
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-800"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-sm font-black text-[#BE123C]"
         aria-hidden
       >
         SA
       </div>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium text-slate-900">
+        <p className="truncate text-sm font-black text-slate-950">
           {t("common.adminProfileNick")}
         </p>
         <p className="truncate text-xs text-slate-500">
@@ -64,7 +64,7 @@ function AdminSidebarProfile({ onLogout }: { onLogout: () => void }) {
         type="button"
         variant="ghost"
         size="sm"
-        className="!h-9 !w-9 shrink-0 !p-0 text-slate-500 hover:text-slate-900"
+        className="!h-9 !w-9 shrink-0 !p-0 text-slate-500 hover:text-[#BE123C]"
         onClick={onLogout}
         aria-label={t("common.adminAriaLogOut")}
       >

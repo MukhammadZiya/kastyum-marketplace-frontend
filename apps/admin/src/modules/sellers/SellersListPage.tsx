@@ -3,8 +3,12 @@ import { TableCard } from "@repo/ui";
 import type { Member } from "@repo/types";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
 import { DataTablePlaceholder } from "../../components/DataTablePlaceholder";
+import { MemberStatusSelect } from "../../components/MemberStatusSelect";
 import { ADMIN_PAGE_TITLE_KEYS } from "../../constants/adminNavigation";
-import { useAdminMemberList } from "../../hooks/admin-members";
+import {
+  useAdminMemberList,
+  useAdminMemberUpdate,
+} from "../../hooks/admin-members";
 import { getAuthToken } from "@repo/api";
 import { getAdminListEmptyMessage } from "../../lib/adminListEmptyMessage";
 import { useT } from "../../i18n";
@@ -16,9 +20,9 @@ export function SellersListPage() {
     page: 1,
     limit: 200,
   });
+  const updateMember = useAdminMemberUpdate();
 
-  const sellers =
-    data?.list.filter((m: Member) => m.type === "SELLER") ?? [];
+  const sellers = data?.list.filter((m: Member) => m.type === "SELLER") ?? [];
 
   const emptyMessage = getAdminListEmptyMessage({
     signedIn,
@@ -42,14 +46,23 @@ export function SellersListPage() {
   const rowEls =
     sellers.length > 0 ?
       sellers.map((m: Member) => (
-        <tr key={m._id} className="border-t border-slate-100">
-          <td className="px-4 py-3 font-medium text-slate-900">{m.nick}</td>
-          <td className="px-4 py-3">{m.email}</td>
-          <td className="px-4 py-3">{m.status}</td>
+        <tr
+          key={m._id}
+          className="border-t border-neutral-100 transition hover:bg-[#FAFAFB]"
+        >
+          <td className="px-4 py-3 font-black text-slate-950">{m.nick}</td>
+          <td className="px-4 py-3 text-slate-700">{m.email}</td>
+          <td className="px-4 py-3">
+            <MemberStatusSelect
+              value={m.status}
+              disabled={updateMember.isPending}
+              onChange={(status) =>
+                updateMember.mutate({ id: m._id, body: { status } })
+              }
+            />
+          </td>
           <td className="px-4 py-3 text-slate-600">
-            {m.createdAt
-              ? new Date(m.createdAt).toLocaleDateString()
-              : "—"}
+            {m.createdAt ? new Date(m.createdAt).toLocaleDateString() : "—"}
           </td>
         </tr>
       ))
@@ -66,7 +79,11 @@ export function SellersListPage() {
         </p>
       }
     >
-      <TableCard title={t("common.adminSellersListTitle")} description={tableDescription}>
+      <TableCard
+        title={t("common.adminSellersListTitle")}
+        description={tableDescription}
+        className="rounded-3xl border-neutral-200 shadow-[0_18px_50px_rgba(15,23,42,0.05)]"
+      >
         <DataTablePlaceholder columns={columns} emptyMessage={emptyMessage}>
           {rowEls}
         </DataTablePlaceholder>
