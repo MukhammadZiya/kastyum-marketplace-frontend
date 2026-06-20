@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Breadcrumb from "../components/Common/Breadcrumb";
-import { useMemberLogin, useMemberTelegramLogin } from "../hooks/members";
+import { useMemberLogin, useMemberTelegramLogin, useMemberGoogleLogin } from "../hooks/members";
 import type { MemberLoginBody } from "../lib/marketplaceTypes";
 import { getSellerSignupUrl } from "../lib/sellerAppUrl";
 import { TelegramLoginButton } from "../components/Auth/TelegramLoginButton";
+import { GoogleLoginButton } from "../components/Auth/GoogleLoginButton";
 import { useT } from "../i18n";
 
 export function SignInPage() {
@@ -12,6 +13,7 @@ export function SignInPage() {
   const navigate = useNavigate();
   const login = useMemberLogin();
   const telegramLogin = useMemberTelegramLogin();
+  const googleLogin = useMemberGoogleLogin();
   const [values, setValues] = useState<MemberLoginBody>({
     email: "",
     password: "",
@@ -104,6 +106,21 @@ export function SignInPage() {
                     },
                   });
                 }}
+              />
+
+              <GoogleLoginButton
+                onSuccess={(idToken) => {
+                  setFormError("");
+                  googleLogin.mutate({ idToken }, {
+                    onSuccess: () => navigate("/"),
+                    onError: (err) => {
+                      setFormError(
+                        err instanceof Error ? err.message : "Google login failed",
+                      );
+                    },
+                  });
+                }}
+                onError={() => setFormError("Google login failed. Please try again.")}
               />
 
               <div className="rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 text-center text-sm text-neutral-600">

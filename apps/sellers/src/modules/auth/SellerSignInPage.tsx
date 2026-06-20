@@ -2,9 +2,10 @@ import { useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { MemberLoginBody } from "../../lib/marketplaceTypes";
-import { formatRequestFailureMessage, postMemberLogin } from "@repo/api";
+import { formatRequestFailureMessage, postMemberLogin, postMemberGoogleLogin } from "@repo/api";
 import { Button } from "@repo/ui";
 import { SellerAuthScaffold } from "../../components/seller/SellerAuthScaffold";
+import { GoogleLoginButton } from "../../components/Auth/GoogleLoginButton";
 import { useT } from "../../i18n";
 import { getMarketplaceOrigin } from "../../lib/marketplaceUrl";
 import {
@@ -52,6 +53,21 @@ export function SellerSignInPage() {
     },
     onError: (err) => {
       setFormError(formatRequestFailureMessage(err) || t("common.sellerAuthErrorInvalidLogin"));
+    },
+  });
+
+  const googleLogin = useMutation({
+    mutationFn: postMemberGoogleLogin,
+    onSuccess: (response) => {
+      if (!accountTypeIsSeller(response.member.type)) {
+        setFormError("This Google account is registered as a buyer, not a seller. Please apply as a seller first.");
+        return;
+      }
+      writeSellerSessionToCache(queryClient, response.accessToken, response.member);
+      navigate(redirectAfterLogin, { replace: true });
+    },
+    onError: (err) => {
+      setFormError(formatRequestFailureMessage(err) || "Google login failed.");
     },
   });
 
@@ -137,6 +153,23 @@ export function SellerSignInPage() {
         >
           {login.isPending ? t("common.sellerAuthSigningIn") : t("common.sellerAuthSignInSubmit")}
         </Button>
+
+        <div className="relative my-2">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-slate-200"></div>
+          </div>
+          <div className="relative flex justify-center text-xs">
+            <span className="bg-white px-2 text-slate-400">Or continue with</span>
+          </div>
+        </div>
+
+        <GoogleLoginButton
+          onSuccess={(idToken) => {
+            setFormError("");
+            googleLogin.mutate({ idToken });
+          }}
+          onError={() => setFormError("Google login failed. Please try again.")}
+        />
 
         <div className="rounded-2xl border border-[#E11D48]/15 bg-[#FFF1F4] px-4 py-3 text-sm text-[#9F1239]">
           {t("common.sellerAuthApprovalNotice")}

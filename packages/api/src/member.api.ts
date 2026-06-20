@@ -40,10 +40,21 @@ export async function postMemberLogin(
 }
 
 export async function postMemberTelegramLogin(
-  body: any, // Using any for now to avoid strict type mismatch if TelegramLoginData is not exported everywhere
+  body: any,
 ): Promise<MemberAuthResponse> {
   const { data } = await apiClient.post<MemberAuthResponse>(
     "/member/telegram-login",
+    body,
+  );
+  return data;
+}
+
+export async function postMemberGoogleLogin(body: {
+  idToken?: string;
+  accessToken?: string;
+}): Promise<MemberAuthResponse> {
+  const { data } = await apiClient.post<MemberAuthResponse>(
+    "/member/google-login",
     body,
   );
   return data;

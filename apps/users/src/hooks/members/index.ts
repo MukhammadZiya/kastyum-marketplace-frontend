@@ -5,3 +5,4 @@ export { useMemberMe } from "./useMemberMe";
 export { useMemberUpdate } from "./useMemberUpdate";
 export { useMemberDetail } from "./useMemberDetail";
 export { useMemberTelegramLogin } from "./useMemberTelegramLogin";
+export { useMemberGoogleLogin } from "./useMemberGoogleLogin";

@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Breadcrumb from "../components/Common/Breadcrumb";
-import { useMemberTelegramLogin } from "../hooks/members";
+import { useMemberTelegramLogin, useMemberGoogleLogin } from "../hooks/members";
 import { TelegramLoginButton } from "../components/Auth/TelegramLoginButton";
+import { GoogleLoginButton } from "../components/Auth/GoogleLoginButton";
 import { getSellerSignupUrl } from "../lib/sellerAppUrl";
 import { useT } from "../i18n";
 
@@ -10,6 +11,7 @@ export function SignUpPage() {
   const t = useT();
   const navigate = useNavigate();
   const telegramLogin = useMemberTelegramLogin();
+  const googleLogin = useMemberGoogleLogin();
   const [formError, setFormError] = useState("");
 
   const openSellerSignup = () => {
@@ -55,6 +57,20 @@ export function SignUpPage() {
                     },
                   });
                 }}
+              />
+              <GoogleLoginButton
+                onSuccess={(idToken) => {
+                  setFormError("");
+                  googleLogin.mutate({ idToken }, {
+                    onSuccess: () => navigate("/"),
+                    onError: (err) => {
+                      setFormError(
+                        err instanceof Error ? err.message : "Google login failed",
+                      );
+                    },
+                  });
+                }}
+                onError={() => setFormError("Google login failed. Please try again.")}
               />
             </div>
 
