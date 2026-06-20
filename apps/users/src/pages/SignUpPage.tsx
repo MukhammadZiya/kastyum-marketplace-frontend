@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Breadcrumb from "../components/Common/Breadcrumb";
-import { useMemberTelegramLogin, useMemberGoogleLogin } from "../hooks/members";
-import { TelegramLoginButton } from "../components/Auth/TelegramLoginButton";
+import { useMemberGoogleLogin } from "../hooks/members";
+import { TelegramIconButton } from "../components/Auth/TelegramLoginButton";
 import { GoogleLoginButton } from "../components/Auth/GoogleLoginButton";
 import { getSellerSignupUrl } from "../lib/sellerAppUrl";
 import { useT } from "../i18n";
@@ -10,7 +10,6 @@ import { useT } from "../i18n";
 export function SignUpPage() {
   const t = useT();
   const navigate = useNavigate();
-  const telegramLogin = useMemberTelegramLogin();
   const googleLogin = useMemberGoogleLogin();
   const [formError, setFormError] = useState("");
 
@@ -44,34 +43,23 @@ export function SignUpPage() {
               <p className="mb-4 text-sm font-semibold text-[#9F1239]">
                 One secure Telegram login creates your buyer account automatically.
               </p>
-              <TelegramLoginButton
-                botName={import.meta.env.VITE_TELEGRAM_BOT_NAME || "iBerry_official_bot"}
-                onAuth={(user) => {
-                  setFormError("");
-                  telegramLogin.mutate(user, {
-                    onSuccess: () => navigate("/"),
-                    onError: (err) => {
-                      setFormError(
-                        err instanceof Error ? err.message : "Telegram login failed",
-                      );
-                    },
-                  });
-                }}
-              />
-              <GoogleLoginButton
-                onSuccess={(idToken) => {
-                  setFormError("");
-                  googleLogin.mutate({ idToken }, {
-                    onSuccess: () => navigate("/"),
-                    onError: (err) => {
-                      setFormError(
-                        err instanceof Error ? err.message : "Google login failed",
-                      );
-                    },
-                  });
-                }}
-                onError={() => setFormError("Google login failed. Please try again.")}
-              />
+              <div className="flex items-center justify-center gap-4">
+                <TelegramIconButton />
+                <GoogleLoginButton
+                  onSuccess={(accessToken) => {
+                    setFormError("");
+                    googleLogin.mutate({ accessToken }, {
+                      onSuccess: () => navigate("/"),
+                      onError: (err) => {
+                        setFormError(
+                          err instanceof Error ? err.message : "Google login failed",
+                        );
+                      },
+                    });
+                  }}
+                  onError={() => setFormError("Google login failed. Please try again.")}
+                />
+              </div>
             </div>
 
             <div className="mt-6 rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 text-center text-sm text-neutral-600">

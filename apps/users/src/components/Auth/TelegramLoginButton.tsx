@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface TelegramLoginButtonProps {
   botName: string;
@@ -57,3 +58,27 @@ export const TelegramLoginButton = ({
 
   return <div ref={containerRef} className="flex justify-center" />;
 };
+
+interface TelegramIconButtonProps {
+  botId: string | number;
+  onAuth: (user: any) => void;
+  disabled?: boolean;
+}
+
+export function TelegramIconButton({ disabled }: Pick<TelegramIconButtonProps, "disabled">) {
+  const navigate = useNavigate();
+
+  return (
+    <button
+      type="button"
+      onClick={() => navigate("/telegram-login")}
+      disabled={disabled}
+      title="Continue with Telegram"
+      className="flex h-12 w-12 items-center justify-center rounded-full bg-[#229ED9] shadow-sm transition hover:bg-[#1a8bbf] active:scale-95 disabled:opacity-60"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+      </svg>
+    </button>
+  );
+}

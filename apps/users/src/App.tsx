@@ -18,6 +18,7 @@ import { BlogGridPage } from "./pages/BlogGridPage";
 import { BlogDetailsWithSidebarPage } from "./pages/BlogDetailsWithSidebarPage";
 import { BlogDetailsPage } from "./pages/BlogDetailsPage";
 import { MyAccountPage } from "./pages/MyAccountPage";
+import { TelegramLoginPage } from "./pages/TelegramLoginPage";
 
 type AppProps = {
   basename?: string;
@@ -38,6 +39,7 @@ function App({ basename }: AppProps = {}) {
           <Route path="wishlist" element={<WishlistPage />} />
           <Route path="shop-details" element={<ShopDetailsPage />} />
           <Route path="signin" element={<SignInPage />} />
+          <Route path="telegram-login" element={<TelegramLoginPage />} />
           <Route path="signup" element={<SignUpPage />} />
           <Route path="my-account" element={<MyAccountPage />} />
           <Route path="error" element={<ErrorPage />} />
