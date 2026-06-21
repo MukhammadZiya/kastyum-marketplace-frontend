@@ -216,6 +216,8 @@
   "accountTabAddress": "Мекенжай",
   "accountTabOrders": "Тапсырыстар",
   "accountTabSecurity": "Қауіпсіздік",
+  "edit": "Өзгерту",
+  "cancel": "Болдырмау",
   "accountAddressAdd": "Мекенжай қосу",
   "accountAddressLabel": "Мекенжай",
   "accountAddressPlaceholder": "Көше, қала, аймақ",

@@ -215,6 +215,8 @@
   "accountTabAddress": "Address",
   "accountTabOrders": "Orders",
   "accountTabSecurity": "Security",
+  "edit": "Edit",
+  "cancel": "Cancel",
   "accountAddressAdd": "Add address",
   "accountAddressLabel": "Address",
   "accountAddressPlaceholder": "Street, city, region",

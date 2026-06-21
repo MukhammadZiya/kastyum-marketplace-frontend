@@ -305,6 +305,8 @@ function AddressPanel() {
 
   const [addresses, setAddresses] = useState<string[]>(loadAddresses);
   const [input, setInput] = useState("");
+  const [editingIdx, setEditingIdx] = useState<number | null>(null);
+  const [editValue, setEditValue] = useState("");
 
   if (!getAuthToken()) {
     return (
@@ -335,6 +337,21 @@ function AddressPanel() {
 
   function removeAddress(idx: number) {
     save(addresses.filter((_, i) => i !== idx));
+    if (editingIdx === idx) setEditingIdx(null);
+  }
+
+  function startEdit(idx: number) {
+    setEditingIdx(idx);
+    setEditValue(addresses[idx]);
+  }
+
+  function saveEdit(idx: number) {
+    const trimmed = editValue.trim();
+    if (!trimmed) return;
+    const updated = [...addresses];
+    updated[idx] = trimmed;
+    save(updated);
+    setEditingIdx(null);
   }
 
   return (
@@ -348,19 +365,58 @@ function AddressPanel() {
           {addresses.map((addr, idx) => (
             <li
               key={idx}
-              className="flex items-start justify-between gap-3 rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3"
+              className="rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3"
             >
-              <div className="flex items-start gap-3">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#E11D48]" strokeWidth={2.2} />
-                <span className="text-sm font-semibold text-neutral-800">{addr}</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => removeAddress(idx)}
-                className="shrink-0 text-xs font-black text-neutral-400 hover:text-red-600 transition"
-              >
-                ✕
-              </button>
+              {editingIdx === idx ? (
+                <div className="space-y-2">
+                  <textarea
+                    rows={2}
+                    autoFocus
+                    className="w-full rounded-xl border border-[#E11D48] bg-white px-3 py-2 text-sm font-semibold outline-none resize-none"
+                    value={editValue}
+                    onChange={(e) => setEditValue(e.target.value)}
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => saveEdit(idx)}
+                      className="rounded-xl bg-[#E11D48] px-4 py-1.5 text-xs font-black text-white hover:bg-[#BE123C] transition"
+                    >
+                      {t("common.profileSave")}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setEditingIdx(null)}
+                      className="rounded-xl border border-neutral-200 px-4 py-1.5 text-xs font-black text-neutral-600 hover:bg-neutral-100 transition"
+                    >
+                      {t("cancel")}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-start gap-3">
+                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#E11D48]" strokeWidth={2.2} />
+                    <span className="text-sm font-semibold text-neutral-800">{addr}</span>
+                  </div>
+                  <div className="flex shrink-0 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => startEdit(idx)}
+                      className="text-xs font-black text-neutral-400 hover:text-[#E11D48] transition"
+                    >
+                      {t("edit")}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => removeAddress(idx)}
+                      className="text-xs font-black text-neutral-400 hover:text-red-600 transition"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </div>
+              )}
             </li>
           ))}
         </ul>

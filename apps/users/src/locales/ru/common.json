@@ -205,6 +205,8 @@
   "accountTabAddress": "Адрес",
   "accountTabOrders": "Заказы",
   "accountTabSecurity": "Безопасность",
+  "edit": "Изменить",
+  "cancel": "Отмена",
   "accountAddressAdd": "Добавить адрес",
   "accountAddressLabel": "Адрес",
   "accountAddressPlaceholder": "Улица, город, регион",

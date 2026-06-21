@@ -205,6 +205,8 @@
   "accountTabAddress": "Manzil",
   "accountTabOrders": "Buyurtmalar",
   "accountTabSecurity": "Xavfsizlik",
+  "edit": "Tahrirlash",
+  "cancel": "Bekor qilish",
   "accountAddressAdd": "Manzil qo'shish",
   "accountAddressLabel": "Manzil",
   "accountAddressPlaceholder": "Ko'cha, shahar, viloyat",
