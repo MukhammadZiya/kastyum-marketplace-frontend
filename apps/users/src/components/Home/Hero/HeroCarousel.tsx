@@ -31,7 +31,7 @@ export default function HeroCarousel() {
         onSlideChange={(s) => setActiveIndex(s.realIndex)}
         className="[&_.swiper-button-next]:opacity-0 [&_.swiper-button-next]:transition [&_.swiper-button-next]:duration-200 [&_.swiper-button-next]:after:text-white [&_.swiper-button-next]:after:text-[24px] [&_.swiper-button-prev]:opacity-0 [&_.swiper-button-prev]:transition [&_.swiper-button-prev]:duration-200 [&_.swiper-button-prev]:after:text-white [&_.swiper-button-prev]:after:text-[24px] group-hover:[&_.swiper-button-next]:opacity-100 group-hover:[&_.swiper-button-prev]:opacity-100"
       >
-        {slides.map((slide, i) => (
+        {slides.map((slide) => (
           <SwiperSlide key={slide.id}>
             <div className="relative min-h-[340px] overflow-hidden sm:min-h-[380px] md:min-h-[420px] lg:min-h-[440px]">
 
