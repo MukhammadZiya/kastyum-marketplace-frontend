@@ -7,7 +7,7 @@ import {
   Plus,
   ShoppingBag,
 } from "lucide-react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Breadcrumb from "../components/Common/Breadcrumb";
 import { StarRating } from "../components/Common/StarRating";
 import { ProductReviewsSection } from "../components/Shop/ProductReviewsSection";
@@ -297,6 +297,7 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
   const [selectedSizeId, setSelectedSizeId] = useState<string | null>(null);
   const [selectedColorId, setSelectedColorId] = useState<string | null>(null);
   const [variantError, setVariantError] = useState<string | null>(null);
+  const navigate = useNavigate();
   const { addItem } = useCart();
   const { addItem: addWishlistItem } = useWishlist();
 
@@ -587,6 +588,7 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
                     selectedColorId: colorOpt?.id,
                     selectedColorName: colorOpt?.label,
                   });
+                  navigate("/checkout");
                 }}
                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#E11D48] px-7 py-3.5 font-bold text-white shadow-[0_18px_40px_-24px_rgba(225,29,72,1)] transition duration-200 ease-out hover:-translate-y-px hover:bg-[#BE123C] hover:shadow-md active:translate-y-0 active:shadow-sm"
                 type="button"
