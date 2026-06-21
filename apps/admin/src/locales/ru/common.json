@@ -290,6 +290,19 @@
     "adminPhOwnerEmail": "owner@store.com",
     "adminCreateSeller": "Создать продавца",
     "adminNavSearch": "Поиск",
-    "adminPageSearch": "Глобальный поиск"
+    "adminPageSearch": "Глобальный поиск",
+    "searchPlaceholder": "Поиск по имени, email, названию товара, ID заказа…",
+    "searchButton": "Найти",
+    "searchResultsFor": "результатов по",
+    "searchSectionUsers": "Пользователи",
+    "searchSectionSellers": "Продавцы",
+    "searchSectionProducts": "Товары",
+    "searchSectionOrders": "Заказы",
+    "searchEmptyUsers": "Пользователи не найдены",
+    "searchEmptySellers": "Продавцы не найдены",
+    "searchEmptyProducts": "Товары не найдены",
+    "searchEmptyOrders": "Заказы не найдены",
+    "searchEmptyStateTitle": "Поиск",
+    "searchEmptyStateDesc": "Введите имя, email, название товара, SKU или ID заказа и нажмите Найти"
   }
 }

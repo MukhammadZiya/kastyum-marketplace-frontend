@@ -290,6 +290,20 @@
     "adminPhOwnerEmail": "owner@store.com",
     "adminCreateSeller": "Sotuvchi yaratish",
     "adminNavSearch": "Qidiruv",
-    "adminPageSearch": "Umumiy qidiruv"
+    "adminPageSearch": "Umumiy qidiruv",
+    "searchPlaceholder": "Ism, email, mahsulot nomi, buyurtma ID bo'yicha qidirish…",
+    "searchButton": "Qidirish",
+    "searchResultsFor": "natija",
+    "searchSectionUsers": "Foydalanuvchilar",
+    "searchSectionSellers": "Sotuvchilar",
+    "searchSectionProducts": "Mahsulotlar",
+    "searchSectionOrders": "Buyurtmalar",
+    "searchEmptyUsers": "Foydalanuvchilar topilmadi",
+    "searchEmptyPosts": "Postlar topilmadi",
+    "searchEmptySellers": "Sotuvchilar topilmadi",
+    "searchEmptyProducts": "Mahsulotlar topilmadi",
+    "searchEmptyOrders": "Buyurtmalar topilmadi",
+    "searchEmptyStateTitle": "Qidirish",
+    "searchEmptyStateDesc": "Ism, email, mahsulot nomi, SKU yoki buyurtma ID kiriting va Qidirish tugmasini bosing"
   }
 }

@@ -291,6 +291,19 @@
     "adminPhOwnerEmail": "owner@store.com",
     "adminCreateSeller": "Create seller",
     "adminNavSearch": "Search",
-    "adminPageSearch": "Global Search"
+    "adminPageSearch": "Global Search",
+    "searchPlaceholder": "Search by name, email, product title, order ID…",
+    "searchButton": "Search",
+    "searchResultsFor": "results for",
+    "searchSectionUsers": "Users",
+    "searchSectionSellers": "Sellers",
+    "searchSectionProducts": "Products",
+    "searchSectionOrders": "Orders",
+    "searchEmptyUsers": "No users found",
+    "searchEmptySellers": "No sellers found",
+    "searchEmptyProducts": "No products found",
+    "searchEmptyOrders": "No orders found",
+    "searchEmptyStateTitle": "Search anything",
+    "searchEmptyStateDesc": "Type a name, email, product title, SKU or order ID and press Search"
   }
 }

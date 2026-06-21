@@ -291,6 +291,19 @@
     "adminPhOwnerEmail": "owner@store.com",
     "adminCreateSeller": "Сатушы құру",
     "adminNavSearch": "Іздеу",
-    "adminPageSearch": "Жалпы іздеу"
+    "adminPageSearch": "Жалпы іздеу",
+    "searchPlaceholder": "Аты, email, өнім атауы, тапсырыс ID бойынша іздеу…",
+    "searchButton": "Іздеу",
+    "searchResultsFor": "нәтиже",
+    "searchSectionUsers": "Пайдаланушылар",
+    "searchSectionSellers": "Сатушылар",
+    "searchSectionProducts": "Өнімдер",
+    "searchSectionOrders": "Тапсырыстар",
+    "searchEmptyUsers": "Пайдаланушылар табылмады",
+    "searchEmptySellers": "Сатушылар табылмады",
+    "searchEmptyProducts": "Өнімдер табылмады",
+    "searchEmptyOrders": "Тапсырыстар табылмады",
+    "searchEmptyStateTitle": "Іздеу",
+    "searchEmptyStateDesc": "Аты, email, өнім атауы, SKU немесе тапсырыс ID енгізіп, Іздеу түймесін басыңыз"
   }
 }
