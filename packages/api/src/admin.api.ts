@@ -11,6 +11,7 @@ import type {
   MemberListQuery,
   NotificationAdminListItem,
   NotificationListQuery,
+  Order,
   OrderListQuery,
   OrderListRow,
   PaginatedResult,
@@ -18,6 +19,7 @@ import type {
   ProductDocument,
   ProductWithRelations,
   ProductsQueryParams,
+  UpdateOrderStatusBody,
 } from "@repo/types";
 import { apiClient } from "./client";
 
@@ -148,6 +150,17 @@ export async function getAdminOrderList(
   const { data } = await apiClient.get<PaginatedResult<OrderListRow>>(
     "/admin/order/list",
     { params },
+  );
+  return data;
+}
+
+export async function postAdminOrderUpdateStatus(
+  orderId: string,
+  body: UpdateOrderStatusBody,
+): Promise<Order> {
+  const { data } = await apiClient.post<Order>(
+    `/admin/order/update-status/${orderId}`,
+    body,
   );
   return data;
 }

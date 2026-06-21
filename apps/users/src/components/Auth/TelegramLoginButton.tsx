@@ -1,9 +1,19 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
+export interface TelegramUser {
+  id: number;
+  first_name: string;
+  last_name?: string;
+  username?: string;
+  photo_url?: string;
+  auth_date: number;
+  hash: string;
+}
+
 interface TelegramLoginButtonProps {
   botName: string;
-  onAuth: (user: any) => void;
+  onAuth: (user: TelegramUser) => void;
   buttonSize?: "large" | "medium" | "small";
   cornerRadius?: number;
   requestAccess?: string;
@@ -12,7 +22,7 @@ interface TelegramLoginButtonProps {
 
 declare global {
   interface Window {
-    onTelegramAuth: (user: any) => void;
+    onTelegramAuth: (user: TelegramUser) => void;
   }
 }
 
@@ -27,7 +37,7 @@ export const TelegramLoginButton = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    window.onTelegramAuth = (user: any) => {
+    window.onTelegramAuth = (user: TelegramUser) => {
       onAuth(user);
     };
 
@@ -51,7 +61,7 @@ export const TelegramLoginButton = ({
 
     return () => {
       if (containerRef.current) {
-        containerRef.current.innerHTML = "";
+        containerRef.current.replaceChildren();
       }
     };
   }, [botName, onAuth, buttonSize, cornerRadius, requestAccess, usePic]);
