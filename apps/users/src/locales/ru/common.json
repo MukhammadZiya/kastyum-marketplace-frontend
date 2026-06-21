@@ -345,5 +345,17 @@
   "promoSecondaryLeftImageAlt": "Кэжуал пошив",
   "promoSecondaryRightImageAlt": "Вечерний образ",
   "countdownDecorAlt": "Акция",
-  "countdownProductAlt": "Товар из акции"
+  "countdownProductAlt": "Товар из акции",
+  "signInNoAccount": "Нет аккаунта?",
+  "signInSignUpNow": "Зарегистрируйтесь!",
+  "signInOrContinueWith": "Или продолжить через",
+  "signUpName": "Имя",
+  "signUpNamePlaceholder": "Введите ваше имя",
+  "signUpPhone": "Телефон",
+  "signUpPasswordPlaceholder": "Минимум 6 символов",
+  "signUpConfirmPassword": "Подтвердите пароль",
+  "signUpConfirmPasswordPlaceholder": "Повторите пароль",
+  "signUpPasswordMismatch": "Пароли не совпадают",
+  "signUpSubmit": "Создать аккаунт",
+  "signUpOrContinueWith": "Или продолжить через"
 }

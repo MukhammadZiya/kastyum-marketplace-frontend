@@ -344,5 +344,17 @@
   "promoSecondaryLeftImageAlt": "Aqlli casual tikuvchilik",
   "promoSecondaryRightImageAlt": "Kechki rasmiy kiyim",
   "countdownDecorAlt": "Aksiya",
-  "countdownProductAlt": "Tavsiya etilgan mahsulot"
+  "countdownProductAlt": "Tavsiya etilgan mahsulot",
+  "signInNoAccount": "Hisobingiz yo'qmi?",
+  "signInSignUpNow": "Ro'yxatdan o'ting!",
+  "signInOrContinueWith": "Yoki davom eting",
+  "signUpName": "Ism",
+  "signUpNamePlaceholder": "Ismingizni kiriting",
+  "signUpPhone": "Telefon",
+  "signUpPasswordPlaceholder": "Kamida 6 ta belgi",
+  "signUpConfirmPassword": "Parolni tasdiqlang",
+  "signUpConfirmPasswordPlaceholder": "Parolni qaytaring",
+  "signUpPasswordMismatch": "Parollar mos kelmadi",
+  "signUpSubmit": "Ro'yxatdan o'tish",
+  "signUpOrContinueWith": "Yoki davom eting"
 }

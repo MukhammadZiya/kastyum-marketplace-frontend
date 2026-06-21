@@ -88,7 +88,7 @@ export function SignInPage() {
                   <div className="w-full border-t border-neutral-200"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="bg-white px-2 text-neutral-500">Or continue with</span>
+                  <span className="bg-white px-2 text-neutral-500">{t("signInOrContinueWith")}</span>
                 </div>
               </div>
 
@@ -122,10 +122,10 @@ export function SignInPage() {
                   {t("signInOpenSellerSignup")}
                 </button>
               </div>
-              <p className="text-center text-sm">
-                Don&apos;t have an account?
+              <p className="text-center text-sm text-neutral-600">
+                {t("signInNoAccount")}
                 <Link to="/signup" className="pl-2 font-black text-[#BE123C]">
-                  Sign Up Now!
+                  {t("signInSignUpNow")}
                 </Link>
               </p>
             </form>

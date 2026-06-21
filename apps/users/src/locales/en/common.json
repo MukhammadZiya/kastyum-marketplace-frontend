@@ -356,5 +356,17 @@
   "promoSecondaryLeftImageAlt": "Smart casual tailoring",
   "promoSecondaryRightImageAlt": "Evening formal wear",
   "countdownDecorAlt": "Promotion",
-  "countdownProductAlt": "Featured product"
+  "countdownProductAlt": "Featured product",
+  "signInNoAccount": "Don't have an account?",
+  "signInSignUpNow": "Sign Up Now!",
+  "signInOrContinueWith": "Or continue with",
+  "signUpName": "Name",
+  "signUpNamePlaceholder": "Enter your name",
+  "signUpPhone": "Phone",
+  "signUpPasswordPlaceholder": "At least 6 characters",
+  "signUpConfirmPassword": "Confirm password",
+  "signUpConfirmPasswordPlaceholder": "Repeat your password",
+  "signUpPasswordMismatch": "Passwords do not match",
+  "signUpSubmit": "Create account",
+  "signUpOrContinueWith": "Or continue with"
 }

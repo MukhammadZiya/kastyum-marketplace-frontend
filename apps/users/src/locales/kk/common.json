@@ -357,5 +357,17 @@
   "promoSecondaryLeftImageAlt": "Ақылды кездейсоқ тігін",
   "promoSecondaryRightImageAlt": "Кешкі салтанатты киім",
   "countdownDecorAlt": "Науқан",
-  "countdownProductAlt": "Таңдаулы өнім"
+  "countdownProductAlt": "Таңдаулы өнім",
+  "signInNoAccount": "Тіркелгіңіз жоқ па?",
+  "signInSignUpNow": "Тіркеліңіз!",
+  "signInOrContinueWith": "Немесе жалғастыру",
+  "signUpName": "Аты",
+  "signUpNamePlaceholder": "Атыңызды енгізіңіз",
+  "signUpPhone": "Телефон",
+  "signUpPasswordPlaceholder": "Кемінде 6 таңба",
+  "signUpConfirmPassword": "Құпия сөзді растаңыз",
+  "signUpConfirmPasswordPlaceholder": "Құпия сөзді қайталаңыз",
+  "signUpPasswordMismatch": "Құпия сөздер сәйкес келмейді",
+  "signUpSubmit": "Тіркелу",
+  "signUpOrContinueWith": "Немесе жалғастыру"
 }
