@@ -89,28 +89,14 @@ export async function postMemberUpdate(
   body: MemberUpdateBody,
   options?: { profileImage?: File | null },
 ): Promise<MemberAuthResponse> {
+  const fd = new FormData();
+  appendIfDefined(fd, "nick", body.nick);
+  appendIfDefined(fd, "phone", body.phone);
+  appendIfDefined(fd, "password", body.password);
   if (options?.profileImage) {
-    const fd = new FormData();
-    appendIfDefined(fd, "nick", body.nick);
-    appendIfDefined(fd, "phone", body.phone);
-    appendIfDefined(fd, "address", body.address);
-    appendIfDefined(fd, "password", body.password);
     fd.append("image", options.profileImage, options.profileImage.name);
-    const { data } = await apiClient.post<MemberAuthResponse>(
-      "/member/update",
-      fd,
-    );
-    return data;
   }
-
-  const jsonBody = Object.fromEntries(
-    Object.entries({ nick: body.nick, phone: body.phone, password: body.password })
-      .filter(([, v]) => v !== undefined),
-  );
-  const { data } = await apiClient.post<MemberAuthResponse>(
-    "/member/update",
-    jsonBody,
-  );
+  const { data } = await apiClient.post<MemberAuthResponse>("/member/update", fd);
   return data;
 }
 
