@@ -66,8 +66,8 @@ export default function ProductItem({ item }: { item: Product }) {
         ) : null}
         <div className="absolute inset-0 z-0 overflow-hidden">
           {cardImages.length === 0 ? (
-            <div className="flex h-full w-full items-center justify-center p-4 sm:p-5">
-              <img src="/images/logo/logo.svg" alt="" className="h-full w-full object-contain object-center" />
+            <div className="h-full w-full">
+              <img src="/images/logo/logo.svg" alt="" className="h-full w-full object-cover object-center" />
             </div>
           ) : (
             <div
@@ -77,12 +77,12 @@ export default function ProductItem({ item }: { item: Product }) {
               {cardImages.map((src, i) => (
                 <div
                   key={src}
-                  className="flex h-full w-full shrink-0 items-center justify-center p-4 sm:p-5"
+                  className="h-full w-full shrink-0"
                 >
                   <img
                     src={src}
                     alt=""
-                    className="h-full w-full object-contain object-center transition duration-500 ease-out group-hover:scale-[1.025]"
+                    className="h-full w-full object-cover object-center transition duration-500 ease-out group-hover:scale-[1.025]"
                     loading={i === 0 ? "eager" : "lazy"}
                     decoding="async"
                   />
