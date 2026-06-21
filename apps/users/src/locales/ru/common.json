@@ -357,5 +357,9 @@
   "signUpConfirmPasswordPlaceholder": "Повторите пароль",
   "signUpPasswordMismatch": "Пароли не совпадают",
   "signUpSubmit": "Создать аккаунт",
-  "signUpOrContinueWith": "Или продолжить через"
+  "signUpOrContinueWith": "Или продолжить через",
+  "accountChangePassword": "Изменить пароль",
+  "accountCurrentPassword": "Текущий пароль",
+  "accountNewPassword": "Новый пароль",
+  "accountPasswordChanged": "Пароль успешно изменён"
 }

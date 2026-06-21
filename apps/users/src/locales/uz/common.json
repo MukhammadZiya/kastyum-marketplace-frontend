@@ -356,5 +356,9 @@
   "signUpConfirmPasswordPlaceholder": "Parolni qaytaring",
   "signUpPasswordMismatch": "Parollar mos kelmadi",
   "signUpSubmit": "Ro'yxatdan o'tish",
-  "signUpOrContinueWith": "Yoki davom eting"
+  "signUpOrContinueWith": "Yoki davom eting",
+  "accountChangePassword": "Parolni o'zgartirish",
+  "accountCurrentPassword": "Joriy parol",
+  "accountNewPassword": "Yangi parol",
+  "accountPasswordChanged": "Parol muvaffaqiyatli o'zgartirildi"
 }

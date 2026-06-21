@@ -146,10 +146,14 @@ function ProfilePanel() {
 
   const [nick, setNick] = useState("");
   const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState<{ type: "ok" | "err"; text: string } | null>(
-    null,
-  );
+  const [message, setMessage] = useState<{ type: "ok" | "err"; text: string } | null>(null);
+
+  // password change state
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [pwMessage, setPwMessage] = useState<{ type: "ok" | "err"; text: string } | null>(null);
+
   const initialized = useRef(false);
 
   useEffect(() => {
@@ -163,128 +167,123 @@ function ProfilePanel() {
     return (
       <p className="text-neutral-700">
         <Link to="/signin" className="font-black text-[#BE123C]">
-          Sign in
+          {t("common.signIn")}
         </Link>{" "}
         {t("common.profileSignInToEdit")}
       </p>
     );
   }
 
-  if (isPending) {
-    return <p className="text-neutral-600">{t("common.loading")}</p>;
-  }
+  if (isPending) return <p className="text-neutral-600">{t("common.loading")}</p>;
+  if (isError || !me) return <p className="text-red-600">{t("common.sessionCouldNotLoad")}</p>;
 
-  if (isError || !me) {
-    return <p className="text-red-600">{t("common.sessionCouldNotLoad")}</p>;
-  }
-
-  const hasChanges =
+  const inputClass = "w-full rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white";
+  const hasProfileChanges =
     nick.trim() !== (me.nick ?? "").trim() ||
-    phone.trim() !== (me.phone ?? "").trim() ||
-    password.length >= 6;
+    phone.trim() !== (me.phone ?? "").trim();
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-black tracking-tight text-neutral-950">
-        {t("accountTabProfile")}
-      </h2>
-
-      <form
-        className="max-w-lg space-y-4"
-        onSubmit={(e) => {
-          e.preventDefault();
-          setMessage(null);
-          const body: {
-            nick?: string;
-            phone?: string;
-            password?: string;
-          } = {};
-          if (nick.trim()) body.nick = nick.trim();
-          if (phone.trim()) body.phone = phone.trim();
-          if (password.length >= 6) body.password = password;
-
-          update.mutate(
-            { body },
-            {
-              onSuccess: () => {
-                setPassword("");
-                setMessage({ type: "ok", text: t("common.profileUpdated") });
-              },
-              onError: (err) => {
-                setMessage({
-                  type: "err",
-                  text: err instanceof Error ? err.message : "Update failed",
-                });
-              },
-            },
-          );
-        }}
-      >
-        {message ? (
-          <p
-            className={message.type === "ok" ? "text-green-700" : "text-red-600"}
-            role="status"
-          >
-            {message.text}
-          </p>
-        ) : null}
-
-        <div>
-          <label className="mb-1 block text-sm font-medium text-neutral-800">
-            {t("common.email")}
-          </label>
-          <input
-            className="w-full rounded-2xl border border-neutral-200 bg-neutral-100 px-4 py-3 font-semibold text-neutral-600"
-            readOnly
-            value={me.email}
-          />
-        </div>
-
-        <div>
-          <label className="mb-1 block text-sm font-medium text-neutral-800">
-            {t("common.profileNickLabel")}
-          </label>
-          <input
-            className="w-full rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white"
-            value={nick}
-            onChange={(e) => setNick(e.target.value)}
-          />
-        </div>
-
-        <div>
-          <label className="mb-1 block text-sm font-medium text-neutral-800">
-            {t("common.profilePhoneLabel")}
-          </label>
-          <input
-            type="tel"
-            placeholder="+998 90 123 45 67"
-            className="w-full rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-        </div>
-
-        <div>
-          <label className="mb-1 block text-sm font-medium text-neutral-800">
-            {t("common.profilePasswordHint")}
-          </label>
-          <input
-            type="password"
-            className="w-full rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="new-password"
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={update.isPending || !hasChanges}
-          className="rounded-2xl bg-[#E11D48] px-6 py-3 font-black text-white shadow-[0_18px_40px_-22px_rgba(225,29,72,0.7)] transition hover:-translate-y-px hover:bg-[#BE123C] disabled:translate-y-0 disabled:opacity-60"
+    <div className="space-y-10 max-w-lg">
+      {/* Profile info */}
+      <div>
+        <h2 className="mb-6 text-2xl font-black tracking-tight text-neutral-950">
+          {t("accountTabProfile")}
+        </h2>
+        <form
+          className="space-y-4"
+          onSubmit={(e) => {
+            e.preventDefault();
+            setMessage(null);
+            const body: { nick?: string; phone?: string } = {};
+            if (nick.trim()) body.nick = nick.trim();
+            if (phone.trim()) body.phone = phone.trim();
+            update.mutate({ body }, {
+              onSuccess: () => setMessage({ type: "ok", text: t("common.profileUpdated") }),
+              onError: (err) => setMessage({ type: "err", text: err instanceof Error ? err.message : "Update failed" }),
+            });
+          }}
         >
-          {update.isPending ? t("common.profileSaving") : t("common.profileSave")}
-        </button>
-      </form>
+          {message ? (
+            <p className={message.type === "ok" ? "text-green-700" : "text-red-600"} role="status">
+              {message.text}
+            </p>
+          ) : null}
+          <div>
+            <label className="mb-1 block text-sm font-medium text-neutral-800">{t("common.email")}</label>
+            <input className="w-full rounded-2xl border border-neutral-200 bg-neutral-100 px-4 py-3 font-semibold text-neutral-600" readOnly value={me.email} />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-neutral-800">{t("common.profileNickLabel")}</label>
+            <input className={inputClass} value={nick} onChange={(e) => setNick(e.target.value)} />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-neutral-800">{t("common.profilePhoneLabel")}</label>
+            <input type="tel" placeholder="+998 90 123 45 67" className={inputClass} value={phone} onChange={(e) => setPhone(e.target.value)} />
+          </div>
+          <button
+            type="submit"
+            disabled={update.isPending || !hasProfileChanges}
+            className="rounded-2xl bg-[#E11D48] px-6 py-3 font-black text-white shadow-[0_18px_40px_-22px_rgba(225,29,72,0.7)] transition hover:-translate-y-px hover:bg-[#BE123C] disabled:translate-y-0 disabled:opacity-60"
+          >
+            {update.isPending ? t("common.profileSaving") : t("common.profileSave")}
+          </button>
+        </form>
+      </div>
+
+      {/* Change password */}
+      <div className="border-t border-neutral-100 pt-8">
+        <h3 className="mb-6 text-xl font-black tracking-tight text-neutral-950">
+          {t("accountChangePassword")}
+        </h3>
+        <form
+          className="space-y-4"
+          onSubmit={(e) => {
+            e.preventDefault();
+            setPwMessage(null);
+            if (newPassword !== confirmPassword) {
+              setPwMessage({ type: "err", text: t("signUpPasswordMismatch") });
+              return;
+            }
+            update.mutate(
+              { body: { password: newPassword } },
+              {
+                onSuccess: () => {
+                  setCurrentPassword("");
+                  setNewPassword("");
+                  setConfirmPassword("");
+                  setPwMessage({ type: "ok", text: t("accountPasswordChanged") });
+                },
+                onError: (err) => setPwMessage({ type: "err", text: err instanceof Error ? err.message : "Update failed" }),
+              },
+            );
+          }}
+        >
+          {pwMessage ? (
+            <p className={pwMessage.type === "ok" ? "text-green-700" : "text-red-600"} role="status">
+              {pwMessage.text}
+            </p>
+          ) : null}
+          <div>
+            <label className="mb-1 block text-sm font-medium text-neutral-800">{t("accountCurrentPassword")}</label>
+            <input type="password" className={inputClass} value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} autoComplete="current-password" required />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-neutral-800">{t("accountNewPassword")}</label>
+            <input type="password" className={inputClass} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} autoComplete="new-password" required minLength={6} />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-neutral-800">{t("signUpConfirmPassword")}</label>
+            <input type="password" className={inputClass} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} autoComplete="new-password" required />
+          </div>
+          <button
+            type="submit"
+            disabled={update.isPending || !currentPassword || !newPassword || !confirmPassword}
+            className="rounded-2xl bg-[#E11D48] px-6 py-3 font-black text-white shadow-[0_18px_40px_-22px_rgba(225,29,72,0.7)] transition hover:-translate-y-px hover:bg-[#BE123C] disabled:translate-y-0 disabled:opacity-60"
+          >
+            {update.isPending ? t("common.profileSaving") : t("accountChangePassword")}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

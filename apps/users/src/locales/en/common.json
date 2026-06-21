@@ -368,5 +368,9 @@
   "signUpConfirmPasswordPlaceholder": "Repeat your password",
   "signUpPasswordMismatch": "Passwords do not match",
   "signUpSubmit": "Create account",
-  "signUpOrContinueWith": "Or continue with"
+  "signUpOrContinueWith": "Or continue with",
+  "accountChangePassword": "Change password",
+  "accountCurrentPassword": "Current password",
+  "accountNewPassword": "New password",
+  "accountPasswordChanged": "Password changed successfully"
 }

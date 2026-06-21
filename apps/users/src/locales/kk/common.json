@@ -369,5 +369,9 @@
   "signUpConfirmPasswordPlaceholder": "Құпия сөзді қайталаңыз",
   "signUpPasswordMismatch": "Құпия сөздер сәйкес келмейді",
   "signUpSubmit": "Тіркелу",
-  "signUpOrContinueWith": "Немесе жалғастыру"
+  "signUpOrContinueWith": "Немесе жалғастыру",
+  "accountChangePassword": "Құпия сөзді өзгерту",
+  "accountCurrentPassword": "Ағымдағы құпия сөз",
+  "accountNewPassword": "Жаңа құпия сөз",
+  "accountPasswordChanged": "Құпия сөз сәтті өзгертілді"
 }
