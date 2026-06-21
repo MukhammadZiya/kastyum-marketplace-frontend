@@ -215,6 +215,7 @@
   "accountTabAddress": "Address",
   "accountTabOrders": "Orders",
   "accountTabSecurity": "Security",
+  "accountAddressAdd": "Add address",
   "accountAddressLabel": "Address",
   "accountAddressPlaceholder": "Street, city, region",
   "accountYourOrders": "Your orders",

@@ -289,14 +289,22 @@ function ProfilePanel() {
   );
 }
 
-const ADDRESS_KEY = "iberry_user_address";
+const ADDRESS_KEY = "iberry_user_addresses";
+
+function loadAddresses(): string[] {
+  try {
+    return JSON.parse(localStorage.getItem(ADDRESS_KEY) ?? "[]");
+  } catch {
+    return [];
+  }
+}
 
 function AddressPanel() {
   const t = useT();
   const { data: me, isPending, isError } = useMemberMe();
 
-  const [address, setAddress] = useState(() => localStorage.getItem(ADDRESS_KEY) ?? "");
-  const [saved, setSaved] = useState(false);
+  const [addresses, setAddresses] = useState<string[]>(loadAddresses);
+  const [input, setInput] = useState("");
 
   if (!getAuthToken()) {
     return (
@@ -312,44 +320,71 @@ function AddressPanel() {
   if (isPending) return <p className="text-neutral-600">{t("common.loading")}</p>;
   if (isError || !me) return <p className="text-red-600">{t("common.sessionCouldNotLoad")}</p>;
 
-  const stored = localStorage.getItem(ADDRESS_KEY) ?? "";
-  const hasChanges = address.trim() !== stored.trim();
+  function save(updated: string[]) {
+    setAddresses(updated);
+    localStorage.setItem(ADDRESS_KEY, JSON.stringify(updated));
+  }
+
+  function addAddress(e: React.FormEvent) {
+    e.preventDefault();
+    const trimmed = input.trim();
+    if (!trimmed || addresses.includes(trimmed)) return;
+    save([...addresses, trimmed]);
+    setInput("");
+  }
+
+  function removeAddress(idx: number) {
+    save(addresses.filter((_, i) => i !== idx));
+  }
 
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-black tracking-tight text-neutral-950">
         {t("accountTabAddress")}
       </h2>
-      <form
-        className="max-w-lg space-y-4"
-        onSubmit={(e) => {
-          e.preventDefault();
-          localStorage.setItem(ADDRESS_KEY, address.trim());
-          setSaved(true);
-          setTimeout(() => setSaved(false), 3000);
-        }}
-      >
-        {saved ? (
-          <p className="text-green-700" role="status">{t("common.profileUpdated")}</p>
-        ) : null}
+
+      {addresses.length > 0 && (
+        <ul className="max-w-lg space-y-3">
+          {addresses.map((addr, idx) => (
+            <li
+              key={idx}
+              className="flex items-start justify-between gap-3 rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3"
+            >
+              <div className="flex items-start gap-3">
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#E11D48]" strokeWidth={2.2} />
+                <span className="text-sm font-semibold text-neutral-800">{addr}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => removeAddress(idx)}
+                className="shrink-0 text-xs font-black text-neutral-400 hover:text-red-600 transition"
+              >
+                ✕
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <form className="max-w-lg space-y-4" onSubmit={addAddress}>
         <div>
           <label className="mb-1 block text-sm font-medium text-neutral-800">
             {t("accountAddressLabel")}
           </label>
           <textarea
-            rows={3}
+            rows={2}
             placeholder={t("accountAddressPlaceholder")}
             className="w-full rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white resize-none"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
           />
         </div>
         <button
           type="submit"
-          disabled={!hasChanges}
+          disabled={!input.trim()}
           className="rounded-2xl bg-[#E11D48] px-6 py-3 font-black text-white shadow-[0_18px_40px_-22px_rgba(225,29,72,0.7)] transition hover:-translate-y-px hover:bg-[#BE123C] disabled:translate-y-0 disabled:opacity-60"
         >
-          {t("common.profileSave")}
+          {t("accountAddressAdd")}
         </button>
       </form>
     </div>
