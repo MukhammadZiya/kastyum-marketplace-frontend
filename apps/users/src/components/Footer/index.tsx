@@ -52,6 +52,42 @@ export default function Footer() {
                 {t("footerEmailDisplay")}
               </a>
             </div>
+
+            <div className="mt-6 flex items-center gap-3 sm:justify-start">
+              <a
+                href="https://www.instagram.com/iberry_uz/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="group flex h-10 w-10 items-center justify-center rounded-full bg-[#FAFAFA] ring-1 ring-neutral-200 transition duration-200 hover:bg-gradient-to-br hover:from-[#f9ce34] hover:via-[#ee2a7b] hover:to-[#6228d7] hover:ring-0"
+              >
+                <svg className="h-5 w-5 text-neutral-600 transition duration-200 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                  <circle cx="12" cy="12" r="4.5" />
+                  <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                </svg>
+              </a>
+
+              <a
+                href="#"
+                aria-label="Facebook"
+                className="group flex h-10 w-10 items-center justify-center rounded-full bg-[#FAFAFA] ring-1 ring-neutral-200 transition duration-200 hover:bg-[#1877F2] hover:ring-0"
+              >
+                <svg className="h-5 w-5 text-neutral-600 transition duration-200 group-hover:text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                </svg>
+              </a>
+
+              <a
+                href="#"
+                aria-label="Telegram"
+                className="group flex h-10 w-10 items-center justify-center rounded-full bg-[#FAFAFA] ring-1 ring-neutral-200 transition duration-200 hover:bg-[#26A5E4] hover:ring-0"
+              >
+                <svg className="h-5 w-5 text-neutral-600 transition duration-200 group-hover:text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M21.93 3.24a1.5 1.5 0 0 0-1.54-.21L2.87 10.2a1.5 1.5 0 0 0 .09 2.78l3.77 1.26 1.55 4.9a1 1 0 0 0 1.7.4l2.23-2.27 3.91 2.87a1.5 1.5 0 0 0 2.34-1l2.5-14a1.5 1.5 0 0 0-.03-.9ZM10.5 15.5l-.9 2.7-1.1-3.5 8.5-6.8-6.5 7.6Z" />
+                </svg>
+              </a>
+            </div>
           </div>
 
           <div>
