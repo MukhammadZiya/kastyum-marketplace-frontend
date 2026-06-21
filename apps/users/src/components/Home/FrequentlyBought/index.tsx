@@ -1,31 +1,39 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { TrendingUp } from "lucide-react";
-import { shopData } from "../../../data/shopData";
-import { useProductHomeShowcase } from "../../../hooks/products";
+import { useProductHomeShowcase, useProductList } from "../../../hooks/products";
 import { apiProductToStorefront } from "../../../lib/apiProductToStorefront";
 import { useT } from "../../../i18n";
 import ProductItem from "../NewArrivals/ProductItem";
 
-/** Product order so the grid differs from New Arrivals while reusing the same catalog & images. */
-const FREQUENTLY_BOUGHT_ORDER = [6, 7, 4, 1, 3, 8, 2, 5] as const;
+const SKELETON_COUNT = 5;
+
+function ProductSkeleton() {
+  return (
+    <div className="animate-pulse">
+      <div className="mb-3 aspect-[3/4] rounded-2xl bg-neutral-100" />
+      <div className="mb-1.5 h-3 w-2/3 rounded bg-neutral-100" />
+      <div className="h-4 w-1/2 rounded bg-neutral-100" />
+    </div>
+  );
+}
 
 export default function FrequentlyBought() {
   const t = useT();
-  const { data: showcase } = useProductHomeShowcase();
+  const { data: showcase, isPending: showcasePending } = useProductHomeShowcase();
+  const { data: listData, isPending: listPending } = useProductList({ page: 1, limit: 8 });
+
+  const isPending = showcasePending || listPending;
 
   const items = useMemo(() => {
+    if (!showcase && !listData) return [];
     if (showcase?.mostPurchased?.length) {
       return showcase.mostPurchased.map((slot) =>
-        apiProductToStorefront(slot.product, {
-          customPreviewPath: slot.customImage,
-        }),
+        apiProductToStorefront(slot.product, { customPreviewPath: slot.customImage }),
       );
     }
-    return FREQUENTLY_BOUGHT_ORDER.map((id) =>
-      shopData.find((p) => p.id === id),
-    ).filter((p): p is NonNullable<typeof p> => p != null);
-  }, [showcase]);
+    return (listData?.list ?? []).map((p) => apiProductToStorefront(p)).slice(0, 8);
+  }, [showcase, listData]);
 
   return (
     <section className="overflow-hidden pt-12 sm:pt-16">
@@ -50,12 +58,16 @@ export default function FrequentlyBought() {
         </div>
 
         <div className="grid grid-cols-2 gap-x-2 gap-y-5 sm:gap-x-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-5">
-          {items.map((item) => (
-            <ProductItem
-              item={item}
-              key={`frequent-${item.mongoId ?? String(item.id)}`}
-            />
-          ))}
+          {isPending
+            ? Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+                <ProductSkeleton key={i} />
+              ))
+            : items.map((item) => (
+                <ProductItem
+                  item={item}
+                  key={`frequent-${item.mongoId ?? String(item.id)}`}
+                />
+              ))}
         </div>
       </div>
     </section>

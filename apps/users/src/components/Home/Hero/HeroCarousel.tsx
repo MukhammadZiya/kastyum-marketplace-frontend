@@ -18,7 +18,7 @@ export default function HeroCarousel() {
   const [swiperRef, setSwiperRef] = useState<SwiperType | null>(null);
 
   return (
-    <div className="trending-hero-carousel group relative overflow-hidden rounded-[1.35rem] shadow-[0_24px_80px_-44px_rgba(17,24,39,0.75)] ring-1 ring-black/5">
+    <div className="trending-hero-carousel group relative overflow-hidden rounded-[1.35rem] shadow-[0_24px_80px_-44px_rgba(17,24,39,0.75)] ring-1 ring-black/5 min-h-[340px] sm:min-h-[380px] md:min-h-[420px] lg:min-h-[440px]">
       <Swiper
         modules={[Autoplay, Navigation]}
         spaceBetween={0}

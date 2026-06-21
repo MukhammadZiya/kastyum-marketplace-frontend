@@ -1,18 +1,31 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { shopData } from "../../../data/shopData";
 import { useProductHomeShowcase, useProductList } from "../../../hooks/products";
 import { apiProductToStorefront } from "../../../lib/apiProductToStorefront";
 import { useT } from "../../../i18n";
 import ProductItem from "./ProductItem";
 
+const SKELETON_COUNT = 5;
+
+function ProductSkeleton() {
+  return (
+    <div className="animate-pulse">
+      <div className="mb-3 aspect-[3/4] rounded-2xl bg-neutral-100" />
+      <div className="mb-1.5 h-3 w-2/3 rounded bg-neutral-100" />
+      <div className="h-4 w-1/2 rounded bg-neutral-100" />
+    </div>
+  );
+}
+
 export default function NewArrivals() {
   const t = useT();
-  const { data: showcase } = useProductHomeShowcase();
-  const { data, isPending } = useProductList({ page: 1, limit: 8 });
-  const hasListItems = Boolean(data?.list?.length);
+  const { data: showcase, isPending: showcasePending } = useProductHomeShowcase();
+  const { data, isPending: listPending } = useProductList({ page: 1, limit: 8 });
+
+  const isPending = showcasePending || listPending;
 
   const items = useMemo(() => {
+    if (!data && !showcase) return [];
     const showcaseItems = (showcase?.newArrivals ?? []).map((slot) =>
       apiProductToStorefront(slot.product, { customPreviewPath: slot.customImage }),
     );
@@ -20,8 +33,7 @@ export default function NewArrivals() {
     const listItems = (data?.list ?? [])
       .filter((p) => !showcaseIds.has(p._id))
       .map((p) => apiProductToStorefront(p));
-    const merged = [...showcaseItems, ...listItems].slice(0, 8);
-    return merged.length ? merged : shopData.slice(0, 8);
+    return [...showcaseItems, ...listItems].slice(0, 8);
   }, [data, showcase]);
 
   return (
@@ -64,17 +76,17 @@ export default function NewArrivals() {
           </Link>
         </div>
 
-        {isPending && !hasListItems ? (
-          <p className="text-sm text-neutral-600 py-8">{t("common.loadingProducts")}</p>
-        ) : null}
-
         <div className="grid grid-cols-2 gap-x-2 gap-y-5 sm:gap-x-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-5">
-          {items.map((item) => (
-            <ProductItem
-              item={item}
-              key={item.mongoId ?? String(item.id)}
-            />
-          ))}
+          {isPending
+            ? Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+                <ProductSkeleton key={i} />
+              ))
+            : items.map((item) => (
+                <ProductItem
+                  item={item}
+                  key={item.mongoId ?? String(item.id)}
+                />
+              ))}
         </div>
       </div>
     </section>
