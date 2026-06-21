@@ -243,6 +243,10 @@ function PasswordPanel() {
 
   const inputClass = "w-full rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white";
 
+  const passwordsTyped = newPassword.length > 0 && confirmPassword.length > 0;
+  const passwordsMatch = newPassword === confirmPassword;
+  const canSubmit = !update.isPending && currentPassword.length > 0 && newPassword.length >= 6 && passwordsMatch;
+
   return (
     <div className="max-w-lg">
       <h2 className="mb-6 text-2xl font-black tracking-tight text-neutral-950">
@@ -253,10 +257,6 @@ function PasswordPanel() {
         onSubmit={(e) => {
           e.preventDefault();
           setPwMessage(null);
-          if (newPassword !== confirmPassword) {
-            setPwMessage({ type: "err", text: t("signUpPasswordMismatch") });
-            return;
-          }
           update.mutate(
             { body: { password: newPassword } },
             {
@@ -266,7 +266,18 @@ function PasswordPanel() {
                 setConfirmPassword("");
                 setPwMessage({ type: "ok", text: t("accountPasswordChanged") });
               },
-              onError: (err) => setPwMessage({ type: "err", text: err instanceof Error ? err.message : "Update failed" }),
+              onError: (err) => {
+                const msg = err instanceof Error ? err.message : "Update failed";
+                const isWrongPassword =
+                  msg.toLowerCase().includes("password") ||
+                  msg.toLowerCase().includes("incorrect") ||
+                  msg.toLowerCase().includes("unauthorized") ||
+                  msg.includes("401");
+                setPwMessage({
+                  type: "err",
+                  text: isWrongPassword ? t("accountCurrentPasswordWrong") : msg,
+                });
+              },
             },
           );
         }}
@@ -276,21 +287,56 @@ function PasswordPanel() {
             {pwMessage.text}
           </p>
         ) : null}
+
         <div>
           <label className="mb-1 block text-sm font-medium text-neutral-800">{t("accountCurrentPassword")}</label>
-          <input type="password" className={inputClass} value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} autoComplete="current-password" required />
+          <input
+            type="password"
+            className={inputClass}
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+            autoComplete="current-password"
+            required
+          />
         </div>
+
         <div>
           <label className="mb-1 block text-sm font-medium text-neutral-800">{t("accountNewPassword")}</label>
-          <input type="password" className={inputClass} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} autoComplete="new-password" required minLength={6} />
+          <input
+            type="password"
+            className={inputClass}
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            autoComplete="new-password"
+            required
+            minLength={6}
+          />
+          {newPassword.length > 0 && newPassword.length < 6 && (
+            <p className="mt-1 text-xs text-amber-600">{t("signUpPasswordPlaceholder")}</p>
+          )}
         </div>
+
         <div>
           <label className="mb-1 block text-sm font-medium text-neutral-800">{t("signUpConfirmPassword")}</label>
-          <input type="password" className={inputClass} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} autoComplete="new-password" required />
+          <input
+            type="password"
+            className={`${inputClass} ${passwordsTyped ? (passwordsMatch ? "border-green-400 focus:border-green-500" : "border-red-400 focus:border-red-500") : ""}`}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            autoComplete="new-password"
+            required
+          />
+          {passwordsTyped && !passwordsMatch && (
+            <p className="mt-1 text-xs text-red-600">{t("signUpPasswordMismatch")}</p>
+          )}
+          {passwordsTyped && passwordsMatch && (
+            <p className="mt-1 text-xs text-green-600">✓ {t("accountPasswordsMatch")}</p>
+          )}
         </div>
+
         <button
           type="submit"
-          disabled={update.isPending || !currentPassword || !newPassword || !confirmPassword}
+          disabled={!canSubmit}
           className="rounded-2xl bg-[#E11D48] px-6 py-3 font-black text-white shadow-[0_18px_40px_-22px_rgba(225,29,72,0.7)] transition hover:-translate-y-px hover:bg-[#BE123C] disabled:translate-y-0 disabled:opacity-60"
         >
           {update.isPending ? t("common.profileSaving") : t("accountChangePassword")}

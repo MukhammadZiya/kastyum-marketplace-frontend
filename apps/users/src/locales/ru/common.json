@@ -361,5 +361,7 @@
   "accountChangePassword": "Изменить пароль",
   "accountCurrentPassword": "Текущий пароль",
   "accountNewPassword": "Новый пароль",
-  "accountPasswordChanged": "Пароль успешно изменён"
+  "accountPasswordChanged": "Пароль успешно изменён",
+  "accountCurrentPasswordWrong": "Текущий пароль неверен",
+  "accountPasswordsMatch": "Пароли совпадают"
 }

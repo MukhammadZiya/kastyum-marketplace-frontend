@@ -373,5 +373,7 @@
   "accountChangePassword": "Құпия сөзді өзгерту",
   "accountCurrentPassword": "Ағымдағы құпия сөз",
   "accountNewPassword": "Жаңа құпия сөз",
-  "accountPasswordChanged": "Құпия сөз сәтті өзгертілді"
+  "accountPasswordChanged": "Құпия сөз сәтті өзгертілді",
+  "accountCurrentPasswordWrong": "Ағымдағы құпия сөз қате",
+  "accountPasswordsMatch": "Құпия сөздер сәйкес келді"
 }

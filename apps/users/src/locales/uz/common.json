@@ -360,5 +360,7 @@
   "accountChangePassword": "Parolni o'zgartirish",
   "accountCurrentPassword": "Joriy parol",
   "accountNewPassword": "Yangi parol",
-  "accountPasswordChanged": "Parol muvaffaqiyatli o'zgartirildi"
+  "accountPasswordChanged": "Parol muvaffaqiyatli o'zgartirildi",
+  "accountCurrentPasswordWrong": "Joriy parol noto'g'ri",
+  "accountPasswordsMatch": "Parollar mos keldi"
 }
