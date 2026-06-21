@@ -74,9 +74,11 @@ export async function postProductUpdateStatus(
   id: string,
   status: ProductStatus,
 ): Promise<ProductDocument> {
+  const fd = new FormData();
+  fd.append("status", status);
   const { data } = await apiClient.post<ProductDocument>(
-    `/product/update-status/${id}`,
-    { status },
+    `/product/update/${id}`,
+    fd,
   );
   return data;
 }
