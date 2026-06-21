@@ -289,20 +289,14 @@ function ProfilePanel() {
   );
 }
 
+const ADDRESS_KEY = "iberry_user_address";
+
 function AddressPanel() {
   const t = useT();
   const { data: me, isPending, isError } = useMemberMe();
-  const update = useMemberUpdate();
 
-  const [address, setAddress] = useState("");
-  const [message, setMessage] = useState<{ type: "ok" | "err"; text: string } | null>(null);
-  const initialized = useRef(false);
-
-  useEffect(() => {
-    if (!me || initialized.current) return;
-    setAddress(me.address ?? "");
-    initialized.current = true;
-  }, [me]);
+  const [address, setAddress] = useState(() => localStorage.getItem(ADDRESS_KEY) ?? "");
+  const [saved, setSaved] = useState(false);
 
   if (!getAuthToken()) {
     return (
@@ -318,7 +312,8 @@ function AddressPanel() {
   if (isPending) return <p className="text-neutral-600">{t("common.loading")}</p>;
   if (isError || !me) return <p className="text-red-600">{t("common.sessionCouldNotLoad")}</p>;
 
-  const hasChanges = address.trim() !== (me.address ?? "").trim();
+  const stored = localStorage.getItem(ADDRESS_KEY) ?? "";
+  const hasChanges = address.trim() !== stored.trim();
 
   return (
     <div className="space-y-6">
@@ -329,23 +324,13 @@ function AddressPanel() {
         className="max-w-lg space-y-4"
         onSubmit={(e) => {
           e.preventDefault();
-          setMessage(null);
-          update.mutate(
-            { body: { address: address.trim() } },
-            {
-              onSuccess: () => setMessage({ type: "ok", text: t("common.profileUpdated") }),
-              onError: (err) => setMessage({
-                type: "err",
-                text: err instanceof Error ? err.message : "Update failed",
-              }),
-            },
-          );
+          localStorage.setItem(ADDRESS_KEY, address.trim());
+          setSaved(true);
+          setTimeout(() => setSaved(false), 3000);
         }}
       >
-        {message ? (
-          <p className={message.type === "ok" ? "text-green-700" : "text-red-600"} role="status">
-            {message.text}
-          </p>
+        {saved ? (
+          <p className="text-green-700" role="status">{t("common.profileUpdated")}</p>
         ) : null}
         <div>
           <label className="mb-1 block text-sm font-medium text-neutral-800">
@@ -361,10 +346,10 @@ function AddressPanel() {
         </div>
         <button
           type="submit"
-          disabled={update.isPending || !hasChanges}
+          disabled={!hasChanges}
           className="rounded-2xl bg-[#E11D48] px-6 py-3 font-black text-white shadow-[0_18px_40px_-22px_rgba(225,29,72,0.7)] transition hover:-translate-y-px hover:bg-[#BE123C] disabled:translate-y-0 disabled:opacity-60"
         >
-          {update.isPending ? t("common.profileSaving") : t("common.profileSave")}
+          {t("common.profileSave")}
         </button>
       </form>
     </div>
