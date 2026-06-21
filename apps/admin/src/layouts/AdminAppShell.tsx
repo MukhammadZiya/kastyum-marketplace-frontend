@@ -27,9 +27,7 @@ function AdminBrand() {
   const t = useT();
   return (
     <div className="flex items-center gap-3">
-      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#E11D48] text-sm font-black text-white shadow-sm shadow-[#E11D48]/20">
-        iB
-      </div>
+      <img src="/logo.png" alt="iBerry" className="h-10 w-auto object-contain" />
       <div>
         <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">
           {t("common.adminBrandName")}

@@ -87,9 +87,7 @@ export function AdminLoginPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-[#f6f6f7] px-4 py-12">
       <div className="mb-8 flex items-center gap-3">
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#E11D48] text-base font-black text-white shadow-sm shadow-[#E11D48]/20">
-          iB
-        </div>
+        <img src="/logo.png" alt="iBerry" className="h-14 w-auto object-contain" />
         <div>
           <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">
             {t("common.adminBrandName")}

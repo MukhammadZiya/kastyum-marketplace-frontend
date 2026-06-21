@@ -9,9 +9,7 @@ export function SellerSidebarHeader() {
   const t = useT();
   return (
     <div className="flex items-center gap-3">
-      <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#E11D48] text-sm font-black text-white shadow-[0_16px_30px_-18px_rgba(225,29,72,0.9)]">
-        iB
-      </div>
+      <img src="/logo.png" alt="iBerry" className="h-10 w-auto object-contain" />
       <div>
         <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-400">
           iBerry

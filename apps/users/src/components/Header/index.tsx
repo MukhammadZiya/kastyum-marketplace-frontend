@@ -81,12 +81,7 @@ const Header = () => {
             to="/"
             aria-label="iBerry home"
           >
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E11D48] text-xl font-black tracking-tight text-white shadow-[0_16px_30px_-18px_rgba(225,29,72,0.9)] lg:h-14 lg:w-14 lg:text-2xl">
-              iB
-            </span>
-            <span className="text-[30px] font-black tracking-tight text-[#111827] lg:text-[34px]">
-              iBerry
-            </span>
+            <img src="/logo.png" alt="iBerry" className="h-14 w-auto object-contain lg:h-16" />
           </Link>
 
           <nav className="hidden items-center gap-10 text-[17px] font-black text-neutral-950 lg:flex">
