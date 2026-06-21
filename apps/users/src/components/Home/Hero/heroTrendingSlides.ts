@@ -20,6 +20,10 @@ const EYEBROW_KEYS = [
   "homeHeroEyebrowHotWeek",
 ] as const;
 
+const HERO_IMAGE_OVERRIDES: Record<number, string> = {
+  3: "/images/images/IMG_4-3-main.JPG.webp",
+};
+
 /** Pick products for the home hero; labels alternate between trending / new. */
 export function getHeroTrendingSlides(t: TranslateFn): HeroTrendingSlide[] {
   return shopData.slice(0, 5).map((p, i) => {
@@ -36,7 +40,7 @@ export function getHeroTrendingSlides(t: TranslateFn): HeroTrendingSlide[] {
         "{amount}",
         `$${p.discountedPrice.toFixed(0)}`,
       ),
-      image: p.imgs.previews[0] ?? "",
+      image: HERO_IMAGE_OVERRIDES[p.id] ?? p.imgs.previews[0] ?? "",
       imageAlt: p.title,
     };
   });
