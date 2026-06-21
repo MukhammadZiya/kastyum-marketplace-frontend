@@ -103,9 +103,13 @@ export async function postMemberUpdate(
     return data;
   }
 
+  const jsonBody = Object.fromEntries(
+    Object.entries({ nick: body.nick, phone: body.phone, password: body.password })
+      .filter(([, v]) => v !== undefined),
+  );
   const { data } = await apiClient.post<MemberAuthResponse>(
     "/member/update",
-    body,
+    jsonBody,
   );
   return data;
 }
