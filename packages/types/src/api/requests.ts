@@ -37,6 +37,7 @@ export type TelegramLoginData = {
 export type MemberUpdateBody = {
   nick?: string;
   phone?: string;
+  address?: string;
   image?: string;
   password?: string;
 };

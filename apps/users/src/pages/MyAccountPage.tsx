@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -6,7 +6,6 @@ import {
   CreditCard,
   LogOut,
   MapPin,
-  ShieldCheck,
   UserRound,
 } from "lucide-react";
 import Breadcrumb from "../components/Common/Breadcrumb";
@@ -17,13 +16,12 @@ import { getAuthToken } from "@repo/api";
 import { useT } from "../i18n";
 import { clearMarketplaceSession } from "../user-auth";
 
-const tabs = ["Profile", "Address", "Orders", "Security"] as const;
+const tabs = ["Profile", "Address", "Orders"] as const;
 
 const tabIcons = {
   Profile: UserRound,
   Address: MapPin,
   Orders: ClipboardList,
-  Security: ShieldCheck,
 } as const;
 
 function accountTabLabel(tab: (typeof tabs)[number], t: ReturnType<typeof useT>) {
@@ -34,8 +32,6 @@ function accountTabLabel(tab: (typeof tabs)[number], t: ReturnType<typeof useT>)
       return t("accountTabAddress");
     case "Orders":
       return t("accountTabOrders");
-    case "Security":
-      return t("accountTabSecurity");
   }
 }
 
@@ -154,11 +150,13 @@ function ProfilePanel() {
   const [message, setMessage] = useState<{ type: "ok" | "err"; text: string } | null>(
     null,
   );
+  const initialized = useRef(false);
 
   useEffect(() => {
-    if (!me) return;
+    if (!me || initialized.current) return;
     setNick(me.nick ?? "");
     setPhone(me.phone ?? "");
+    initialized.current = true;
   }, [me]);
 
   if (!getAuthToken()) {
@@ -258,6 +256,8 @@ function ProfilePanel() {
             {t("common.profilePhoneLabel")}
           </label>
           <input
+            type="tel"
+            placeholder="+998 90 123 45 67"
             className="w-full rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
@@ -289,6 +289,88 @@ function ProfilePanel() {
   );
 }
 
+function AddressPanel() {
+  const t = useT();
+  const { data: me, isPending, isError } = useMemberMe();
+  const update = useMemberUpdate();
+
+  const [address, setAddress] = useState("");
+  const [message, setMessage] = useState<{ type: "ok" | "err"; text: string } | null>(null);
+  const initialized = useRef(false);
+
+  useEffect(() => {
+    if (!me || initialized.current) return;
+    setAddress(me.address ?? "");
+    initialized.current = true;
+  }, [me]);
+
+  if (!getAuthToken()) {
+    return (
+      <p className="text-neutral-700">
+        <Link to="/signin" className="font-black text-[#BE123C]">
+          {t("common.signIn")}
+        </Link>{" "}
+        {t("common.profileSignInToEdit")}
+      </p>
+    );
+  }
+
+  if (isPending) return <p className="text-neutral-600">{t("common.loading")}</p>;
+  if (isError || !me) return <p className="text-red-600">{t("common.sessionCouldNotLoad")}</p>;
+
+  const hasChanges = address.trim() !== (me.address ?? "").trim();
+
+  return (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-black tracking-tight text-neutral-950">
+        {t("accountTabAddress")}
+      </h2>
+      <form
+        className="max-w-lg space-y-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          setMessage(null);
+          update.mutate(
+            { body: { address: address.trim() } },
+            {
+              onSuccess: () => setMessage({ type: "ok", text: t("common.profileUpdated") }),
+              onError: (err) => setMessage({
+                type: "err",
+                text: err instanceof Error ? err.message : "Update failed",
+              }),
+            },
+          );
+        }}
+      >
+        {message ? (
+          <p className={message.type === "ok" ? "text-green-700" : "text-red-600"} role="status">
+            {message.text}
+          </p>
+        ) : null}
+        <div>
+          <label className="mb-1 block text-sm font-medium text-neutral-800">
+            {t("accountAddressLabel")}
+          </label>
+          <textarea
+            rows={3}
+            placeholder={t("accountAddressPlaceholder")}
+            className="w-full rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white resize-none"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={update.isPending || !hasChanges}
+          className="rounded-2xl bg-[#E11D48] px-6 py-3 font-black text-white shadow-[0_18px_40px_-22px_rgba(225,29,72,0.7)] transition hover:-translate-y-px hover:bg-[#BE123C] disabled:translate-y-0 disabled:opacity-60"
+        >
+          {update.isPending ? t("common.profileSaving") : t("common.profileSave")}
+        </button>
+      </form>
+    </div>
+  );
+}
+
 export function MyAccountPage() {
   const t = useT();
   const navigate = useNavigate();
@@ -305,20 +387,11 @@ export function MyAccountPage() {
         <div className="mx-auto grid max-w-[1280px] gap-10 px-4 sm:px-8 lg:grid-cols-[minmax(0,1fr)_320px] xl:px-0">
           <div className="min-h-[520px] rounded-[2px] bg-white p-0 sm:p-2">
             {activeTab === "Profile" && <ProfilePanel />}
-            {activeTab === "Address" && (
-              <div className="rounded-xl bg-white p-6 shadow-[0_24px_80px_-70px_rgba(15,23,42,0.75)]">
-                <p className="text-neutral-700">{t("accountAddressPlaceholder")}</p>
-              </div>
-            )}
+            {activeTab === "Address" && <AddressPanel />}
             {activeTab === "Orders" && (
               <div className="space-y-4">
                 <h2 className="text-3xl font-black tracking-tight text-neutral-950">{t("accountYourOrders")}</h2>
                 <OrdersPanel />
-              </div>
-            )}
-            {activeTab === "Security" && (
-              <div className="rounded-xl bg-white p-6 shadow-[0_24px_80px_-70px_rgba(15,23,42,0.75)]">
-                <p className="text-neutral-700">{t("accountSecurityPlaceholder")}</p>
               </div>
             )}
           </div>

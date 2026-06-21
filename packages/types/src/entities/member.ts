@@ -5,6 +5,7 @@ export type Member = {
   nick: string;
   email: string;
   phone?: string;
+  address?: string;
   image?: string;
   type: MemberType;
   status: MemberStatus;

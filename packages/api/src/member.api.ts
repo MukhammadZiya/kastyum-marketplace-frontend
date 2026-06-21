@@ -93,6 +93,7 @@ export async function postMemberUpdate(
     const fd = new FormData();
     appendIfDefined(fd, "nick", body.nick);
     appendIfDefined(fd, "phone", body.phone);
+    appendIfDefined(fd, "address", body.address);
     appendIfDefined(fd, "password", body.password);
     fd.append("image", options.profileImage, options.profileImage.name);
     const { data } = await apiClient.post<MemberAuthResponse>(
