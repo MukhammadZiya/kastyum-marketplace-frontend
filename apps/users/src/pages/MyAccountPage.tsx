@@ -87,7 +87,7 @@ function OrdersPanel() {
         <Link to="/signin" className="font-black text-[#BE123C]">
           {t("common.signIn")}
         </Link>{" "}
-        to see your orders.
+        {t("ordersSignInToView")}
       </p>
     );
   }
@@ -105,7 +105,7 @@ function OrdersPanel() {
   }
 
   if (!data?.list.length) {
-    return <p className="text-neutral-700">You have no orders yet.</p>;
+    return <p className="text-neutral-700">{t("ordersEmpty")}</p>;
   }
 
   return (
@@ -118,7 +118,7 @@ function OrdersPanel() {
               ${o.totalAmount.toFixed(2)}
             </span>
           </div>
-          <p className="mt-1 text-sm text-neutral-600">Seller: {o.sellerId.nick}</p>
+          <p className="mt-1 text-sm text-neutral-600">{t("ordersSeller")}: {o.sellerId.nick}</p>
           <p className="mt-1 text-xs text-neutral-500">
             {o.createdAt ? new Date(o.createdAt).toLocaleString() : ""}
           </p>
