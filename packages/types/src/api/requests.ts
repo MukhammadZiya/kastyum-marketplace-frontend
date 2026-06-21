@@ -83,7 +83,7 @@ export type ProductsQueryParams = {
 export type CreateProductBody = {
   title: string;
   description: string;
-  modelNumber: string;
+  modelNumber?: string;
   audience: TargetAudience;
   storeTypes?: string[];
   departmentCategory?: string;

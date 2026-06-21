@@ -8,6 +8,7 @@ import type {
   ProductReviewEligibility,
   ProductReviewListResponse,
   ProductSellerListItem,
+  ProductStatus,
   ProductWithRelations,
   ProductsQueryParams,
 } from "@repo/types";
@@ -69,6 +70,17 @@ export async function postProductReview(
   return data;
 }
 
+export async function postProductUpdateStatus(
+  id: string,
+  status: ProductStatus,
+): Promise<ProductDocument> {
+  const { data } = await apiClient.post<ProductDocument>(
+    `/product/update-status/${id}`,
+    { status },
+  );
+  return data;
+}
+
 export async function getSellerProductList(
   params?: ProductsQueryParams,
 ): Promise<PaginatedResult<ProductSellerListItem>> {
@@ -90,7 +102,9 @@ export async function postProductCreate(
   const fd = new FormData();
   fd.append("title", body.title);
   fd.append("description", body.description);
-  fd.append("modelNumber", body.modelNumber);
+  if (body.modelNumber?.trim()) {
+    fd.append("modelNumber", body.modelNumber.trim());
+  }
   fd.append("audience", body.audience);
   fd.append("price", String(body.price));
   fd.append("stockCount", String(body.stockCount));

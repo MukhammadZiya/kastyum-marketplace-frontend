@@ -89,7 +89,6 @@ export function SellerProductsPage() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [modelNumber, setModelNumber] = useState("");
   const [audience, setAudience] = useState<TargetAudience>("MEN");
   const [price, setPrice] = useState("");
   const [listPrice, setListPrice] = useState("");
@@ -171,7 +170,6 @@ export function SellerProductsPage() {
   function resetForm() {
     setTitle("");
     setDescription("");
-    setModelNumber("");
     setAudience("MEN");
     setPrice("");
     setListPrice("");
@@ -300,7 +298,7 @@ export function SellerProductsPage() {
       setFormError(t("common.sellerProductAttrLoadError"));
       return;
     }
-    if (!title.trim() || !description.trim() || !modelNumber.trim()) {
+    if (!title.trim() || !description.trim()) {
       setFormError(t("common.sellerProductErrorBasics"));
       return;
     }
@@ -346,7 +344,6 @@ export function SellerProductsPage() {
     const body: CreateProductBody = {
       title: title.trim(),
       description: description.trim(),
-      modelNumber: modelNumber.trim(),
       audience,
       price: priceNum,
       listPrice:
@@ -490,15 +487,6 @@ export function SellerProductsPage() {
                     className={inputClass}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="lg:col-span-2">
-                  <label className={labelClass}>{t("common.sellerProductFormSku")}</label>
-                  <input
-                    className={`${inputClass} max-w-md`}
-                    value={modelNumber}
-                    onChange={(e) => setModelNumber(e.target.value)}
                     required
                   />
                 </div>

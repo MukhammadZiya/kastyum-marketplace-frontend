@@ -11,20 +11,17 @@ export default function NewArrivals() {
   const { data: showcase } = useProductHomeShowcase();
   const { data, isPending } = useProductList({ page: 1, limit: 8 });
   const hasListItems = Boolean(data?.list?.length);
-  const hasShowcaseItems = Boolean(showcase?.newArrivals?.length);
 
   const items = useMemo(() => {
-    if (showcase?.newArrivals?.length) {
-      return showcase.newArrivals.map((slot) =>
-        apiProductToStorefront(slot.product, {
-          customPreviewPath: slot.customImage,
-        }),
-      );
-    }
-    if (data?.list?.length) {
-      return data.list.map((p) => apiProductToStorefront(p));
-    }
-    return shopData.slice(0, 8);
+    const showcaseItems = (showcase?.newArrivals ?? []).map((slot) =>
+      apiProductToStorefront(slot.product, { customPreviewPath: slot.customImage }),
+    );
+    const showcaseIds = new Set(showcaseItems.map((i) => i.mongoId).filter(Boolean));
+    const listItems = (data?.list ?? [])
+      .filter((p) => !showcaseIds.has(p._id))
+      .map((p) => apiProductToStorefront(p));
+    const merged = [...showcaseItems, ...listItems].slice(0, 8);
+    return merged.length ? merged : shopData.slice(0, 8);
   }, [data, showcase]);
 
   return (
@@ -67,7 +64,7 @@ export default function NewArrivals() {
           </Link>
         </div>
 
-        {isPending && !hasListItems && !hasShowcaseItems ? (
+        {isPending && !hasListItems ? (
           <p className="text-sm text-neutral-600 py-8">{t("common.loadingProducts")}</p>
         ) : null}
 

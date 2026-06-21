@@ -1,14 +1,16 @@
 import { useMemo } from "react";
-import type { ProductSellerListItem } from "@repo/types";
+import type { ProductSellerListItem, ProductStatus } from "@repo/types";
 import { getAuthToken } from "@repo/api";
 import { Card } from "@repo/ui";
 import { SellerPageFrame } from "../../components/seller/SellerPageFrame";
 import { SellerTableScaffold } from "../../components/seller/SellerTableScaffold";
 import { SELLER_PAGE_COPY_KEYS } from "../../constants/sellerNavigation";
-import { useSellerProductList } from "../../hooks/seller-products";
+import { useSellerProductList, useSellerProductUpdateStatus } from "../../hooks/seller-products";
 import { useT } from "../../i18n";
 
 const copy = SELLER_PAGE_COPY_KEYS.inventoryPage;
+
+const productStatuses: ProductStatus[] = ["ACTIVE", "INACTIVE"];
 
 export function SellerInventoryPage() {
   const t = useT();
@@ -17,6 +19,7 @@ export function SellerInventoryPage() {
     page: 1,
     limit: 50,
   });
+  const updateStatus = useSellerProductUpdateStatus();
 
   const columns = useMemo(
     () => [
@@ -57,15 +60,22 @@ export function SellerInventoryPage() {
           </td>
           <td className="px-4 py-4 tabular-nums">{p.soldCount ?? 0}</td>
           <td className="px-4 py-4">
-            <span
-              className={`inline-flex rounded-full px-3 py-1 text-xs font-black ${
-                p.status === "ACTIVE" ?
-                  "bg-[#FFF1F2] text-[#BE123C]"
-                : "bg-slate-100 text-slate-500"
+            <select
+              value={p.status}
+              disabled={updateStatus.isPending}
+              onChange={(e) =>
+                updateStatus.mutate({ id: p._id, status: e.target.value as ProductStatus })
+              }
+              className={`cursor-pointer rounded-full border-0 px-3 py-1 text-xs font-black outline-none ring-1 transition focus:ring-2 ${
+                p.status === "ACTIVE"
+                  ? "bg-[#FFF1F2] text-[#BE123C] ring-[#FECDD3] focus:ring-[#BE123C]"
+                  : "bg-slate-100 text-slate-500 ring-slate-200 focus:ring-slate-400"
               }`}
             >
-              {p.status}
-            </span>
+              {productStatuses.map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
           </td>
           <td className="px-4 py-4 text-slate-600">
             {p.updatedAt
