@@ -288,8 +288,8 @@
     "adminLabelOwnerEmail": "Email владельца",
     "adminPhStoreName": "Northwind Goods",
     "adminPhOwnerEmail": "owner@store.com",
-    "adminCreateSeller": "Создать продавца"
-  },
-  "adminNavSearch": "Poisk",
-  "adminPageSearch": "Globalnyy poisk"
+    "adminCreateSeller": "Создать продавца",
+    "adminNavSearch": "Поиск",
+    "adminPageSearch": "Глобальный поиск"
+  }
 }

@@ -289,8 +289,8 @@
     "adminLabelOwnerEmail": "Иесінің электрондық поштасы",
     "adminPhStoreName": "Солтүстік жел тауарлары",
     "adminPhOwnerEmail": "owner@store.com",
-    "adminCreateSeller": "Сатушы құру"
-  },
-  "adminNavSearch": "Izdeu",
-  "adminPageSearch": "Zhalpy izdeu"
+    "adminCreateSeller": "Сатушы құру",
+    "adminNavSearch": "Іздеу",
+    "adminPageSearch": "Жалпы іздеу"
+  }
 }

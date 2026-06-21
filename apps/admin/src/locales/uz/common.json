@@ -288,8 +288,8 @@
     "adminLabelOwnerEmail": "Egasi email",
     "adminPhStoreName": "Northwind Goods",
     "adminPhOwnerEmail": "owner@store.com",
-    "adminCreateSeller": "Sotuvchi yaratish"
-  },
-  "adminNavSearch": "Qidiruv",
-  "adminPageSearch": "Umumiy qidiruv"
+    "adminCreateSeller": "Sotuvchi yaratish",
+    "adminNavSearch": "Qidiruv",
+    "adminPageSearch": "Umumiy qidiruv"
+  }
 }
