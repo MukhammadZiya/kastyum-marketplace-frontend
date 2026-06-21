@@ -7,6 +7,7 @@ import { ProductCreatePage } from "./modules/products/ProductCreatePage";
 import { ProductsListPage } from "./modules/products/ProductsListPage";
 import { SellersListPage } from "./modules/sellers/SellersListPage";
 import { UsersListPage } from "./modules/users/UsersListPage";
+import { GlobalSearchPage } from "./modules/search/GlobalSearchPage";
 
 type AppProps = {
   basename?: string;
@@ -37,6 +38,7 @@ function App({ basename }: AppProps = {}) {
               <Route index element={<Navigate to="/orders/list" replace />} />
               <Route path="list" element={<OrdersListPage />} />
             </Route>
+            <Route path="search" element={<GlobalSearchPage />} />
             <Route path="*" element={<Navigate to="/users/list" replace />} />
           </Route>
         </Route>

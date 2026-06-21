@@ -289,5 +289,7 @@
     "adminPhStoreName": "Northwind Goods",
     "adminPhOwnerEmail": "owner@store.com",
     "adminCreateSeller": "Sotuvchi yaratish"
-  }
+  },
+  "adminNavSearch": "Qidiruv",
+  "adminPageSearch": "Umumiy qidiruv"
 }

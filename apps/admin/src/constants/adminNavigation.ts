@@ -1,4 +1,4 @@
-export type AdminNavId = "users" | "sellers" | "products" | "orders";
+export type AdminNavId = "users" | "sellers" | "products" | "orders" | "search";
 
 export type AdminNavItem = {
   id: AdminNavId;
@@ -11,6 +11,7 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
   { id: "sellers", labelKey: "common.adminNavSellers", path: "/sellers/list" },
   { id: "products", labelKey: "common.adminNavProducts", path: "/products" },
   { id: "orders", labelKey: "common.adminNavOrders", path: "/orders/list" },
+  { id: "search", labelKey: "common.adminNavSearch", path: "/search" },
 ];
 
 export const ADMIN_PAGE_TITLE_KEYS: Record<AdminNavId, string> = {
@@ -18,4 +19,5 @@ export const ADMIN_PAGE_TITLE_KEYS: Record<AdminNavId, string> = {
   sellers: "common.adminPageSellers",
   products: "common.adminPageProducts",
   orders: "common.adminPageOrders",
+  search: "common.adminPageSearch",
 };

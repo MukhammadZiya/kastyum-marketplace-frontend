@@ -290,5 +290,7 @@
     "adminPhStoreName": "Northwind Goods",
     "adminPhOwnerEmail": "owner@store.com",
     "adminCreateSeller": "Create seller"
-  }
+  },
+  "adminNavSearch": "Search",
+  "adminPageSearch": "Global Search"
 }
