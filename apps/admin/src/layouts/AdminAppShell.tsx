@@ -28,14 +28,9 @@ function AdminBrand() {
   return (
     <div className="flex items-center gap-3">
       <img src="/logo.png" alt="iBerry" className="h-10 w-auto object-contain" />
-      <div>
-        <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">
-          {t("common.adminBrandName")}
-        </p>
-        <p className="text-sm font-black text-slate-950">
-          {t("common.adminBrandTitle")}
-        </p>
-      </div>
+      <span className="text-xl font-black tracking-tight text-slate-900">
+        {t("common.adminBrandTitle")}
+      </span>
     </div>
   );
 }
