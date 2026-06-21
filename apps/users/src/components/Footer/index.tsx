@@ -32,12 +32,7 @@ export default function Footer() {
         <div className="grid gap-10 py-12 lg:grid-cols-[1.25fr_0.8fr_0.8fr_1fr] lg:py-16">
           <div>
             <Link to="/" className="inline-flex items-center gap-3">
-              <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#E11D48] text-2xl font-black text-white">
-                iB
-              </span>
-              <span className="text-3xl font-black tracking-tight text-neutral-950">
-                iBerry
-              </span>
+              <img src="/logo.png" alt="iBerry" className="h-14 w-auto object-contain" />
             </Link>
             <p className="mt-5 max-w-sm text-sm leading-6 text-neutral-600">
               {t("footerLead")}
