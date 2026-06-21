@@ -1,27 +1,18 @@
 import { useMemo } from "react";
 import { TableCard } from "@repo/ui";
-import type { ProductAdminListItem } from "@repo/types";
+import type { ProductAdminListItem, ProductStatus } from "@repo/types";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
 import { DataTablePlaceholder } from "../../components/DataTablePlaceholder";
+import { ProductStatusSelect } from "../../components/ProductStatusSelect";
 import { ADMIN_PAGE_TITLE_KEYS } from "../../constants/adminNavigation";
 import {
   useAdminProductDelete,
   useAdminProductList,
+  useAdminProductUpdate,
 } from "../../hooks/admin-products";
 import { getAuthToken } from "@repo/api";
 import { getAdminListEmptyMessage } from "../../lib/adminListEmptyMessage";
 import { useT } from "../../i18n";
-
-function statusClass(status: string) {
-  const normalized = status.toUpperCase();
-  if (normalized === "ACTIVE") {
-    return "bg-[#FFF1F2] text-[#BE123C]";
-  }
-  if (normalized === "DELETE" || normalized === "DELETED") {
-    return "bg-red-50 text-red-700";
-  }
-  return "bg-slate-100 text-slate-600";
-}
 
 export function ProductsListPage() {
   const t = useT();
@@ -31,6 +22,7 @@ export function ProductsListPage() {
     limit: 50,
   });
   const deleteProduct = useAdminProductDelete();
+  const updateProduct = useAdminProductUpdate();
 
   const emptyMessage = getAdminListEmptyMessage({
     signedIn,
@@ -66,11 +58,11 @@ export function ProductsListPage() {
             {p.sellerId.nick}
           </td>
           <td className="px-4 py-3">
-            <span
-              className={`inline-flex rounded-full px-2.5 py-1 text-xs font-black ${statusClass(p.status)}`}
-            >
-              {p.status}
-            </span>
+            <ProductStatusSelect
+              value={p.status as ProductStatus}
+              disabled={updateProduct.isPending}
+              onChange={(status) => updateProduct.mutate({ id: p._id, status })}
+            />
           </td>
           <td className="px-4 py-3 text-slate-600">
             {p.updatedAt ? new Date(p.updatedAt).toLocaleDateString() : "—"}

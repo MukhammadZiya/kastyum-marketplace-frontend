@@ -7,8 +7,8 @@ export type AdminNavItem = {
 };
 
 export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
-  { id: "users", labelKey: "common.adminNavUsers", path: "/users" },
-  { id: "sellers", labelKey: "common.adminNavSellers", path: "/sellers" },
+  { id: "users", labelKey: "common.adminNavUsers", path: "/users/list" },
+  { id: "sellers", labelKey: "common.adminNavSellers", path: "/sellers/list" },
   { id: "products", labelKey: "common.adminNavProducts", path: "/products" },
   { id: "orders", labelKey: "common.adminNavOrders", path: "/orders/list" },
 ];

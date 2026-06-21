@@ -6,5 +6,4 @@ export type AdminSubNavSpec = {
 
 export const USERS_SUBNAV_SPECS: readonly AdminSubNavSpec[] = [
   { to: "/users/list", labelKey: "common.adminUsersSubAll", end: true },
-  { to: "/users/new", labelKey: "common.adminUsersSubAdd" },
 ];

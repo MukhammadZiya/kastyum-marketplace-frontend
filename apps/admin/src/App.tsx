@@ -5,9 +5,7 @@ import { AdminLoginPage } from "./modules/auth/AdminLoginPage";
 import { OrdersListPage } from "./modules/orders/OrdersListPage";
 import { ProductCreatePage } from "./modules/products/ProductCreatePage";
 import { ProductsListPage } from "./modules/products/ProductsListPage";
-import { SellerCreatePage } from "./modules/sellers/SellerCreatePage";
 import { SellersListPage } from "./modules/sellers/SellersListPage";
-import { UserCreatePage } from "./modules/users/UserCreatePage";
 import { UsersListPage } from "./modules/users/UsersListPage";
 
 type AppProps = {
@@ -25,12 +23,10 @@ function App({ basename }: AppProps = {}) {
             <Route path="users" element={<Outlet />}>
               <Route index element={<Navigate to="/users/list" replace />} />
               <Route path="list" element={<UsersListPage />} />
-              <Route path="new" element={<UserCreatePage />} />
             </Route>
             <Route path="sellers" element={<Outlet />}>
               <Route index element={<Navigate to="/sellers/list" replace />} />
               <Route path="list" element={<SellersListPage />} />
-              <Route path="new" element={<SellerCreatePage />} />
             </Route>
             <Route path="products" element={<Outlet />}>
               <Route index element={<Navigate to="/products/list" replace />} />

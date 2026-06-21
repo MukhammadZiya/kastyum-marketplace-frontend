@@ -4,15 +4,11 @@ import {
   type AdminNavId,
 } from "../constants/adminNavigation";
 import { PRODUCTS_SUBNAV_SPECS } from "../modules/products/productsNav";
-import { SELLERS_SUBNAV_SPECS } from "../modules/sellers/sellersNav";
-import { USERS_SUBNAV_SPECS } from "../modules/users/usersNav";
 import type { TranslateFn } from "../i18n/types";
 
 const SUB_SPECS: Partial<
   Record<AdminNavId, readonly { to: string; labelKey: string; end?: boolean }[]>
 > = {
-  users: USERS_SUBNAV_SPECS,
-  sellers: SELLERS_SUBNAV_SPECS,
   products: PRODUCTS_SUBNAV_SPECS,
 };
 

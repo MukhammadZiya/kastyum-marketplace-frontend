@@ -1,32 +1,19 @@
 import { useMemo } from "react";
 import { TableCard } from "@repo/ui";
-import type { OrderListRow } from "@repo/types";
+import type { OrderListRow, OrderStatus } from "@repo/types";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
 import { DataTablePlaceholder } from "../../components/DataTablePlaceholder";
+import { OrderStatusSelect } from "../../components/OrderStatusSelect";
 import { ADMIN_PAGE_TITLE_KEYS } from "../../constants/adminNavigation";
-import { useAdminOrderList } from "../../hooks/admin-orders";
+import { useAdminOrderList, useAdminOrderUpdate } from "../../hooks/admin-orders";
 import { getAuthToken } from "@repo/api";
 import { getAdminListEmptyMessage } from "../../lib/adminListEmptyMessage";
 import { useT } from "../../i18n";
 
-function statusClass(status: string) {
-  const normalized = status.toUpperCase();
-  if (
-    normalized === "PAID" ||
-    normalized === "SHIPPED" ||
-    normalized === "DELIVERED"
-  ) {
-    return "bg-[#FFF1F2] text-[#BE123C]";
-  }
-  if (normalized === "CANCELLED" || normalized === "REFUNDED") {
-    return "bg-red-50 text-red-700";
-  }
-  return "bg-slate-100 text-slate-600";
-}
-
 export function OrdersListPage() {
   const t = useT();
   const signedIn = !!getAuthToken();
+  const updateOrder = useAdminOrderUpdate();
   const { data, isPending, isError, error } = useAdminOrderList({
     page: 1,
     limit: 50,
@@ -75,11 +62,11 @@ export function OrdersListPage() {
             ${o.totalAmount.toFixed(2)}
           </td>
           <td className="px-4 py-3">
-            <span
-              className={`inline-flex rounded-full px-2.5 py-1 text-xs font-black ${statusClass(o.status)}`}
-            >
-              {o.status}
-            </span>
+            <OrderStatusSelect
+              value={o.status as OrderStatus}
+              disabled={updateOrder.isPending}
+              onChange={(status) => updateOrder.mutate({ id: o._id, status })}
+            />
           </td>
           <td className="px-4 py-3 text-slate-600">
             {o.createdAt ? new Date(o.createdAt).toLocaleString() : "—"}
