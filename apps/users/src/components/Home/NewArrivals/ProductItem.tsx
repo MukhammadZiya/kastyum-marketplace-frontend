@@ -33,7 +33,6 @@ export default function ProductItem({ item }: { item: Product }) {
   }, [item.imgs.previews, item.imgs.thumbnails]);
   const hasCarousel = cardImages.length > 1;
   const safeImageIndex = cardImages.length ? imageIndex % cardImages.length : 0;
-  const currentImage = cardImages[safeImageIndex] || "/images/logo/logo.svg";
 
   const changeImage = (delta: number, event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -65,14 +64,32 @@ export default function ProductItem({ item }: { item: Product }) {
             {t("common.new")}
           </span>
         ) : null}
-        <div className="absolute inset-0 z-0 flex items-center justify-center p-4 sm:p-5">
-          <img
-            src={currentImage}
-            alt=""
-            className="h-full w-full object-contain object-center transition duration-500 ease-out group-hover:scale-[1.025]"
-            loading="lazy"
-            decoding="async"
-          />
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          {cardImages.length === 0 ? (
+            <div className="flex h-full w-full items-center justify-center p-4 sm:p-5">
+              <img src="/images/logo/logo.svg" alt="" className="h-full w-full object-contain object-center" />
+            </div>
+          ) : (
+            <div
+              className="flex h-full transition-transform duration-300 ease-out"
+              style={{ transform: `translateX(-${safeImageIndex * 100}%)` }}
+            >
+              {cardImages.map((src, i) => (
+                <div
+                  key={src}
+                  className="flex h-full w-full shrink-0 items-center justify-center p-4 sm:p-5"
+                >
+                  <img
+                    src={src}
+                    alt=""
+                    className="h-full w-full object-contain object-center transition duration-500 ease-out group-hover:scale-[1.025]"
+                    loading={i === 0 ? "eager" : "lazy"}
+                    decoding="async"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {hasCarousel ? (
