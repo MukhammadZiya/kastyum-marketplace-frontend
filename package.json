@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "pnpm --filter @repo/standard dev",
     "dev:split": "turbo run dev --filter=@repo/users --filter=@repo/sellers --filter=@repo/admin",
-    "build": "pnpm --filter @repo/standard build",
+    "build": "pnpm --filter @repo/users build && pnpm --filter @repo/sellers build && pnpm --filter @repo/admin build",
     "build:all": "turbo run build",
     "lint": "pnpm --filter @repo/standard lint",
     "lint:all": "turbo run lint"
