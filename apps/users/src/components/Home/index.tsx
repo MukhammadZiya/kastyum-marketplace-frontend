@@ -5,9 +5,9 @@ import FrequentlyBought from "./FrequentlyBought";
 export default function Home() {
   return (
     <main>
-      <Hero />
-      <NewArrivals />
-      <FrequentlyBought />
+      <div className="home-section-animate"><Hero /></div>
+      <div className="home-section-animate"><NewArrivals /></div>
+      <div className="home-section-animate"><FrequentlyBought /></div>
     </main>
   );
 }

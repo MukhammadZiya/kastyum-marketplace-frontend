@@ -53,3 +53,22 @@
   opacity: 0.35;
   pointer-events: none;
 }
+
+/* Reserve carousel height before Swiper JS initialises — prevents layout shift */
+.trending-hero-carousel {
+  min-height: 340px;
+}
+@media (min-width: 640px)  { .trending-hero-carousel { min-height: 380px; } }
+@media (min-width: 768px)  { .trending-hero-carousel { min-height: 420px; } }
+@media (min-width: 1024px) { .trending-hero-carousel { min-height: 440px; } }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+.home-section-animate {
+  animation: fadeInUp 0.5s ease both;
+}
+.home-section-animate:nth-child(1) { animation-delay: 0s;    }
+.home-section-animate:nth-child(2) { animation-delay: 0.08s; }
+.home-section-animate:nth-child(3) { animation-delay: 0.16s; }
