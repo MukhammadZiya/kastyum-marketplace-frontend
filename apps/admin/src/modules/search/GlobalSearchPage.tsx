@@ -85,18 +85,32 @@ export function GlobalSearchPage() {
     queryKey: ["admin", "search", "members", submitted],
     queryFn: () => getAdminMemberList({ search: submitted, limit: 20 }),
     enabled,
+    retry: false,
   });
 
   const { data: productsData, isPending: productsPending } = useQuery({
     queryKey: ["admin", "search", "products", submitted],
-    queryFn: () => getAdminProductList({ q: submitted, limit: 20 }),
+    queryFn: () => getAdminProductList({ limit: 100 }),
     enabled,
+    retry: false,
+    select: (data) => {
+      const q = submitted.toLowerCase();
+      return {
+        ...data,
+        list: data.list.filter(
+          (p: ProductAdminListItem) =>
+            p.title.toLowerCase().includes(q) ||
+            p.modelNumber?.toLowerCase().includes(q),
+        ),
+      };
+    },
   });
 
   const { data: ordersData, isPending: ordersPending } = useQuery({
     queryKey: ["admin", "search", "orders", submitted],
     queryFn: () => getAdminOrderList({ limit: 100 }),
     enabled,
+    retry: false,
     select: (data) => {
       const q = submitted.toLowerCase();
       return {
