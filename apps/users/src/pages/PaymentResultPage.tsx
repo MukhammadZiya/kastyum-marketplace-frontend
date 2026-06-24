@@ -26,7 +26,7 @@ export function PaymentResultPage() {
   const handleRetry = () => {
     if (!orderId) return;
     setRetryError("");
-    preparePayment.mutate(orderId, {
+    preparePayment.mutate({ orderId }, {
       onSuccess: (res) => {
         window.location.href = res.octo_pay_url;
       },

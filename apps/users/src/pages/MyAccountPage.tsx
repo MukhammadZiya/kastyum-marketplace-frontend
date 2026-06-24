@@ -56,7 +56,7 @@ function PayNowButton({ orderId }: { orderId: string }) {
         disabled={preparePayment.isPending}
         onClick={() => {
           setError("");
-          preparePayment.mutate(orderId, {
+          preparePayment.mutate({ orderId }, {
             onSuccess: (res) => {
               window.location.href = res.octo_pay_url;
             },
