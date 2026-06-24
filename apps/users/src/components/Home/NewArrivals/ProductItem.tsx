@@ -1,5 +1,5 @@
 import { useMemo, useState, type MouseEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Heart, ShoppingCart } from "lucide-react";
 import type { Product } from "../../../types/product";
 import { useCart } from "../../../context/cart";
@@ -18,6 +18,7 @@ function productDetailPath(item: Product) {
 export default function ProductItem({ item }: { item: Product }) {
   const t = useT();
   const [imageIndex, setImageIndex] = useState(0);
+  const navigate = useNavigate();
   const { addItem } = useCart();
   const { addItem: addWishlistItem } = useWishlist();
   const detailTo = productDetailPath(item);
@@ -131,10 +132,16 @@ export default function ProductItem({ item }: { item: Product }) {
           }`}
         >
           <button
-            onClick={() => addItem({ ...item, quantity: 1 })}
+            onClick={() => {
+              if (item.hasSizes || item.hasColors) {
+                navigate(detailTo);
+              } else {
+                addItem({ ...item, quantity: 1 });
+              }
+            }}
             className="pointer-events-auto inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#E11D48] text-white shadow-[0_18px_34px_-18px_rgba(225,29,72,0.85)] transition duration-200 ease-out hover:-translate-y-px hover:bg-[#BE123C] active:translate-y-0"
             type="button"
-            aria-label={t("common.addToCart")}
+            aria-label={item.hasSizes || item.hasColors ? t("productSelectOptions") : t("common.addToCart")}
           >
             <ShoppingCart className="h-5 w-5" strokeWidth={2.25} />
           </button>

@@ -23,6 +23,8 @@ export type StorefrontProduct = {
   price: number;
   discountedPrice: number;
   imgs: ProductImages;
+  hasSizes?: boolean;
+  hasColors?: boolean;
 };
 
 export type Product = StorefrontProduct;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useQuickViewModal } from "../../context/quickViewModal";
 import { useCart } from "../../context/cart";
 import { getReviewStats } from "../../data/productReviews";
@@ -9,6 +9,7 @@ import { useT } from "../../i18n";
 
 export default function QuickViewModal() {
   const t = useT();
+  const navigate = useNavigate();
   const { isOpen, close, product } = useQuickViewModal();
   const { addItem } = useCart();
   const [quantity, setQuantity] = useState(1);
@@ -175,13 +176,19 @@ export default function QuickViewModal() {
               <div className="flex flex-wrap items-center gap-4">
                 <button
                   onClick={() => {
-                    addItem({ ...product, quantity });
-                    close();
+                    if (product.hasSizes || product.hasColors) {
+                      const id = product.mongoId ?? String(product.id);
+                      navigate(`/shop-details?id=${encodeURIComponent(id)}`);
+                      close();
+                    } else {
+                      addItem({ ...product, quantity });
+                      close();
+                    }
                   }}
                   className="inline-flex rounded-md bg-[#E11D48] px-7 py-3 font-medium text-white shadow-sm transition duration-200 ease-out hover:-translate-y-px hover:bg-[#BE123C] hover:shadow-md active:translate-y-0 active:shadow-sm"
                   type="button"
                 >
-                  {t("common.addToCart")}
+                  {product.hasSizes || product.hasColors ? t("productSelectOptions") : t("common.addToCart")}
                 </button>
                 <button
                   className="inline-flex items-center gap-2 font-medium text-white bg-neutral-900 py-3 px-6 rounded-md ease-out duration-200 hover:bg-opacity-95"

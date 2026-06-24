@@ -53,5 +53,7 @@ export function apiProductToStorefront(
     price: listPrice,
     discountedPrice: salePrice,
     imgs,
+    hasSizes: Array.isArray(p.sizes) && p.sizes.length > 0,
+    hasColors: Array.isArray(p.colors) && p.colors.length > 0,
   };
 }

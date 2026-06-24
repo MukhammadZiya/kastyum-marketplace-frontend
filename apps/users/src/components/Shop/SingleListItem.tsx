@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { Product } from "../../types/product";
 import { useCart } from "../../context/cart";
 import { useT } from "../../i18n";
@@ -13,6 +13,7 @@ function detailQuery(item: Product) {
 
 export default function SingleListItem({ item }: { item: Product }) {
   const t = useT();
+  const navigate = useNavigate();
   const { addItem } = useCart();
   const q = detailQuery(item);
   const displayTitle = productDisplayTitle(item, t);
@@ -44,11 +45,17 @@ export default function SingleListItem({ item }: { item: Product }) {
         </div>
         <div className="mt-4 flex gap-3">
           <button
-            onClick={() => addItem({ ...item, quantity: 1 })}
+            onClick={() => {
+              if (item.hasSizes || item.hasColors) {
+                navigate(`/shop-details?id=${q}`);
+              } else {
+                addItem({ ...item, quantity: 1 });
+              }
+            }}
             className="rounded-lg bg-[#E11D48] px-4 py-2 text-sm font-black text-white shadow-sm transition duration-200 ease-out hover:-translate-y-px hover:bg-[#BE123C] hover:shadow-md active:translate-y-0 active:shadow-sm"
             type="button"
           >
-            {t("common.addToCart")}
+            {item.hasSizes || item.hasColors ? t("productSelectOptions") : t("common.addToCart")}
           </button>
         </div>
       </div>
