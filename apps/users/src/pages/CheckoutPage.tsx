@@ -14,6 +14,7 @@ export function CheckoutPage() {
   const createOrder = useCreateOrder();
   const preparePayment = usePreparePayment();
   const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
   const [formError, setFormError] = useState("");
 
   const lineItems = items
@@ -48,7 +49,7 @@ export function CheckoutPage() {
                   <input className="rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white" placeholder={t("common.firstName")} />
                   <input className="rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white" placeholder={t("common.lastName")} />
                   <input className="rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white" placeholder={t("common.email")} />
-                  <input className="rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white" placeholder={t("common.phone")} />
+                  <input className="rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white" placeholder={t("common.phone")} value={phone} onChange={(e) => setPhone(e.target.value)} />
                   <input
                     className="rounded-2xl border border-neutral-200 bg-[#FAFAFA] px-4 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white sm:col-span-2"
                     placeholder={t("common.accountTabAddress")}
@@ -158,7 +159,7 @@ export function CheckoutPage() {
                     {
                       onSuccess: (order) => {
                         clear();
-                        preparePayment.mutate(order._id, {
+                        preparePayment.mutate({ orderId: order._id, phone: phone.trim() || undefined }, {
                           onSuccess: (res) => {
                             window.location.href = res.octo_pay_url;
                           },

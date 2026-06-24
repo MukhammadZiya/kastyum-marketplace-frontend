@@ -2,11 +2,11 @@ import type { OctoPrepareResponse, PaymentStatusResponse } from "@repo/types";
 import { apiClient } from "./client";
 
 export async function postOctoPreparePayment(
-  orderId: string,
+  params: { orderId: string; phone?: string },
 ): Promise<OctoPrepareResponse> {
   const { data } = await apiClient.post<OctoPrepareResponse>(
     "/payments/octo/prepare",
-    { orderId },
+    { orderId: params.orderId, ...(params.phone ? { phone: params.phone } : {}) },
   );
   return data;
 }
