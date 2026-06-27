@@ -5,7 +5,6 @@ import { SellerSignInPage } from "./modules/auth/SellerSignInPage";
 import { SellerSignUpPage } from "./modules/auth/SellerSignUpPage";
 import { SellerOrdersPage } from "./modules/orders/SellerOrdersPage";
 import { SellerInventoryPage } from "./modules/products/SellerInventoryPage";
-import { SellerProductsPage } from "./modules/products/SellerProductsPage";
 
 type AppProps = {
   basename?: string;
@@ -19,10 +18,10 @@ function App({ basename }: AppProps = {}) {
         <Route path="/signup" element={<SellerSignUpPage />} />
         <Route element={<RequireSellerAuth />}>
           <Route path="/" element={<SellerAppShell />}>
-            <Route index element={<SellerProductsPage />} />
+            <Route index element={<Navigate to="/inventory" replace />} />
             <Route path="inventory" element={<SellerInventoryPage />} />
             <Route path="orders" element={<SellerOrdersPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<Navigate to="/inventory" replace />} />
           </Route>
         </Route>
       </Routes>
