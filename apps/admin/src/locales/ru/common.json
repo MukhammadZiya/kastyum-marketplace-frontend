@@ -171,6 +171,7 @@
     "adminColJoined": "Регистрация",
     "adminColTitle": "Название",
     "adminColSku": "Артикул",
+    "adminColCategory": "Категория",
     "adminColSeller": "Продавец",
     "adminColUpdated": "Обновлён",
     "adminColOrder": "Заказ",
@@ -303,6 +304,23 @@
     "searchEmptyProducts": "Товары не найдены",
     "searchEmptyOrders": "Заказы не найдены",
     "searchEmptyStateTitle": "Поиск",
-    "searchEmptyStateDesc": "Введите имя, email, название товара, SKU или ID заказа и нажмите Найти"
+    "searchEmptyStateDesc": "Введите имя, email, название товара, SKU или ID заказа и нажмите Найти",
+    "adminNavCategories": "Категории",
+    "adminPageCategories": "Категории",
+    "adminCategoriesSubAll": "Все категории",
+    "adminCategoriesTitle": "Категории",
+    "adminCategoriesAddon": "Управляйте глобальным списком категорий. Продавцы выбирают одну категорию для каждого товара. Добавлять и удалять категории могут только администраторы.",
+    "adminCategoryAddTitle": "Добавить категорию",
+    "adminCategoryAddDesc": "Введите название категории на узбекском или на общепринятом языке каталога.",
+    "adminCategoryName": "Название категории",
+    "adminCategoryNamePh": "например Электроника, Одежда, Обувь…",
+    "adminCategoryNameRequired": "Введите название категории.",
+    "adminCategoryAddError": "Не удалось добавить категорию. Возможно, такое название уже существует.",
+    "adminCategoryAdd": "Добавить",
+    "adminCategoryAdding": "Добавляем…",
+    "adminCategoryListTitle": "Существующие категории",
+    "adminCategoryEmpty": "Категорий пока нет. Добавьте первую.",
+    "adminCategoryLoadError": "Не удалось загрузить категории.",
+    "adminCategoryDelete": "Удалить категорию"
   }
 }

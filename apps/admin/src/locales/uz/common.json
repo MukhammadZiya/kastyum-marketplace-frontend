@@ -171,6 +171,7 @@
     "adminColJoined": "Qoʻshilgan",
     "adminColTitle": "Sarlavha",
     "adminColSku": "SKU",
+    "adminColCategory": "Kategoriya",
     "adminColSeller": "Sotuvchi",
     "adminColUpdated": "Yangilangan",
     "adminColOrder": "Buyurtma",
@@ -304,6 +305,23 @@
     "searchEmptyProducts": "Mahsulotlar topilmadi",
     "searchEmptyOrders": "Buyurtmalar topilmadi",
     "searchEmptyStateTitle": "Qidirish",
-    "searchEmptyStateDesc": "Ism, email, mahsulot nomi, SKU yoki buyurtma ID kiriting va Qidirish tugmasini bosing"
+    "searchEmptyStateDesc": "Ism, email, mahsulot nomi, SKU yoki buyurtma ID kiriting va Qidirish tugmasini bosing",
+    "adminNavCategories": "Kategoriyalar",
+    "adminPageCategories": "Kategoriyalar",
+    "adminCategoriesSubAll": "Barcha kategoriyalar",
+    "adminCategoriesTitle": "Kategoriyalar",
+    "adminCategoriesAddon": "Global kategoriya ro'yxatini boshqaring. Sotuvchilar har bir mahsulot uchun bitta kategoriya tanlaydi. Faqat adminlar kategoriya qo'shishi yoki o'chirishi mumkin.",
+    "adminCategoryAddTitle": "Kategoriya qo'shish",
+    "adminCategoryAddDesc": "Kategoriya nomini o'zbek tilida yoki katalogingizda ishlatiladigan umumiy nomda kiriting.",
+    "adminCategoryName": "Kategoriya nomi",
+    "adminCategoryNamePh": "masalan Elektronika, Kiyimlar, Poyabzal…",
+    "adminCategoryNameRequired": "Kategoriya nomini kiriting.",
+    "adminCategoryAddError": "Bu kategoriyani qo'shib bo'lmadi. Nom allaqachon mavjud bo'lishi mumkin.",
+    "adminCategoryAdd": "Qo'shish",
+    "adminCategoryAdding": "Qo'shilmoqda…",
+    "adminCategoryListTitle": "Mavjud kategoriyalar",
+    "adminCategoryEmpty": "Hali kategoriyalar yo'q. Birinchisini qo'shing.",
+    "adminCategoryLoadError": "Kategoriyalarni yuklab bo'lmadi.",
+    "adminCategoryDelete": "Kategoriyani o'chirish"
   }
 }

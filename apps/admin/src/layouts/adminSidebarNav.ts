@@ -3,6 +3,7 @@ import {
   ADMIN_NAV_ITEMS,
   type AdminNavId,
 } from "../constants/adminNavigation";
+import { CATEGORIES_SUBNAV_SPECS } from "../modules/categories/categoriesNav";
 import { PRODUCTS_SUBNAV_SPECS } from "../modules/products/productsNav";
 import type { TranslateFn } from "../i18n/types";
 
@@ -10,6 +11,7 @@ const SUB_SPECS: Partial<
   Record<AdminNavId, readonly { to: string; labelKey: string; end?: boolean }[]>
 > = {
   products: PRODUCTS_SUBNAV_SPECS,
+  categories: CATEGORIES_SUBNAV_SPECS,
 };
 
 export function buildAdminSidebarItems(t: TranslateFn): SidebarNavItem[] {

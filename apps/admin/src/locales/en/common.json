@@ -172,6 +172,7 @@
     "adminColJoined": "Joined",
     "adminColTitle": "Title",
     "adminColSku": "SKU",
+    "adminColCategory": "Category",
     "adminColSeller": "Seller",
     "adminColUpdated": "Updated",
     "adminColOrder": "Order",
@@ -304,6 +305,23 @@
     "searchEmptyProducts": "No products found",
     "searchEmptyOrders": "No orders found",
     "searchEmptyStateTitle": "Search anything",
-    "searchEmptyStateDesc": "Type a name, email, product title, SKU or order ID and press Search"
+    "searchEmptyStateDesc": "Type a name, email, product title, SKU or order ID and press Search",
+    "adminNavCategories": "Categories",
+    "adminPageCategories": "Categories",
+    "adminCategoriesSubAll": "All categories",
+    "adminCategoriesTitle": "Categories",
+    "adminCategoriesAddon": "Manage the global category list. Sellers pick one category per product. Only admins can add or remove categories.",
+    "adminCategoryAddTitle": "Add category",
+    "adminCategoryAddDesc": "Enter the category name in Uzbek or the common name used in your catalog.",
+    "adminCategoryName": "Category name",
+    "adminCategoryNamePh": "e.g. Electronics, Clothing, Shoes…",
+    "adminCategoryNameRequired": "Enter a category name.",
+    "adminCategoryAddError": "Could not add this category. The name may already exist.",
+    "adminCategoryAdd": "Add",
+    "adminCategoryAdding": "Adding…",
+    "adminCategoryListTitle": "Existing categories",
+    "adminCategoryEmpty": "No categories yet. Add the first one.",
+    "adminCategoryLoadError": "Could not load categories.",
+    "adminCategoryDelete": "Delete category"
   }
 }
