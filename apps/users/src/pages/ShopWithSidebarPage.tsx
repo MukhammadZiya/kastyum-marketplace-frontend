@@ -15,7 +15,7 @@ import {
 import SingleGridItem from "../components/Shop/SingleGridItem";
 import SingleListItem from "../components/Shop/SingleListItem";
 import { useProductList } from "../hooks/products";
-import { useT } from "../i18n";
+import { useI18nState, useT } from "../i18n";
 import type { TranslateFn } from "../i18n/types";
 import { apiProductToStorefront } from "../lib/apiProductToStorefront";
 import type { Product } from "../types/product";
@@ -144,6 +144,7 @@ function ShopFiltersBody({
 
 export function ShopWithSidebarPage() {
   const t = useT();
+  const { locale } = useI18nState();
   const [searchParams, setSearchParams] = useSearchParams();
   const [view, setView] = useState<"grid" | "list">("grid");
   const [filters, setFilters] = useState<ShopFilterState>(emptyShopFilterState);
@@ -208,8 +209,8 @@ export function ShopWithSidebarPage() {
 
   const products: Product[] = useMemo(() => {
     if (!data?.list?.length) return [];
-    return data.list.map((row) => apiProductToStorefront(row));
-  }, [data]);
+    return data.list.map((row) => apiProductToStorefront(row, { locale }));
+  }, [data, locale]);
 
   const resultTotal = data?.total ?? 0;
 
