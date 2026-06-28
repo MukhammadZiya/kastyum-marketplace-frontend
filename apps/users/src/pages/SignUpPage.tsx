@@ -87,8 +87,9 @@ export function SignUpPage() {
                   type="tel"
                   className={inputClass}
                   placeholder="+998 90 123 45 67"
+                  inputMode="numeric"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => setPhone(e.target.value.replace(/[^\d+]/g, ""))}
                 />
               </div>
 
