@@ -168,6 +168,12 @@ function buildDetailSpecs(
       value: apiProduct.modelNumber.trim(),
     });
   }
+  if (apiProduct?.weight != null && apiProduct.weight > 0) {
+    specs.push({
+      label: t("productDetailWeight"),
+      value: `${apiProduct.weight} kg`,
+    });
+  }
   specs.push({
     label: t("productDetailSeller"),
     value: sellerNick || product.sellerName || "iBerry",
