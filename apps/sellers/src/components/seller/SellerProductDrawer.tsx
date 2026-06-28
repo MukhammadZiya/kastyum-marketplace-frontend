@@ -472,7 +472,7 @@ export function SellerProductDrawer({
       );
     } else {
       update.mutate(
-        { id: productId!, body, images: imageFiles.length ? imageFiles : undefined },
+        { id: productId!, body, images: imageFiles.length ? imageFiles : undefined, keepImages: imageFiles.length ? undefined : existingImages },
         {
           onSuccess: () => { setFormError(""); onClose(); },
           onError: (err) => setFormError(formatRequestFailureMessage(err)),
@@ -899,7 +899,17 @@ export function SellerProductDrawer({
                       <p className={labelCls}>{t("common.sellerProductExistingImages")} ({existingImages.length})</p>
                       <div className="flex flex-wrap gap-2">
                         {existingImages.map((img, i) => (
-                          <img key={i} src={img} alt="" className="h-20 w-20 rounded-xl border border-neutral-200 object-cover" />
+                          <div key={i} className="relative h-20 w-20 shrink-0">
+                            <img src={img} alt="" className="h-20 w-20 rounded-xl border border-neutral-200 object-cover" />
+                            <button
+                              type="button"
+                              onClick={() => setExistingImages((prev) => prev.filter((_, j) => j !== i))}
+                              className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-white shadow hover:bg-red-700"
+                              aria-label="Remove image"
+                            >
+                              <span className="text-xs leading-none">×</span>
+                            </button>
+                          </div>
                         ))}
                       </div>
                     </div>

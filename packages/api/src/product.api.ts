@@ -159,6 +159,7 @@ export async function postSellerProductUpdate(
   id: string,
   body: Partial<CreateProductBody>,
   imageFiles?: File[],
+  keepImages?: string[],
 ): Promise<ProductDocument> {
   const fd = new FormData();
   appendProductFields(fd, body as CreateProductBody);
@@ -166,6 +167,8 @@ export async function postSellerProductUpdate(
     for (const file of imageFiles) {
       fd.append("images", file, file.name);
     }
+  } else if (keepImages) {
+    fd.append("keepImages", JSON.stringify(keepImages));
   }
   const { data } = await apiClient.post<ProductDocument>(`/product/update/${id}`, fd);
   return data;

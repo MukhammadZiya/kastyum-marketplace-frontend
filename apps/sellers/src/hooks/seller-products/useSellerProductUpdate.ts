@@ -7,14 +7,15 @@ export type UpdateProductVariables = {
   id: string;
   body: Partial<CreateProductBody>;
   images?: File[];
+  keepImages?: string[];
 };
 
 export function useSellerProductUpdate() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, body, images }: UpdateProductVariables) =>
-      postSellerProductUpdate(id, body, images),
+    mutationFn: ({ id, body, images, keepImages }: UpdateProductVariables) =>
+      postSellerProductUpdate(id, body, images, keepImages),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: sellerProductKeys.all });
     },
