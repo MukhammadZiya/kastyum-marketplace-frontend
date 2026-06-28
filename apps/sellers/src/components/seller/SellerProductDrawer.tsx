@@ -155,7 +155,7 @@ export function SellerProductDrawer({
   const [guaranteeKk, setGuaranteeKk] = useState("");
 
   // Attribute bundle query
-  const { data: attrBundle, isError: attrError } = useQuery({
+  const { data: attrBundle } = useQuery({
     queryKey: ATTR_BUNDLE_QUERY_KEY,
     queryFn: () => getAllAttributes(),
     staleTime: 5 * 60_000,
@@ -297,7 +297,7 @@ export function SellerProductDrawer({
   // ── Add attribute handlers ────────────────────────────────────────────────────
   function makeAddHandler<T extends { _id: string }>(
     mutation: ReturnType<typeof useSellerAttributeCreate>,
-    type: string,
+    type: "color" | "size" | "brand" | "material" | "style",
     name: string,
     setName: (v: string) => void,
     setError: (v: string) => void,
@@ -313,9 +313,9 @@ export function SellerProductDrawer({
           onSuccess: (attr) => {
             queryClient.setQueryData<AllAttributesBundle>(ATTR_BUNDLE_QUERY_KEY, (old) => {
               if (!old) return old;
-              const arr = old[arrayKey] as T[];
+              const arr = old[arrayKey] as unknown as T[];
               if (arr.some((x) => x._id === attr._id)) return old;
-              return { ...old, [arrayKey]: [...arr, attr as T] };
+              return { ...old, [arrayKey]: [...arr, attr as unknown as T] };
             });
             onSelect(attr._id);
             setName("");
