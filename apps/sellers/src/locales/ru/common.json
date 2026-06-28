@@ -348,6 +348,9 @@
     "sellerTranslationsTitleKk": "Название (Казахский)",
     "sellerTranslationsDescKk": "Описание (Казахский)",
     "sellerTranslationsCareKk": "Инструкция (Казахский)",
-    "sellerTranslationsGuaranteeKk": "Условия гарантии (Казахский)"
+    "sellerTranslationsGuaranteeKk": "Условия гарантии (Казахский)",
+    "filterDateFrom": "С",
+    "filterDateTo": "По",
+    "filterDateClear": "Сбросить"
   }
 }

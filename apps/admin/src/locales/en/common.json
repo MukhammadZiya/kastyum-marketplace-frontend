@@ -323,6 +323,9 @@
     "adminCategoryListTitle": "Existing categories",
     "adminCategoryEmpty": "No categories yet. Add the first one.",
     "adminCategoryLoadError": "Could not load categories.",
-    "adminCategoryDelete": "Delete category"
+    "adminCategoryDelete": "Delete category",
+    "filterDateFrom": "From",
+    "filterDateTo": "To",
+    "filterDateClear": "Clear"
   }
 }

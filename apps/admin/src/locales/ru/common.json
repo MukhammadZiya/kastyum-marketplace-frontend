@@ -322,6 +322,9 @@
     "adminCategoryListTitle": "Существующие категории",
     "adminCategoryEmpty": "Категорий пока нет. Добавьте первую.",
     "adminCategoryLoadError": "Не удалось загрузить категории.",
-    "adminCategoryDelete": "Удалить категорию"
+    "adminCategoryDelete": "Удалить категорию",
+    "filterDateFrom": "С",
+    "filterDateTo": "По",
+    "filterDateClear": "Сбросить"
   }
 }

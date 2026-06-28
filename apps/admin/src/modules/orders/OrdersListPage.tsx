@@ -1,5 +1,6 @@
-import { useMemo } from "react";
-import { TableCard } from "@repo/ui";
+import { useMemo, useState } from "react";
+import { TableCard, DateRangeFilter } from "@repo/ui";
+import type { DateRange } from "@repo/ui";
 import type { OrderListRow, OrderStatus } from "@repo/types";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
 import { DataTablePlaceholder } from "../../components/DataTablePlaceholder";
@@ -10,10 +11,21 @@ import { getAuthToken } from "@repo/api";
 import { getAdminListEmptyMessage } from "../../lib/adminListEmptyMessage";
 import { useT } from "../../i18n";
 
+function inDateRange(dateStr: string | undefined, range: DateRange): boolean {
+  if (!range.from && !range.to) return true;
+  if (!dateStr) return false;
+  const ts = new Date(dateStr).getTime();
+  if (range.from && ts < new Date(range.from).getTime()) return false;
+  if (range.to && ts > new Date(range.to + "T23:59:59").getTime()) return false;
+  return true;
+}
+
 export function OrdersListPage() {
   const t = useT();
   const signedIn = !!getAuthToken();
   const updateOrder = useAdminOrderUpdate();
+  const [dateRange, setDateRange] = useState<DateRange>({ from: "", to: "" });
+
   const { data, isPending, isError, error } = useAdminOrderList({
     page: 1,
     limit: 50,
@@ -28,6 +40,11 @@ export function OrdersListPage() {
     whenEmpty: t("common.adminEmptyOrders"),
   });
 
+  const filteredList = useMemo(() => {
+    if (!data?.list) return [];
+    return data.list.filter((o) => inDateRange(o.createdAt, dateRange));
+  }, [data, dateRange]);
+
   const columns = useMemo(
     () => [
       t("common.adminColOrder"),
@@ -41,8 +58,8 @@ export function OrdersListPage() {
   );
 
   const rowEls =
-    data?.list.length ?
-      data.list.map((o: OrderListRow) => (
+    filteredList.length ?
+      filteredList.map((o: OrderListRow) => (
         <tr
           key={o._id}
           className="border-t border-neutral-100 transition hover:bg-[#FAFAFB]"
@@ -75,7 +92,7 @@ export function OrdersListPage() {
       ))
     : undefined;
 
-  const tableDescription = `${t("common.adminTotal")} ${data?.total ?? 0} ${t("common.adminOrdersTotalSuffix")} (${t("common.adminThisPage")} ${data?.list.length ?? 0}).`;
+  const tableDescription = `${t("common.adminTotal")} ${filteredList.length} ${t("common.adminOrdersTotalSuffix")} (${t("common.adminThisPage")} ${filteredList.length}).`;
 
   return (
     <AdminPageFrame
@@ -86,6 +103,15 @@ export function OrdersListPage() {
         </p>
       }
     >
+      <div className="mb-4 flex flex-wrap items-end gap-3 rounded-2xl border border-neutral-200 bg-[#FAFAFB] p-3">
+        <DateRangeFilter
+          value={dateRange}
+          onChange={setDateRange}
+          labelFrom={t("common.filterDateFrom")}
+          labelTo={t("common.filterDateTo")}
+          clearLabel={t("common.filterDateClear")}
+        />
+      </div>
       <TableCard
         title={t("common.adminOrdersListTitle")}
         description={tableDescription}

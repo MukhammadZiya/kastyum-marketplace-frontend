@@ -323,6 +323,9 @@
     "adminCategoryListTitle": "Mavjud kategoriyalar",
     "adminCategoryEmpty": "Hali kategoriyalar yo'q. Birinchisini qo'shing.",
     "adminCategoryLoadError": "Kategoriyalarni yuklab bo'lmadi.",
-    "adminCategoryDelete": "Kategoriyani o'chirish"
+    "adminCategoryDelete": "Kategoriyani o'chirish",
+    "filterDateFrom": "Dan",
+    "filterDateTo": "Gacha",
+    "filterDateClear": "Tozalash"
   }
 }

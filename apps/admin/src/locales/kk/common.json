@@ -323,6 +323,9 @@
     "adminCategoryListTitle": "Бар санаттар",
     "adminCategoryEmpty": "Санаттар әлі жоқ. Бірінші санатты қосыңыз.",
     "adminCategoryLoadError": "Санаттарды жүктеу мүмкін болмады.",
-    "adminCategoryDelete": "Санатты жою"
+    "adminCategoryDelete": "Санатты жою",
+    "filterDateFrom": "Бастап",
+    "filterDateTo": "Дейін",
+    "filterDateClear": "Тазалау"
   }
 }

@@ -348,6 +348,9 @@
     "sellerTranslationsTitleKk": "Nomi (Qozoqcha)",
     "sellerTranslationsDescKk": "Tavsif (Qozoqcha)",
     "sellerTranslationsCareKk": "Yo’riqnoma (Qozoqcha)",
-    "sellerTranslationsGuaranteeKk": "Kafolat shartlari (Qozoqcha)"
+    "sellerTranslationsGuaranteeKk": "Kafolat shartlari (Qozoqcha)",
+    "filterDateFrom": "Dan",
+    "filterDateTo": "Gacha",
+    "filterDateClear": "Tozalash"
   }
 }

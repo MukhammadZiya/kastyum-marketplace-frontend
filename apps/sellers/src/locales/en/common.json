@@ -350,6 +350,9 @@
     "sellerTranslationsTitleKk": "Title (Kazakh)",
     "sellerTranslationsDescKk": "Description (Kazakh)",
     "sellerTranslationsCareKk": "Care instructions (Kazakh)",
-    "sellerTranslationsGuaranteeKk": "Guarantee terms (Kazakh)"
+    "sellerTranslationsGuaranteeKk": "Guarantee terms (Kazakh)",
+    "filterDateFrom": "From",
+    "filterDateTo": "To",
+    "filterDateClear": "Clear"
   }
 }

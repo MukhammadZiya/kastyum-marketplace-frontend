@@ -350,6 +350,9 @@
     "sellerTranslationsTitleKk": "Атауы (Қазақша)",
     "sellerTranslationsDescKk": "Сипаттама (Қазақша)",
     "sellerTranslationsCareKk": "Нұсқаулық (Қазақша)",
-    "sellerTranslationsGuaranteeKk": "Кепілдік шарттары (Қазақша)"
+    "sellerTranslationsGuaranteeKk": "Кепілдік шарттары (Қазақша)",
+    "filterDateFrom": "Бастап",
+    "filterDateTo": "Дейін",
+    "filterDateClear": "Тазалау"
   }
 }
