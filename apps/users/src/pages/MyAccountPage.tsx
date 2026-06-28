@@ -213,7 +213,7 @@ function ProfilePanel() {
         </div>
         <div>
           <label className="mb-1 block text-sm font-medium text-neutral-800">{t("common.profilePhoneLabel")}</label>
-          <input type="tel" inputMode="numeric" placeholder="+998 90 123 45 67" className={inputClass} value={phone} onChange={(e) => setPhone(e.target.value.replace(/[^\d+]/g, ""))} />
+          <input type="tel" placeholder="+998 90 123 45 67" className={inputClass} value={phone} onChange={(e) => setPhone(e.target.value)} />
         </div>
         <button
           type="submit"

@@ -147,10 +147,8 @@ export function SellerSignUpPage() {
             autoComplete="tel"
             className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-[#E11D48] focus:bg-white focus:ring-4 focus:ring-[#E11D48]/15"
             placeholder={t("common.sellerAuthPhonePh")}
-            type="tel"
-            inputMode="numeric"
             value={fields.phone ?? ""}
-            onChange={(e) => setFields((prev) => ({ ...prev, phone: e.target.value.replace(/[^\d+]/g, "") }))}
+            onChange={(e) => setFields((prev) => ({ ...prev, phone: e.target.value }))}
           />
         </div>
 

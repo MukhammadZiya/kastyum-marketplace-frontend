@@ -13,7 +13,7 @@ import { StarRating } from "../components/Common/StarRating";
 import { ProductReviewsSection } from "../components/Shop/ProductReviewsSection";
 import { shopData } from "../data/shopData";
 import { getReviewStats } from "../data/productReviews";
-import { useI18nState, useT } from "../i18n";
+import { useT } from "../i18n";
 import type { TranslateFn } from "../i18n/types";
 import { useProductDetail } from "../hooks/products";
 import { apiProductToStorefront } from "../lib/apiProductToStorefront";
@@ -168,12 +168,6 @@ function buildDetailSpecs(
       value: apiProduct.modelNumber.trim(),
     });
   }
-  if (apiProduct?.weight != null && apiProduct.weight > 0) {
-    specs.push({
-      label: t("productDetailWeight"),
-      value: `${apiProduct.weight} kg`,
-    });
-  }
   specs.push({
     label: t("productDetailSeller"),
     value: sellerNick || product.sellerName || "iBerry",
@@ -293,7 +287,6 @@ type InnerProps = {
 
 function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
   const t = useT();
-  const { locale } = useI18nState();
   const gallerySources = useMemo(
     () => productGallerySources(product),
     [product],
@@ -363,7 +356,7 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
 
   const description =
     mongoId && apiProduct ?
-      (((apiProduct as any).descriptionI18n?.[locale]?.trim() || apiProduct.description?.trim()) || t("productDescriptionFallback"))
+      (apiProduct.description?.trim() || t("productDescriptionFallback"))
     : t("productDescriptionFallback");
 
   const reviewSummaryText =
@@ -623,7 +616,6 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
 
 export function ShopDetailsPage() {
   const t = useT();
-  const { locale } = useI18nState();
   const [searchParams] = useSearchParams();
 
   const rawId = searchParams.get("id");
@@ -643,10 +635,10 @@ export function ShopDetailsPage() {
   const product = useMemo((): Product | null => {
     if (mongoId) {
       if (!apiProduct) return null;
-      return apiProductToStorefront(apiProduct, { locale });
+      return apiProductToStorefront(apiProduct);
     }
     return mockProduct;
-  }, [mongoId, apiProduct, mockProduct, locale]);
+  }, [mongoId, apiProduct, mockProduct]);
 
   const bodyKey =
     product ? (product.mongoId ?? String(product.id)) : "";

@@ -93,38 +93,49 @@ export async function getSellerProductList(
   return data;
 }
 
-export async function getSellerProductDetail(
-  id: string,
-): Promise<ProductSellerListItem> {
-  const { data } = await apiClient.get<ProductSellerListItem>(
-    `/product/seller-product/${id}`,
-  );
-  return data;
-}
-
 /**
  * Seller creates a product with 1–5 images. Files are stored under `uploads/products/`.
  * Other product fields are sent as form fields (multipart).
  */
-function appendProductFields(fd: FormData, body: CreateProductBody) {
+export async function postProductCreate(
+  body: CreateProductBody,
+  imageFiles: File[],
+): Promise<ProductDocument> {
+  const fd = new FormData();
   fd.append("title", body.title);
   fd.append("description", body.description);
-  if (body.modelNumber?.trim()) fd.append("modelNumber", body.modelNumber.trim());
+  if (body.modelNumber?.trim()) {
+    fd.append("modelNumber", body.modelNumber.trim());
+  }
   fd.append("audience", body.audience);
   fd.append("price", String(body.price));
-  fd.append("stockCount", String(body.stockCount ?? 0));
-  if (body.listPrice != null && body.listPrice > 0) fd.append("listPrice", String(body.listPrice));
-  if (body.status != null) fd.append("status", body.status);
-  if (body.brand?.trim()) fd.append("brand", body.brand.trim());
-  if (body.material?.trim()) fd.append("material", body.material.trim());
-  if (body.style?.trim()) fd.append("style", body.style.trim());
-  if (body.category?.trim()) fd.append("category", body.category.trim());
-  if (body.colors?.length) fd.append("colors", JSON.stringify(body.colors));
-  if (body.sizes?.length) fd.append("sizes", JSON.stringify(body.sizes));
+  fd.append("stockCount", String(body.stockCount));
+  if (body.listPrice != null && body.listPrice > 0) {
+    fd.append("listPrice", String(body.listPrice));
+  }
+  if (body.status != null) {
+    fd.append("status", body.status);
+  }
+  if (body.brand?.trim()) {
+    fd.append("brand", body.brand.trim());
+  }
+  if (body.material?.trim()) {
+    fd.append("material", body.material.trim());
+  }
+  if (body.style?.trim()) {
+    fd.append("style", body.style.trim());
+  }
+  if (body.colors?.length) {
+    fd.append("colors", JSON.stringify(body.colors));
+  }
+  if (body.sizes?.length) {
+    fd.append("sizes", JSON.stringify(body.sizes));
+  }
   if (body.variantStock?.length) {
     const normalized = body.variantStock.map((row) => {
       const n = Number(row.quantity);
-      const quantity = Number.isFinite(n) ? Math.max(0, Math.floor(n)) : 0;
+      const quantity =
+        Number.isFinite(n) ? Math.max(0, Math.floor(n)) : 0;
       return {
         ...(row.sizeId ? { sizeId: row.sizeId } : {}),
         ...(row.colorId ? { colorId: row.colorId } : {}),
@@ -133,43 +144,12 @@ function appendProductFields(fd: FormData, body: CreateProductBody) {
     });
     fd.append("variantStock", JSON.stringify(normalized));
   }
-  if (body.titleI18n) fd.append("titleI18n", JSON.stringify(body.titleI18n));
-  if (body.descriptionI18n) fd.append("descriptionI18n", JSON.stringify(body.descriptionI18n));
-  if (body.careInstructions) fd.append("careInstructions", JSON.stringify(body.careInstructions));
-  if (body.guarantee) fd.append("guarantee", JSON.stringify(body.guarantee));
-  if (body.weight != null) fd.append("weight", String(body.weight));
-  if (body.dimensions) fd.append("dimensions", JSON.stringify(body.dimensions));
-  if (body.customAttributes?.length) fd.append("customAttributes", JSON.stringify(body.customAttributes));
-}
-
-export async function postProductCreate(
-  body: CreateProductBody,
-  imageFiles: File[],
-): Promise<ProductDocument> {
-  const fd = new FormData();
-  appendProductFields(fd, body);
   for (const file of imageFiles) {
     fd.append("images", file, file.name);
   }
-  const { data } = await apiClient.post<ProductDocument>("/product/create", fd);
-  return data;
-}
-
-export async function postSellerProductUpdate(
-  id: string,
-  body: Partial<CreateProductBody>,
-  imageFiles?: File[],
-  keepImages?: string[],
-): Promise<ProductDocument> {
-  const fd = new FormData();
-  appendProductFields(fd, body as CreateProductBody);
-  if (imageFiles?.length) {
-    for (const file of imageFiles) {
-      fd.append("images", file, file.name);
-    }
-  } else if (keepImages) {
-    fd.append("keepImages", JSON.stringify(keepImages));
-  }
-  const { data } = await apiClient.post<ProductDocument>(`/product/update/${id}`, fd);
+  const { data } = await apiClient.post<ProductDocument>(
+    "/product/create",
+    fd,
+  );
   return data;
 }

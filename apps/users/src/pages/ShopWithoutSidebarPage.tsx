@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import Breadcrumb from "../components/Common/Breadcrumb";
 import { shopData } from "../data/shopData";
-import { useI18nState } from "../i18n";
 import { useProductList } from "../hooks/products";
 import { apiProductToStorefront } from "../lib/apiProductToStorefront";
 import SingleGridItem from "../components/Shop/SingleGridItem";
@@ -9,16 +8,15 @@ import SingleListItem from "../components/Shop/SingleListItem";
 
 export function ShopWithoutSidebarPage() {
   const [view, setView] = useState<"grid" | "list">("grid");
-  const { locale } = useI18nState();
   const { data, isPending } = useProductList({ page: 1, limit: 48 });
   const hasListItems = Boolean(data?.list?.length);
 
   const products = useMemo(() => {
     if (data?.list?.length) {
-      return data.list.map((p) => apiProductToStorefront(p, { locale }));
+      return data.list.map((p) => apiProductToStorefront(p));
     }
     return shopData;
-  }, [data, locale]);
+  }, [data]);
 
   return (
     <>

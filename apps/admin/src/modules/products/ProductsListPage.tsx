@@ -37,7 +37,6 @@ export function ProductsListPage() {
     () => [
       t("common.adminColTitle"),
       t("common.adminColSku"),
-      t("common.adminColCategory"),
       t("common.adminColSeller"),
       t("common.adminColStatus"),
       t("common.adminColUpdated"),
@@ -55,7 +54,6 @@ export function ProductsListPage() {
         >
           <td className="px-4 py-3 font-black text-slate-950">{p.title}</td>
           <td className="px-4 py-3 text-slate-600">{p.modelNumber}</td>
-          <td className="px-4 py-3 text-slate-600">{p.category?.name || "—"}</td>
           <td className="px-4 py-3 font-medium text-slate-800">
             {p.sellerId.nick}
           </td>

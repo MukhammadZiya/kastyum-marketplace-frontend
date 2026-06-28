@@ -5,5 +5,4 @@ export const adminMemberKeys = {
   lists: () => [...adminMemberKeys.all, "list"] as const,
   list: (params: MemberListQuery | undefined) =>
     [...adminMemberKeys.lists(), params ?? {}] as const,
-  detail: (id: string) => [...adminMemberKeys.all, "detail", id] as const,
 };

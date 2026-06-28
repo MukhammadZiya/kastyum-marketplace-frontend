@@ -78,8 +78,6 @@ export type ProductsQueryParams = {
   colors?: string;
   /** Comma-separated size ids (product has any). */
   sizes?: string;
-  /** Filter by seller member ID (admin use). */
-  sellerId?: string;
 };
 
 export type CreateProductBody = {
@@ -87,10 +85,10 @@ export type CreateProductBody = {
   description: string;
   modelNumber?: string;
   audience: TargetAudience;
-  category?: string;
   storeTypes?: string[];
   departmentCategory?: string;
   price: number;
+  /** Optional “was” price; storefront shows as strikethrough when greater than `price`. */
   listPrice?: number;
   colors?: string[];
   sizes?: string[];
@@ -100,14 +98,8 @@ export type CreateProductBody = {
   images?: string[];
   stockCount: number;
   status?: ProductStatus;
+  /** When `colors` and/or `sizes` are set, backend expects matching `variantStock` rows (multipart JSON). */
   variantStock?: ProductVariantStockLine[];
-  titleI18n?: { uz?: string; ru?: string; en?: string; kk?: string };
-  descriptionI18n?: { uz?: string; ru?: string; en?: string; kk?: string };
-  careInstructions?: { uz?: string; ru?: string; en?: string; kk?: string };
-  guarantee?: { duration?: string; terms?: { uz?: string; ru?: string; en?: string; kk?: string } };
-  weight?: number;
-  dimensions?: { length?: number; width?: number; height?: number };
-  customAttributes?: { key: string; value: string }[];
 };
 
 /** Admin multipart create (`POST /admin/product/create`). */

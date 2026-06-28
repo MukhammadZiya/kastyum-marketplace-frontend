@@ -26,26 +26,19 @@ export type Style = {
   name: string;
 };
 
-export type Category = {
-  _id: string;
-  name: string;
-};
-
 export type AttributeKind =
   | "color"
   | "size"
   | "brand"
   | "material"
-  | "style"
-  | "category";
+  | "style";
 
 export type AttributeEntity =
   | Color
   | Size
   | Brand
   | Material
-  | Style
-  | Category;
+  | Style;
 
 export type AllAttributesBundle = {
   color: Color[];
@@ -53,5 +46,4 @@ export type AllAttributesBundle = {
   brand: Brand[];
   material: Material[];
   style: Style[];
-  category: Category[];
 };

@@ -57,7 +57,6 @@ export function ProductCreatePage() {
   const [audience, setAudience] = useState<TargetAudience>("MEN");
   const [colorIds, setColorIds] = useState<string[]>([]);
   const [sizeIds, setSizeIds] = useState<string[]>([]);
-  const [categoryId, setCategoryId] = useState("");
   const [brandId, setBrandId] = useState("");
   const [materialId, setMaterialId] = useState("");
   const [styleId, setStyleId] = useState("");
@@ -86,7 +85,6 @@ export function ProductCreatePage() {
 
   const selectClass = `${adminInputClass} max-w-full`;
 
-  const categoryOptions = attrBundle?.category ?? [];
   const brandOptions = attrBundle?.brand ?? [];
   const materialOptions = attrBundle?.material ?? [];
   const styleOptions = attrBundle?.style ?? [];
@@ -238,7 +236,6 @@ export function ProductCreatePage() {
       colorIds: colorIds.length ? colorIds : undefined,
       sizeIds: sizeIds.length ? sizeIds : undefined,
       variantStock: variantStockPayload,
-      category: categoryId || undefined,
       brand: brandId || undefined,
       material: materialId || undefined,
       style: styleId || undefined,
@@ -577,25 +574,6 @@ export function ProductCreatePage() {
                   </div>
                 </div>
               }
-            </div>
-
-            <div className="mt-4">
-              <label htmlFor="admin-product-category" className="mb-1 block text-sm font-medium text-slate-700">
-                {t("common.adminProductFieldCategory")}
-              </label>
-              <select
-                id="admin-product-category"
-                value={categoryId}
-                onChange={(ev) => setCategoryId(ev.target.value)}
-                className={selectClass}
-              >
-                <option value="">{t("common.adminProductPhOptional")}</option>
-                {categoryOptions.map((c) => (
-                  <option key={c._id} value={c._id}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
             </div>
 
             <div className="mt-4 grid gap-4 sm:grid-cols-2">

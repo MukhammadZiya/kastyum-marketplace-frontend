@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useProductHomeShowcase, useProductList } from "../../../hooks/products";
 import { apiProductToStorefront } from "../../../lib/apiProductToStorefront";
-import { useI18n } from "../../../i18n";
+import { useT } from "../../../i18n";
 import ProductItem from "./ProductItem";
 
 const SKELETON_COUNT = 5;
@@ -18,7 +18,7 @@ function ProductSkeleton() {
 }
 
 export default function NewArrivals() {
-  const { locale, t } = useI18n();
+  const t = useT();
   const { data: showcase, isPending: showcasePending } = useProductHomeShowcase();
   const { data, isPending: listPending } = useProductList({ page: 1, limit: 8 });
 
@@ -27,14 +27,14 @@ export default function NewArrivals() {
   const items = useMemo(() => {
     if (!data && !showcase) return [];
     const showcaseItems = (showcase?.newArrivals ?? []).map((slot) =>
-      apiProductToStorefront(slot.product, { customPreviewPath: slot.customImage, locale }),
+      apiProductToStorefront(slot.product, { customPreviewPath: slot.customImage }),
     );
     const showcaseIds = new Set(showcaseItems.map((i) => i.mongoId).filter(Boolean));
     const listItems = (data?.list ?? [])
       .filter((p) => !showcaseIds.has(p._id))
-      .map((p) => apiProductToStorefront(p, { locale }));
+      .map((p) => apiProductToStorefront(p));
     return [...showcaseItems, ...listItems].slice(0, 8);
-  }, [data, showcase, locale]);
+  }, [data, showcase]);
 
   return (
     <section className="overflow-hidden pt-12 sm:pt-14">

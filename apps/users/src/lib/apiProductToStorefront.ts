@@ -1,6 +1,5 @@
 import { apiClient } from "@repo/api";
 import type { ProductWithRelations } from "@repo/types";
-import type { Locale } from "../i18n/types";
 import type { Product } from "../types/product";
 
 function mediaUrl(path: string): string {
@@ -21,7 +20,7 @@ function numericIdFromMongoId(mongoId: string): number {
 
 export function apiProductToStorefront(
   p: ProductWithRelations,
-  opts?: { customPreviewPath?: string | null; locale?: Locale },
+  opts?: { customPreviewPath?: string | null },
 ): Product {
   const raw = p.images?.length ? p.images : [""];
   const previews = raw.map((path) => mediaUrl(path));
@@ -43,16 +42,10 @@ export function apiProductToStorefront(
     "nick" in p.sellerId ?
       p.sellerId.nick?.trim() || undefined
     : undefined;
-  const locale = opts?.locale;
-  const localizedTitle =
-    locale && (p as any).titleI18n?.[locale]?.trim()
-      ? (p as any).titleI18n[locale].trim()
-      : p.title;
-
   return {
     id: numericIdFromMongoId(p._id),
     mongoId: p._id,
-    title: localizedTitle,
+    title: p.title,
     brandName: p.brand?.name,
     sellerName,
     categoryLabel: p.departmentCategory,

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { TrendingUp } from "lucide-react";
 import { useProductHomeShowcase, useProductList } from "../../../hooks/products";
 import { apiProductToStorefront } from "../../../lib/apiProductToStorefront";
-import { useI18n } from "../../../i18n";
+import { useT } from "../../../i18n";
 import ProductItem from "../NewArrivals/ProductItem";
 
 const SKELETON_COUNT = 5;
@@ -19,7 +19,7 @@ function ProductSkeleton() {
 }
 
 export default function FrequentlyBought() {
-  const { locale, t } = useI18n();
+  const t = useT();
   const { data: showcase, isPending: showcasePending } = useProductHomeShowcase();
   const { data: listData, isPending: listPending } = useProductList({ page: 1, limit: 8 });
 
@@ -29,11 +29,11 @@ export default function FrequentlyBought() {
     if (!showcase && !listData) return [];
     if (showcase?.mostPurchased?.length) {
       return showcase.mostPurchased.map((slot) =>
-        apiProductToStorefront(slot.product, { customPreviewPath: slot.customImage, locale }),
+        apiProductToStorefront(slot.product, { customPreviewPath: slot.customImage }),
       );
     }
-    return (listData?.list ?? []).map((p) => apiProductToStorefront(p, { locale })).slice(0, 8);
-  }, [showcase, listData, locale]);
+    return (listData?.list ?? []).map((p) => apiProductToStorefront(p)).slice(0, 8);
+  }, [showcase, listData]);
 
   return (
     <section className="overflow-hidden pt-12 sm:pt-16">

@@ -1,29 +1,6 @@
 import type { ProductStatus, TargetAudience } from "../enums";
-import type { Brand, Category, Color, Material, Size, Style } from "./attributes";
+import type { Brand, Color, Material, Size, Style } from "./attributes";
 import type { Member } from "./member";
-
-export type I18nText = {
-  uz?: string;
-  ru?: string;
-  en?: string;
-  kk?: string;
-};
-
-export type GuaranteeInfo = {
-  duration?: string;
-  terms?: I18nText;
-};
-
-export type ProductDimensions = {
-  length?: number;
-  width?: number;
-  height?: number;
-};
-
-export type CustomAttributeLine = {
-  key: string;
-  value: string;
-};
 
 /** Per size, or per size+color when both are set on the product. */
 export type ProductVariantStockLine = {
@@ -36,15 +13,13 @@ export type ProductDocument = {
   _id: string;
   sellerId: string;
   title: string;
-  titleI18n?: I18nText;
   modelNumber: string;
-  barcode?: string;
   audience: TargetAudience;
-  category?: string;
+  /** Catalog slugs for header device filter (men, suits, …). */
   storeTypes?: string[];
+  /** Sidebar department label (e.g. Formal wear). */
   departmentCategory?: string;
   description: string;
-  descriptionI18n?: I18nText;
   price: number;
   listPrice?: number;
   colors: string[];
@@ -57,18 +32,13 @@ export type ProductDocument = {
   variantStock?: ProductVariantStockLine[];
   inStock: boolean;
   status: ProductStatus;
-  careInstructions?: I18nText;
-  guarantee?: GuaranteeInfo;
-  weight?: number;
-  dimensions?: ProductDimensions;
-  customAttributes?: CustomAttributeLine[];
   createdAt?: string;
   updatedAt?: string;
 };
 
 export type ProductWithRelations = Omit<
   ProductDocument,
-  "sellerId" | "colors" | "sizes" | "brand" | "material" | "style" | "category"
+  "sellerId" | "colors" | "sizes" | "brand" | "material" | "style"
 > & {
   sellerId: Member;
   colors: Color[];
@@ -76,12 +46,12 @@ export type ProductWithRelations = Omit<
   brand?: Brand;
   material?: Material;
   style?: Style;
-  category?: Category;
 };
+
 
 export type ProductSellerListItem = Omit<
   ProductDocument,
-  "sellerId" | "colors" | "sizes" | "brand" | "material" | "style" | "category"
+  "sellerId" | "colors" | "sizes" | "brand" | "material" | "style"
 > & {
   sellerId: string;
   colors: Color[];
@@ -89,13 +59,12 @@ export type ProductSellerListItem = Omit<
   brand?: Brand;
   material?: Material;
   style?: Style;
-  category?: Category;
   soldCount?: number;
 };
 
 export type ProductAdminListItem = Omit<
   ProductDocument,
-  "sellerId" | "colors" | "sizes" | "brand" | "material" | "style" | "category"
+  "sellerId" | "colors" | "sizes" | "brand" | "material" | "style"
 > & {
   sellerId: Member;
   colors: Color[];
@@ -103,5 +72,4 @@ export type ProductAdminListItem = Omit<
   brand?: Brand;
   material?: string;
   style?: string;
-  category?: Category;
 };

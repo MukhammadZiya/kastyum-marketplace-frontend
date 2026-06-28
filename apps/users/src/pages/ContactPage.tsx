@@ -29,7 +29,7 @@ export function ContactPage() {
               </div>
               <div className="grid gap-5 lg:grid-cols-2">
                 <input className="rounded-xl border border-neutral-200 bg-[#FAFAFB] px-5 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white focus:ring-4 focus:ring-[#E11D48]/10" placeholder={t("common.subject")} />
-                <input className="rounded-xl border border-neutral-200 bg-[#FAFAFB] px-5 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white focus:ring-4 focus:ring-[#E11D48]/10" type="tel" inputMode="numeric" placeholder={t("common.phone")} onInput={(e) => { const el = e.currentTarget; el.value = el.value.replace(/[^\d+]/g, ""); }} />
+                <input className="rounded-xl border border-neutral-200 bg-[#FAFAFB] px-5 py-3 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white focus:ring-4 focus:ring-[#E11D48]/10" placeholder={t("common.phone")} />
               </div>
               <textarea rows={6} className="w-full rounded-xl border border-neutral-200 bg-[#FAFAFB] p-5 font-semibold outline-none transition focus:border-[#E11D48] focus:bg-white focus:ring-4 focus:ring-[#E11D48]/10" placeholder={t("contactPlaceholderMessage")} />
               <button type="submit" className="rounded-xl bg-[#E11D48] px-7 py-3.5 font-black text-white shadow-[0_18px_40px_-22px_rgba(225,29,72,0.7)] transition hover:-translate-y-px hover:bg-[#BE123C]">
