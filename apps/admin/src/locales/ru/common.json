@@ -325,6 +325,7 @@
     "adminCategoryDelete": "Удалить категорию",
     "filterDateFrom": "С",
     "filterDateTo": "По",
+    "filterDateSearch": "Найти",
     "filterDateClear": "Сбросить"
   }
 }

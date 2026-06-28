@@ -326,6 +326,7 @@
     "adminCategoryDelete": "Санатты жою",
     "filterDateFrom": "Бастап",
     "filterDateTo": "Дейін",
+    "filterDateSearch": "Іздеу",
     "filterDateClear": "Тазалау"
   }
 }

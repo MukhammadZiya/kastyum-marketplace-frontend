@@ -353,6 +353,7 @@
     "sellerTranslationsGuaranteeKk": "Кепілдік шарттары (Қазақша)",
     "filterDateFrom": "Бастап",
     "filterDateTo": "Дейін",
+    "filterDateSearch": "Іздеу",
     "filterDateClear": "Тазалау"
   }
 }

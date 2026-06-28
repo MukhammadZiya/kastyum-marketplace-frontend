@@ -326,6 +326,7 @@
     "adminCategoryDelete": "Kategoriyani o'chirish",
     "filterDateFrom": "Dan",
     "filterDateTo": "Gacha",
+    "filterDateSearch": "Qidirish",
     "filterDateClear": "Tozalash"
   }
 }

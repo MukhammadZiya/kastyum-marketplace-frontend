@@ -353,6 +353,7 @@
     "sellerTranslationsGuaranteeKk": "Guarantee terms (Kazakh)",
     "filterDateFrom": "From",
     "filterDateTo": "To",
+    "filterDateSearch": "Search",
     "filterDateClear": "Clear"
   }
 }

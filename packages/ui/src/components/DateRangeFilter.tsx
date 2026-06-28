@@ -1,4 +1,5 @@
-import { CalendarDays, X } from "lucide-react";
+import { useState } from "react";
+import { CalendarDays, Search, X } from "lucide-react";
 
 export type DateRange = { from: string; to: string };
 
@@ -7,6 +8,7 @@ interface DateRangeFilterProps {
   onChange: (range: DateRange) => void;
   labelFrom?: string;
   labelTo?: string;
+  searchLabel?: string;
   clearLabel?: string;
   className?: string;
 }
@@ -16,10 +18,13 @@ export function DateRangeFilter({
   onChange,
   labelFrom = "From",
   labelTo = "To",
+  searchLabel = "Search",
   clearLabel = "Clear",
   className = "",
 }: DateRangeFilterProps) {
-  const hasFilter = value.from || value.to;
+  const [draft, setDraft] = useState<DateRange>(value);
+
+  const hasApplied = value.from || value.to;
 
   const inputClass =
     "rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm font-semibold text-slate-900 outline-none transition focus:border-[#E11D48] focus:ring-4 focus:ring-[#E11D48]/10";
@@ -34,9 +39,9 @@ export function DateRangeFilter({
         <input
           type="date"
           className={inputClass}
-          value={value.from}
-          max={value.to || undefined}
-          onChange={(e) => onChange({ ...value, from: e.target.value })}
+          value={draft.from}
+          max={draft.to || undefined}
+          onChange={(e) => setDraft((d) => ({ ...d, from: e.target.value }))}
         />
       </div>
       <div>
@@ -46,16 +51,27 @@ export function DateRangeFilter({
         <input
           type="date"
           className={inputClass}
-          value={value.to}
-          min={value.from || undefined}
-          onChange={(e) => onChange({ ...value, to: e.target.value })}
+          value={draft.to}
+          min={draft.from || undefined}
+          onChange={(e) => setDraft((d) => ({ ...d, to: e.target.value }))}
         />
       </div>
-      {hasFilter ? (
+      <button
+        type="button"
+        onClick={() => onChange(draft)}
+        className="mb-0.5 flex items-center gap-1.5 rounded-xl border border-[#E11D48] bg-[#E11D48] px-3 py-2 text-sm font-semibold text-white transition hover:bg-[#be123c]"
+      >
+        <Search className="h-3.5 w-3.5" strokeWidth={2.5} />
+        {searchLabel}
+      </button>
+      {hasApplied ? (
         <button
           type="button"
-          onClick={() => onChange({ from: "", to: "" })}
-          className="mb-0.5 flex items-center gap-1 rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm font-semibold text-slate-600 transition hover:border-red-200 hover:text-red-600"
+          onClick={() => {
+            setDraft({ from: "", to: "" });
+            onChange({ from: "", to: "" });
+          }}
+          className="mb-0.5 flex items-center gap-1.5 rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm font-semibold text-slate-600 transition hover:border-red-200 hover:text-red-600"
         >
           <X className="h-3.5 w-3.5" strokeWidth={2.5} />
           {clearLabel}

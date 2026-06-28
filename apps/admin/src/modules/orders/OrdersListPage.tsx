@@ -109,6 +109,7 @@ export function OrdersListPage() {
           onChange={setDateRange}
           labelFrom={t("common.filterDateFrom")}
           labelTo={t("common.filterDateTo")}
+          searchLabel={t("common.filterDateSearch")}
           clearLabel={t("common.filterDateClear")}
         />
       </div>

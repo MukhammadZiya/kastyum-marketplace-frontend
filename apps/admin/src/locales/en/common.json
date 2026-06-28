@@ -326,6 +326,7 @@
     "adminCategoryDelete": "Delete category",
     "filterDateFrom": "From",
     "filterDateTo": "To",
+    "filterDateSearch": "Search",
     "filterDateClear": "Clear"
   }
 }
