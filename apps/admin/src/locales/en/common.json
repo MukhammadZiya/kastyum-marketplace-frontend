@@ -235,6 +235,7 @@
     "adminProductFieldColors": "Colors",
     "adminProductNoSizes": "No sizes in the system yet.",
     "adminProductNoColors": "No colors in the system yet.",
+    "adminProductFieldCategory": "Category",
     "adminProductFieldBrand": "Brand",
     "adminProductFieldMaterial": "Material",
     "adminProductFieldStyle": "Style",

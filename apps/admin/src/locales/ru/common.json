@@ -234,6 +234,7 @@
     "adminProductFieldColors": "Цвета",
     "adminProductNoSizes": "Размеров в системе пока нет.",
     "adminProductNoColors": "Цветов в системе пока нет.",
+    "adminProductFieldCategory": "Категория",
     "adminProductFieldBrand": "Бренд",
     "adminProductFieldMaterial": "Материал",
     "adminProductFieldStyle": "Стиль",
