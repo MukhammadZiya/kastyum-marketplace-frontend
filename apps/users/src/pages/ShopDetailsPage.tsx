@@ -33,10 +33,10 @@ function productGallerySources(product: Product): string[] {
   const fromPreviews = product.imgs.previews
     .map((s) => (s?.trim() ? s.trim() : ""))
     .filter((s) => s.length > 0);
-  if (fromPreviews.length > 0) return fromPreviews;
-  return product.imgs.thumbnails
+  const sources = fromPreviews.length > 0 ? fromPreviews : product.imgs.thumbnails
     .map((s) => (s?.trim() ? s.trim() : ""))
     .filter((s) => s.length > 0);
+  return Array.from(new Set(sources));
 }
 
 function ProductImagePlaceholder({ label }: { label: string }) {
@@ -377,6 +377,11 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
       : "";
   const showImagePlaceholder = gallerySources.length === 0 || mainImageFailed;
   const hasGalleryControls = gallerySources.length > 1 && !showImagePlaceholder;
+  const hasGalleryThumbnails = gallerySources.length > 0 && !showImagePlaceholder;
+  const galleryShellClass =
+    gallerySources.length > 0
+      ? "min-w-0 lg:grid lg:grid-cols-[86px_minmax(0,1fr)] lg:gap-5"
+      : "min-w-0";
   const goToPreviousImage = () => {
     setActiveImageIndex((index) =>
       index === 0 ? gallerySources.length - 1 : index - 1,
@@ -392,9 +397,9 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
     <section className="bg-white py-5 sm:py-8">
       <div className="mx-auto max-w-[1280px] px-4 sm:px-8 xl:px-0">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,690px)_minmax(390px,1fr)] lg:gap-10">
-          <div className="min-w-0 lg:grid lg:grid-cols-[86px_minmax(0,1fr)] lg:gap-5">
-            <div className="order-2">
-              <div className="flex min-h-[430px] items-start justify-center overflow-hidden bg-white p-2 sm:min-h-[min(650px,78vh)] sm:p-3 lg:min-h-[650px]">
+          <div className={galleryShellClass}>
+            <div className="order-2 min-w-0 lg:col-start-2 lg:row-start-1">
+              <div className="flex min-h-[430px] items-center justify-center overflow-hidden bg-white p-2 sm:min-h-[min(650px,78vh)] sm:p-3 lg:min-h-[650px]">
               {showImagePlaceholder ?
                 <div className="w-full max-w-full">
                   <ProductImagePlaceholder label={t("productImageUnavailable")} />
@@ -402,7 +407,7 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
               : <img
                   src={activeImageSrc}
                   alt={displayTitle}
-                  className="max-h-[420px] w-full max-w-full object-contain object-center sm:max-h-[min(640px,76vh)]"
+                  className="h-auto max-h-[420px] w-full max-w-full object-contain object-center sm:max-h-[min(640px,76vh)]"
                   loading="eager"
                   decoding="async"
                   fetchPriority="high"
@@ -432,9 +437,9 @@ function ShopDetailsBody({ product, mongoId, apiProduct }: InnerProps) {
                 </div>
               : null}
             </div>
-            {gallerySources.length > 1 ?
+            {hasGalleryThumbnails ?
               <nav
-                className="order-1 -mx-1 mt-4 flex gap-3 overflow-x-auto pb-2 [scrollbar-gutter:stable] sm:mx-0 lg:mt-0 lg:flex-col lg:overflow-visible lg:pb-0"
+                className="order-1 -mx-1 mt-4 flex gap-3 overflow-x-auto pb-2 [scrollbar-gutter:stable] sm:mx-0 lg:col-start-1 lg:row-start-1 lg:mt-0 lg:flex-col lg:overflow-visible lg:pb-0"
                 aria-label={t("productGalleryThumbnails")}
               >
                 {gallerySources.map((img, i) => {
