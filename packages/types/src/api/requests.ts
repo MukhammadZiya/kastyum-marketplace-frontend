@@ -78,6 +78,8 @@ export type ProductsQueryParams = {
   colors?: string;
   /** Comma-separated size ids (product has any). */
   sizes?: string;
+  /** Filter by seller member ID (admin use). */
+  sellerId?: string;
 };
 
 export type CreateProductBody = {

@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { TableCard } from "@repo/ui";
 import type { Member } from "@repo/types";
 import { AdminPageFrame } from "../../components/AdminPageFrame";
@@ -15,6 +16,7 @@ import { useT } from "../../i18n";
 
 export function SellersListPage() {
   const t = useT();
+  const navigate = useNavigate();
   const signedIn = !!getAuthToken();
   const { data, isPending, isError, error } = useAdminMemberList({
     page: 1,
@@ -48,11 +50,12 @@ export function SellersListPage() {
       sellers.map((m: Member) => (
         <tr
           key={m._id}
-          className="border-t border-neutral-100 transition hover:bg-[#FAFAFB]"
+          className="cursor-pointer border-t border-neutral-100 transition hover:bg-[#FAFAFB]"
+          onClick={() => navigate(`/sellers/detail/${m._id}`)}
         >
           <td className="px-4 py-3 font-black text-slate-950">{m.nick}</td>
           <td className="px-4 py-3 text-slate-700">{m.email}</td>
-          <td className="px-4 py-3">
+          <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
             <MemberStatusSelect
               value={m.status}
               disabled={updateMember.isPending}

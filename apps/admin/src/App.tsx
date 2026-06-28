@@ -6,6 +6,7 @@ import { OrdersListPage } from "./modules/orders/OrdersListPage";
 import { ProductCreatePage } from "./modules/products/ProductCreatePage";
 import { ProductsListPage } from "./modules/products/ProductsListPage";
 import { SellersListPage } from "./modules/sellers/SellersListPage";
+import { SellerDetailPage } from "./modules/sellers/SellerDetailPage";
 import { UsersListPage } from "./modules/users/UsersListPage";
 import { CategoriesListPage } from "./modules/categories/CategoriesListPage";
 import { GlobalSearchPage } from "./modules/search/GlobalSearchPage";
@@ -29,6 +30,7 @@ function App({ basename }: AppProps = {}) {
             <Route path="sellers" element={<Outlet />}>
               <Route index element={<Navigate to="/sellers/list" replace />} />
               <Route path="list" element={<SellersListPage />} />
+              <Route path="detail/:id" element={<SellerDetailPage />} />
             </Route>
             <Route path="products" element={<Outlet />}>
               <Route index element={<Navigate to="/products/list" replace />} />
