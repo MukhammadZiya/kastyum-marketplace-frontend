@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
 import type { OrderListRow, OrderStatus } from "@repo/types";
 import { formatRequestFailureMessage, getAuthToken } from "@repo/api";
-import { Button, Card } from "@repo/ui";
+import { Button, Card, DateRangeFilter } from "@repo/ui";
+import type { DateRange } from "@repo/ui";
 import { SellerPageFrame } from "../../components/seller/SellerPageFrame";
 import { SellerTableScaffold } from "../../components/seller/SellerTableScaffold";
 import { SELLER_PAGE_COPY_KEYS } from "../../constants/sellerNavigation";
@@ -9,6 +10,15 @@ import { useSellerOrders, useSellerOrderUpdateStatus } from "../../hooks/seller-
 import { useT } from "../../i18n";
 
 const copy = SELLER_PAGE_COPY_KEYS.ordersList;
+
+function inDateRange(dateStr: string | undefined, range: DateRange): boolean {
+  if (!range.from && !range.to) return true;
+  if (!dateStr) return false;
+  const ts = new Date(dateStr).getTime();
+  if (range.from && ts < new Date(range.from).getTime()) return false;
+  if (range.to && ts > new Date(range.to + "T23:59:59").getTime()) return false;
+  return true;
+}
 
 const ORDER_STATUSES: OrderStatus[] = [
   "PENDING",
@@ -67,6 +77,7 @@ export function SellerOrdersPage() {
   const signedIn = !!getAuthToken();
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<OrderStatus | "">("");
+  const [dateRange, setDateRange] = useState<DateRange>({ from: "", to: "" });
   const [statusMutationError, setStatusMutationError] = useState<string | null>(
     null,
   );
@@ -83,6 +94,11 @@ export function SellerOrdersPage() {
 
   const { data, isPending, isError, error } = useSellerOrders(queryParams);
   const updateStatus = useSellerOrderUpdateStatus();
+
+  const filteredList = useMemo(() => {
+    if (!data?.list) return [];
+    return data.list.filter((o) => inDateRange(o.createdAt, dateRange));
+  }, [data, dateRange]);
 
   const total = data?.total ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / limit));
@@ -111,8 +127,8 @@ export function SellerOrdersPage() {
         : t("common.sellerEmptyNoOrders");
 
   const rowEls =
-    data?.list.length ?
-      data.list.map((row: OrderListRow) => {
+    filteredList.length ?
+      filteredList.map((row: OrderListRow) => {
         const placed = row.createdAt
           ? new Date(row.createdAt).toLocaleString()
           : t("common.sellerEmDash");
@@ -209,6 +225,14 @@ export function SellerOrdersPage() {
                 ))}
               </select>
             </div>
+            <DateRangeFilter
+              value={dateRange}
+              onChange={setDateRange}
+              labelFrom={t("common.filterDateFrom")}
+              labelTo={t("common.filterDateTo")}
+              searchLabel={t("common.filterDateSearch")}
+              clearLabel={t("common.filterDateClear")}
+            />
           </div>
           {statusMutationError ?
             <p className="mb-4 text-sm text-red-600" role="alert">
